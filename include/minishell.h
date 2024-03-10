@@ -6,6 +6,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdbool.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include "libft.h"
 
 /*--- LINKED - LIST ---*/
@@ -22,4 +24,28 @@ typedef struct s_node
 t_node	*node_create(void *content);
 void	node_destroy(t_node *node);
 void	list_append(t_node *head, t_node *to_append);
+
+/*--- COMMAND - STRUCT ---*/
+
+typedef unsigned short	t_cid;
+
+enum e_codes
+{
+	ECHO = 0,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+};
+
+typedef struct s_cmd
+{
+	t_cid	cmd_id;
+	char	*line;
+	t_split	command;
+	t_node	**envp;
+}	t_cmd;
+
 #endif // !MINISHELL_H
