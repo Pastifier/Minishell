@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/03/13 01:12:02 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -58,4 +70,8 @@ typedef struct s_cmd
 	t_node	**lnv;
 }	t_cmd;
 
+/*--- BUILTINS ---*/
+int		env(t_node **envp);
+int		export(t_node **envp, const char *variable, const char *value);
+int	unset(t_node **envp, const char *variable);
 #endif // !MINISHELL_H

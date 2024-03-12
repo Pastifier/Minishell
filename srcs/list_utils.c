@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/03/13 01:10:08 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_node	*node_create(void *content)
@@ -18,10 +30,14 @@ void	node_destroy(t_node *node)
 	t_node	*prev;
 	t_node	*next;
 
+	if (!node)
+		return ;
 	prev = node->prev;
 	next = node->next;
-	next->prev = prev;
-	prev->next = next;
+	if (next)
+		next->prev = prev;
+	if (prev)
+		prev->next = next;
 	node->prev = NULL;
 	node->next = NULL;
 	free(node->content);
@@ -32,6 +48,8 @@ void	list_append(t_node **head, t_node *to_append)
 {
 	t_node	*iter;
 
+	if (!head || !to_append)
+		return ;
 	if (*head)
 	{
 		iter = *head;
@@ -58,7 +76,8 @@ void	list_destroy(t_node **head)
 	while (iter)
 	{
 		temp = iter->next;
-		node_destroy(iter);
+		free(iter->content);
+		free(iter);
 		iter = temp;
 	}
 	*head = NULL;
@@ -69,7 +88,7 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head)
 	t_node	*to_append;
 	void	*content;
 
-	while (strarr)
+	while (*strarr)
 	{
 		content = ft_strdup(*strarr);
 		if (!content)
@@ -77,7 +96,8 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head)
 		to_append = node_create(content);
 		if (!to_append)
 			return (free(content), list_destroy(head), false);
-		list_append(head, node_create(ft_strdup(*strarr)));
+		list_append(head, to_append);
 		++strarr;
 	}
+	return (true);
 }

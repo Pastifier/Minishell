@@ -6,7 +6,8 @@ NAME := minishell
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3
 
-SRC := main.c list_utils.c
+SRC :=  main.c list_utils.c \
+		builtins_env.c builtins_unset.c
 SRCS := $(addprefix srcs/, $(SRC))
 
 INC := minishell.h
@@ -18,7 +19,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS) $(INCLUDES)
 	@make -C libft
-	$(CC) $(CFLAGS) -Iinclude -Llibft -Ilibft/includes -lft $< -o $@
+	$(CC) $(CFLAGS) -I include $(SRCS) -Llibft -Ilibft/includes -lft -o $@
 
 clean :
 	@make -C libft clean
