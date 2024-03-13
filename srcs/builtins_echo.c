@@ -48,11 +48,12 @@ test cases:
 //         ft_putstr_fd("\n", 1);
 // }
 
-void echo(char *str, int n_flag)
+int echo(char *str, int n_flag)
 {
     if (n_flag)
         ft_putstr_fd(str, 1);
     else
         ft_putendl_fd(str, 1);
+    return (EXIT_SUCCESS);
 }
 
