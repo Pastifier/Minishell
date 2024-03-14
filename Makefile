@@ -4,7 +4,7 @@ NAME := minishell
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3
+CFLAGS := -Wall -Wextra -Werror -g3
 
 SRC :=  main.c list_utils.c \
 		builtins_env.c builtins_unset.c

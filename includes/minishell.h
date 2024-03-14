@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/14 17:29:08 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:46:51 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ typedef struct s_astnode
 	t_node	**envp;
 	union u_node_data
 	{
-		struct s_cmd
+		struct s_command
 		{
 			char	*command;
 			char	**args;
