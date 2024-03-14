@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/13 01:11:07 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/14 21:42:56 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static t_node	*find_variable(t_node **envp, const char *variable)
 	size_t	con_length;
 	t_node	*iter;
 
-	if (!envp || !*envp)
+	if (!envp && !*envp)
 		return (NULL);
 	var_length = ft_strlen(variable);
 	iter = *envp;

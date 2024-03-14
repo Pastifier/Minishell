@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/14 17:46:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/14 21:51:57 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head);
 
 /*--- COMMAND - STRUCT ---*/
 
-typedef unsigned short	t_cid;
-
-enum e_builtins
+typedef enum e_builtins
 {
 	ECHO = 0,
 	CD,
@@ -59,7 +57,7 @@ enum e_builtins
 	UNSET,
 	ENV,
 	EXIT
-};
+}	t_cid;
 
 typedef struct s_cmd
 {
