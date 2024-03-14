@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/13 01:12:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:29:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,43 @@ typedef struct s_cmd
 	t_node	**lnv;
 }	t_cmd;
 
+/*--- AST - NODE ---*/
+
+typedef enum e_token
+{
+	TK_COMMAND,
+	TK_PIPE,
+	TK_REDIRECTION,
+	TK_BUILTIN
+}	t_token;
+
+typedef struct s_astnode
+{
+	t_token	type;
+	t_node	**envp;
+	union u_node_data
+	{
+		struct s_cmd
+		{
+			char	*command;
+			char	**args;
+		}	command;
+		struct s_pipe
+		{
+			struct s_astnode	*left;
+			struct s_astnode	*right;
+		}	pipe;
+		struct s_builtin
+		{
+			t_cid	cmd_id;
+			bool	option;
+			char	*args;
+		}	builtin;
+	}	data;	
+}	t_astnode;
+
 /*--- BUILTINS ---*/
 int		env(t_node **envp);
 int		export(t_node **envp, const char *variable, const char *value);
-int	unset(t_node **envp, const char *variable);
+int		unset(t_node **envp, const char *variable);
 #endif // !MINISHELL_H

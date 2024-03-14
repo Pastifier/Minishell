@@ -11,7 +11,7 @@ SRC :=  main.c list_utils.c \
 SRCS := $(addprefix srcs/, $(SRC))
 
 INC := minishell.h
-INCLUDES := $(addprefix include/, $(INC))
+INCLUDES := $(addprefix includes/, $(INC))
 
 # Rules
 
@@ -19,7 +19,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS) $(INCLUDES)
 	@make -C libft
-	$(CC) $(CFLAGS) -I include $(SRCS) -Llibft -Ilibft/includes -lft -o $@
+	$(CC) $(CFLAGS) -Iincludes $(SRCS) -Llibft -Ilibft/includes -lft -o $@
 
 clean :
 	@make -C libft clean
