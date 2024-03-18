@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/14 21:51:57 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/17 17:20:02 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,12 @@ typedef enum e_token
 {
 	TK_COMMAND,
 	TK_PIPE,
-	TK_REDIRECTION,
-	TK_BUILTIN
+	TK_LREDIR,
+	TK_RREDIR,
+	TK_LAPPEND,
+	TK_RAPPEND,
+	TK_BUILTIN,
+	TK_DOLLAR
 }	t_token;
 
 typedef struct s_astnode
