@@ -2,16 +2,20 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	char	*line;
 	t_node	*envl;
 
-	(void)argc; (void)argv; (void)envp;
+	(void)argc; (void)argv;
 	envl = NULL;
 	str_arr_dup_to_list(envp, &envl);
-	export(&envl, "fate=", "Inception");
-	export(&envl, "falafel=", "falafel");
-	export(&envl, "falafel=", "weed");
-	unset(&envl, "fate=");
-	env(&envl);
+	while (true)
+	{
+		line = readline("falafel:~$ ");
+		ft_putendl_fd("bruh.", STDOUT_FILENO);
+		rl_on_new_line();
+		add_history(line);
+		free(line);
+	}
 	list_destroy(&envl);
 	return (0);
 }

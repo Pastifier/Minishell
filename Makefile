@@ -19,7 +19,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS) $(INCLUDES)
 	@make -C libft
-	$(CC) $(CFLAGS) -Iincludes $(SRCS) -Llibft -Ilibft/includes -lft -o $@
+	$(CC) $(CFLAGS) -Iincludes $(SRCS) -Llibft -Ilibft/includes -lft -o $@ -lreadline -lcurses
 
 clean :
 	@make -C libft clean
