@@ -4,10 +4,11 @@ NAME := minishell
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
 
 SRC :=  main.c list_utils.c \
-		builtins_env.c builtins_unset.c
+		builtins_env.c builtins_cd.c \
+		builtins_echo.c builtins_pwd.c
 SRCS := $(addprefix srcs/, $(SRC))
 
 INC := minishell.h

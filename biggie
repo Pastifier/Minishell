@@ -1,0 +1,11 @@
+total 144
+-rw-r--r--  1 aalshafy  2023_abu-dhabi   1066 Mar 12 14:48 LICENSE
+-rw-r--r--  1 aalshafy  2023_abu-dhabi    576 Mar 18 13:40 Makefile
+-rw-r--r--  1 aalshafy  2023_abu-dhabi     29 Mar 12 14:48 README.md
+-rw-r--r--  1 aalshafy  2023_abu-dhabi      0 Mar 18 14:08 biggie
+drwxr-xr-x  3 aalshafy  2023_abu-dhabi    102 Mar 13 13:41 include
+drwxr-xr-x  9 aalshafy  2023_abu-dhabi    306 Mar 13 13:12 libft
+-rw-r--r--  1 aalshafy  2023_abu-dhabi    924 Mar 13 14:02 log
+-rwxr-xr-x  1 aalshafy  2023_abu-dhabi  54640 Mar 18 13:43 minishell
+drwxr-xr-x  3 aalshafy  2023_abu-dhabi    102 Mar 13 14:03 minishell.dSYM
+drwxr-xr-x  9 aalshafy  2023_abu-dhabi    306 Mar 13 13:56 srcs

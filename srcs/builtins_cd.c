@@ -1,17 +1,20 @@
 # include "minishell.h"
 
-int cd(char *path, char **envp)
+static int set_env(char *name, char *value, t_node **envp);
+static int add_env(char *name, char *value, t_node **envp);
+
+int cd(char *path, t_node **envp)
 {
     char *oldpwd;
     char *pwd;
+    // long arg_limit;
 
-    oldpwd = getcwd(NULL, 0);
+    oldpwd = getcwd(NULL, 0);    
     if (chdir(path) == -1)
     {
-        ft_putstr_fd("cd: ", 2);
-        ft_putstr_fd(path, 2);
+        perror("cd");
         ft_putstr_fd(": ", 2);
-        ft_putendl_fd("No such file or directory", 2);
+        ft_putendl_fd(path, 2);
         free(oldpwd);
         return (EXIT_FAILURE);
     }

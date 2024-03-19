@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/13 01:12:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:29:44 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "libft.h"
-
+# include <readline/readline.h>
+# include <readline/history.h>
 /*--- ERROR - CODES ---*/
 enum e_errnos
 {
@@ -61,6 +62,14 @@ enum e_builtins
 	EXIT
 };
 
+typedef struct s_token
+{
+	char 	*token_type;
+	char  	*value;
+	s_token	*next;
+	s_token	*prev;
+}	t_token;
+
 typedef struct s_cmd
 {
 	t_cid	cmd_id;
@@ -73,5 +82,8 @@ typedef struct s_cmd
 /*--- BUILTINS ---*/
 int		env(t_node **envp);
 int		export(t_node **envp, const char *variable, const char *value);
-int	unset(t_node **envp, const char *variable);
+int		unset(t_node **envp, const char *variable);
+int 	pwd(void);
+int 	cd(char *path, t_node **envp);
+int 	echo(char *str, int n_flag);
 #endif // !MINISHELL_H
