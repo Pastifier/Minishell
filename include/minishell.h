@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/18 14:29:44 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:36:24 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,42 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head);
 
 typedef unsigned short	t_cid;
 
-enum e_builtins
+typedef enum e_token
 {
-	ECHO = 0,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-};
+	TK_COMMAND,
+	TK_PIPE,
+	TK_LREDIR,
+	TK_RREDIR,
+	TK_LAPPEND,
+	TK_RAPPEND,
+	TK_BUILTIN,
+	TK_DOLLAR
+}	t_token;
+
+typedef struct s_astnode
+{
+	t_token	type;
+	t_node	**envp;
+	union u_node_data
+	{
+		struct s_command
+		{
+			char	*command;
+			char	**args;
+		}	command;
+		struct s_pipe
+		{
+			struct s_astnode	*left;
+			struct s_astnode	*right;
+		}	pipe;
+		struct s_builtin
+		{
+			t_cid	cmd_id;
+			bool	option;
+			char	*args;
+		}	builtin;
+	}	data;	
+}	t_astnode;
 
 typedef struct s_token
 {
