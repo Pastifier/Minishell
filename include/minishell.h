@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/21 17:36:24 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/23 14:40:33 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@
 # include <stdbool.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include "libft.h"
+# include "../libft/includes/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 /*--- ERROR - CODES ---*/
 enum e_errnos
 {
@@ -49,61 +50,77 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head);
 
 /*--- COMMAND - STRUCT ---*/
 
-typedef unsigned short	t_cid;
 
-typedef enum e_token
+typedef enum e_cid
 {
+	CD,
+	ECHO,
+	PWD,
+	ENV,
+	EXPORT,
+	UNSET,
+	EXIT,
+}	t_cid;
+
+typedef enum e_token_type
+{
+	TK_WORD,
 	TK_COMMAND,
+	TK_ARG,
+	TK_OPTION,
+	TK_EXEC,
 	TK_PIPE,
 	TK_LREDIR,
 	TK_RREDIR,
 	TK_LAPPEND,
 	TK_RAPPEND,
 	TK_BUILTIN,
-	TK_DOLLAR
-}	t_token;
+	TK_D_QUOTE,
+	TK_S_QUOTE,
+}	t_token_type;
 
 typedef struct s_astnode
 {
-	t_token	type;
-	t_node	**envp;
-	union u_node_data
+	t_token_type		type;
+	struct s_astnode	*parent;
+	struct s_astnode	*left;
+	struct s_astnode	*right;
+	union u_data
 	{
 		struct s_command
 		{
-			char	*command;
-			char	**args;
+			char **args
 		}	command;
-		struct s_pipe
+		struct s_redirection
 		{
-			struct s_astnode	*left;
-			struct s_astnode	*right;
-		}	pipe;
+			char	*filename;
+			int		fd;
+		}	redirection;
 		struct s_builtin
 		{
-			t_cid	cmd_id;
-			bool	option;
-			char	*args;
+			t_cid	id;
+			char	**args;
 		}	builtin;
-	}	data;	
+	} data;
 }	t_astnode;
 
 typedef struct s_token
 {
-	char 	*token_type;
-	char  	*value;
-	s_token	*next;
-	s_token	*prev;
+	t_token_type			token_type;
+	char					*value;
+	int						pasred;
+	struct s_token			*next;
+	struct s_token			*prev;
 }	t_token;
 
-typedef struct s_cmd
-{
-	t_cid	cmd_id;
-	char	*line;
-	t_split	command;
-	t_node	**envp;
-	t_node	**lnv;
-}	t_cmd;
+// typedef struct s_cmd
+// {
+// 	t_cid	cmd_id;
+// 	char	*line;
+// 	t_split	command;
+// 	t_node	**envp;
+// 	t_node	**lnv;
+// }	t_cmd;
 
 /*--- BUILTINS ---*/
 int		env(t_node **envp);
