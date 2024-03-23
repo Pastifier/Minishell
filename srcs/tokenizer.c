@@ -24,8 +24,8 @@ void	tokenize(char *line)
         new_token = token_create(tokens[i]);
         if (new_token == NULL)
         {
-            ft_free_strarr(tokens);
-            ft_destroy_token_list(&token_list); // need to implement this function
+            destory_str_arr(tokens);
+            destroy_tokens(&token_list); // need to implement this function
             return ;
         }
         token_list_append(&token_list, token_create(tokens[i]));

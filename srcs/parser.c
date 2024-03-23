@@ -1,4 +1,4 @@
-# include "minishell.h"
+# include "../include/minishell.h"
 
 /* 
 recursive decent parser:
@@ -16,69 +16,66 @@ which can then be used by other functions in this
 program to generate code and execute it.
 */
 
-void   parse(t_token *tokens)
+t_astnode   *parse(t_token *tokens)
 {
-    t_token *token;
+    t_token *token_list;
+    t_astnode *node;
     
-    token = tokens;
-    if (token->token_type == str)
-        parse_command(token);
-    else if (token->token_type == pipe)
-        parse_pipe(token);
-    else if (token->token_type == redirect)
-        parse_redirect(token);    
+    token_list = tokens;
+    if (token_list->token_type == TK_WORD)
+        node = parse_word(token_list, &node);
+    else if (token_list->token_type == TK_PIPE)
+        node = parse_pipe(token_list, &node);
+    else if (token_list->token_type == TK_LREDIR)
+        node = parse_lredirect(token_list);
+    else if (token_list->token_type == TK_RREDIR)
+        node = parse_rredirect(token_list);
+    else if (token_list->token_type == TK_D_QUOTE)
+        node = parse_dquote(token_list);
+    else if (token_list->token_type == TK_S_QUOTE)
+        node = parse_squote(token_list);
     else
         error("syntax error");
-    if (token->next != NULL)
-        parse(token->next);
+    if (token_list->next != NULL)
+        node = parse(token_list->next);
 }
 
 // parse_command will be called when the token type is command
 // it will take the token as input and it should return a pointer 
 // to the parse tree for the command
 
-t_astnode *parse_command(t_token *token)
+t_astnode *parse_word(t_token **token_list, t_astnode **node)
 {
-    t_astnode *node;
-    t_astnode *args;
-    t_astnode *command;
+    t_astnode *new_node;
     
-    node = (t_astnode *)malloc(sizeof(t_astnode));
-    if (node == NULL)
+    new_node = (t_astnode *)malloc(sizeof(t_astnode));
+    if (new_node == NULL)
         error("malloc failed");
-    node->type = command;
-    command = (t_astnode *)malloc(sizeof(t_astnode));
-    if (command == NULL)
-        error("malloc failed");
-    fill_command_node(node, token);
-    // command->type = put_command_type(token->value);
-    // command->command = token->value;
-    // args = parse_args(token->next);
-    // node->command = command;
-    // node->args = args;
-    return (node);
+    new_node->data.builtin.id = get_builtin_id(token_list);
+    if (!new_node->data.builtin.id)
+    {
+        new_node->type = TK_EXEC;
+        new_node->data.command.args = get_command_args(token_list);
+        if (!new_node->data.command.args)
+            destory_parser(token_list, node);
+        return ;
+    }
+    new_node->type = TK_BUILTIN;
+    new_node->data.builtin.args = get_command_args(token_list);
+    if (!new_node->data.builtin.args)
+        destory_parser(token_list, node);
+    if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)
+        destory_parser(token_list, node);
+    // need to make the pointer to the next token and to the partent node
+    return (new_node);
 }
 
 // fill command node will be called in parse_command it will take the node and token as input
 // it will check the command type and parse the command accordingly to its grammer rules
 // and fill the node with the parsed data or destory the tree and exit if there is a syntax error
 
-void fill_command_node(t_astnode *node, t_token *token)
-{
-    if (strcmp(command, "echo") == 0) // need to edit the case
-        parse_echo(node, token); // check for echo args
-    else if (strcmp(command, "cd") == 0) // work in small only
-        parse_cd(node, token); // check for cd args and grammer rules "cd untitled\ folder/ echo ahmed && echo hello"
-    else if (strcmp(command, "pwd") == 0) // need to edit the case
-        parse_pwd(node, token); // check for pwd args and grammer rules
-    else if (strcmp(command, "export") == 0)
-        parse_export(node, token);
-    else if (strcmp(command, "unset") == 0)
-        parse_unset(node, token);
-    else if (strcmp(command, "env") == 0)
-        parse_env(node, token);
-    else if (strcmp(command, "exit") == 0)
-        parse_exit(node, token);
-    else
-        parse_exc(node, token);
-}
+// 23-3 added parse builtins function to parse the builtins
+// need to check if other command can added to the parse builtins function
+// or if we need to create a new function for each command
+// also need to check for exit errors
+
