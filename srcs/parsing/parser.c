@@ -18,26 +18,27 @@ program to generate code and execute it.
 
 t_astnode   *parse(t_token *tokens)
 {
-    t_token *token_list;
+    t_token **token_list;
     t_astnode *node;
     
-    token_list = tokens;
-    if (token_list->token_type == TK_WORD)
+    token_list = &tokens;
+    if ((*token_list)->token_type == TK_WORD)
         node = parse_word(token_list, &node);
-    else if (token_list->token_type == TK_PIPE)
+    else if ((*token_list)->token_type == TK_PIPE)
         node = parse_pipe(token_list, &node);
-    else if (token_list->token_type == TK_LREDIR)
+    else if ((*token_list)->token_type == TK_LREDIR)
         node = parse_lredirect(token_list);
-    else if (token_list->token_type == TK_RREDIR)
+    else if ((*token_list)->token_type == TK_RREDIR)
         node = parse_rredirect(token_list);
-    else if (token_list->token_type == TK_D_QUOTE)
+    else if ((*token_list)->token_type == TK_D_QUOTE)
         node = parse_dquote(token_list);
-    else if (token_list->token_type == TK_S_QUOTE)
+    else if ((*token_list)->token_type == TK_S_QUOTE)
         node = parse_squote(token_list);
     else
         error("syntax error");
-    if (token_list->next != NULL)
-        node = parse(token_list->next);
+    if ((*token_list)->next != NULL)
+        node = parse((*token_list)->next);
+    return (node);
 }
 
 // parse_command will be called when the token type is command
@@ -79,3 +80,25 @@ t_astnode *parse_word(t_token **token_list, t_astnode **node)
 // or if we need to create a new function for each command
 // also need to check for exit errors
 
+// parse_pipe will be called when the token type is pipe it will take the token as input
+// and check for the tree head must be a command node or a pipe node and the next node must be a command node
+
+t_astnode *parse_pipe(t_token **token_list, t_astnode **node)
+{
+    t_astnode *new_node;
+    t_astnode *left;
+    t_astnode *right;
+
+    if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
+        && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_COMMAND)
+        destory_parser(token_list, node);
+    new_node = (t_astnode *)malloc(sizeof(t_astnode));
+    if (new_node == NULL)
+        destory_parser(token_list, node);
+    new_node->type = TK_PIPE;
+    new_node->left = *node;
+    new_node->right = parse_command((*token_list)->next);
+    if (new_node->right == NULL)
+        destory_parser(token_list, node);
+    return (new_node);
+}

@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/23 14:40:33 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:28:27 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,11 @@ typedef struct s_token
 // 	t_node	**envp;
 // 	t_node	**lnv;
 // }	t_cmd;
+
+/*Main usage functions*/
+t_astnode *parse(t_token *tokens);
+void	print_ast(t_astnode *ast);
+
 
 /*--- BUILTINS ---*/
 int		env(t_node **envp);

@@ -1,4 +1,4 @@
-# include "minishell.h"
+# include "../include/minishell.h"
 
 /*
  minishell tokenizer:
@@ -7,15 +7,18 @@
     3- call the parser to parse the tokens  
 */
 
-void	tokenize(char *line)
+t_astnode	*tokenize(char *line)
 {
     t_token     *token_list;
     t_token     *new_token;
-    char	    **tokens;
+    t_split	        split;
+    char        **tokens;
+    t_astnode      *ast;
     int		i;
 
     token_list = NULL;
-    tokens = ft_split(line, ' ');
+    split = ft_split(line, " |><&");
+    tokens = split.array;
     if (tokens == NULL)
         return ;
     i = 0;
@@ -31,10 +34,10 @@ void	tokenize(char *line)
         token_list_append(&token_list, token_create(tokens[i]));
         i++;
     }
-    ft_free_strarr(tokens); // need to implement this function
-    token_type(&token_list);
+    destory_str_arr(tokens); 
+    token_type(&token_list); // need to recheck for ||, &&, <<, >>
     // call the parser to parse the tokens
-    // parser(token_list);
+    ast = parse(&token_list);
 }
     
 
