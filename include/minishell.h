@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/25 17:28:27 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/25 19:28:58 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,19 @@ typedef struct s_token
 /*Main usage functions*/
 t_astnode *parse(t_token *tokens);
 void	print_ast(t_astnode *ast);
+
+/*--- PARSING - UTILS ---*/
+char **get_command_args(t_token **token);
+char *ft_str_toupper(char *str);
+t_cid get_builtin_id(t_token **token);
+void destory_str_arr(char **str_arr);
+void destory_token(t_token *token);
+void destroy_ast(t_astnode *node);
+void destroy_parser(t_token **token, t_astnode **node);
+t_astnode   *parse(t_token *tokens);
+t_astnode *parse_word(t_token **token_list, t_astnode **node);
+t_astnode *parse_pipe(t_token **token_list, t_astnode **node);
+
 
 
 /*--- BUILTINS ---*/

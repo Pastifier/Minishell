@@ -101,19 +101,19 @@ static void determine_token_type(t_token **token)
 }
 
 // destroy the token list
-static void	ft_destroy_token_list(t_token **head)
-{
-    t_token	*temp;
-    t_token	*iter;
+// static void	ft_destroy_token_list(t_token **head)
+// {
+//     t_token	*temp;
+//     t_token	*iter;
 
-    if (!head)
-        return ;
-    iter = *head;
-    while (iter)
-    {
-        temp = iter;
-        iter = iter->next;
-        free(temp);
-    }
-    *head = NULL;
-}
+//     if (!head)
+//         return ;
+//     iter = *head;
+//     while (iter)
+//     {
+//         temp = iter;
+//         iter = iter->next;
+//         free(temp);
+//     }
+//     *head = NULL;
+// }
