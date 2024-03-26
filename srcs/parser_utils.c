@@ -7,7 +7,7 @@ char **get_command_args(t_token **token)
     int i;
 
     i = 0;
-    temp = token;
+    temp = *token;
     while (temp && temp->token_type == TK_WORD)
     {
         i++;
@@ -21,11 +21,11 @@ char **get_command_args(t_token **token)
     {
         args[i] = ft_strdup(temp->value);
         if (!args[i])
-            return (destory_str_arr(args), NULL);
+            return (destroy_str_arr(args), NULL);
         i++;
         temp = temp->next;
     }
-    return (args[i] = NULL, token = temp, args);
+    return (args[i] = NULL, token = &temp, args);
 }
 
 char *ft_str_toupper(char *str)

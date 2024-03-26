@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/25 19:28:58 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:28:12 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ typedef enum e_token_type
 	TK_BUILTIN,
 	TK_D_QUOTE,
 	TK_S_QUOTE,
+	TK_ENV,
+	TK_OR,
+	TK_AND,
 }	t_token_type;
 
 typedef struct s_astnode
@@ -89,7 +92,7 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			char **args
+			char **args;
 		}	command;
 		struct s_redirection
 		{
@@ -123,15 +126,15 @@ typedef struct s_token
 // }	t_cmd;
 
 /*Main usage functions*/
-t_astnode *parse(t_token *tokens);
+t_astnode	*tokenize(char *line);
 void	print_ast(t_astnode *ast);
 
 /*--- PARSING - UTILS ---*/
 char **get_command_args(t_token **token);
 char *ft_str_toupper(char *str);
 t_cid get_builtin_id(t_token **token);
-void destory_str_arr(char **str_arr);
-void destory_token(t_token *token);
+void destroy_str_arr(char **str_arr);
+void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
 t_astnode   *parse(t_token *tokens);
@@ -147,4 +150,9 @@ int		unset(t_node **envp, const char *variable);
 int 	pwd(void);
 int 	cd(char *path, t_node **envp);
 int 	echo(char *str, int n_flag);
+
+
+/*TEMPRORTY DEBUGGING FUNCTIONS */
+void	print_tokens(t_token **token);
+void	print_array(char **array);
 #endif // !MINISHELL_H
