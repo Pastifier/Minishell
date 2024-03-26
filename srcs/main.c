@@ -35,6 +35,7 @@ void print_ast(t_astnode *ast)
 {
 	if (ast == NULL)
 		return ;
+	printf("type: %d\n", ast->type);
 	if (ast->type == TK_COMMAND)
 	{
 		printf("command: %s\n", ast->data.command.args[0]);

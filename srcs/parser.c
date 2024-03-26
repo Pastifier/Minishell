@@ -16,18 +16,38 @@ which can then be used by other functions in this
 program to generate code and execute it.
 */
 
-t_astnode   *parse(t_token *tokens)
+t_astnode   *parse(t_token *tokens_iter)
 {
-    t_token **token_list;
     t_astnode *node;
+
+    if (tokens_iter->token_type == TK_WORD)
+        node = parse_word(&tokens_iter, &node);
+    else if (tokens_iter->token_type == TK_PIPE)
+        node = parse_pipe(&tokens_iter, &node);
+    // else if (tokens_iter->token_type == TK_LREDIR)
+    //     node = parse_lredirect(&tokens_iter);
+    // else if (tokens_iter->token_type == TK_RREDIR)
+    //     node = parse_rredirect(&tokens_iter);
+    // else if (tokens_iter->token_type == TK_D_QUOTE)
+    //     node = parse_dquote(&tokens_iter);
+    // else if (tokens_iter->token_type == TK_S_QUOTE)
+    //     node = parse_squote(&tokens_iter);
+    else
+        printf("syntax error\n"); // need to change this to destroy the tree and exit
+    if (tokens_iter->next != NULL)
+    {
+        printf("next token type: %d\n", tokens_iter->next->token_type);
+        node = parse(tokens_iter->next);
+    }
+    return (node);
+}
     
-    token_list = &tokens;
-    printf("parse\n");
-    printf("token type: %d\n", (*token_list)->token_type);
-    if ((*token_list)->token_type == TK_WORD)
-        node = parse_word(token_list, &node);
-    else if ((*token_list)->token_type == TK_PIPE)
-        node = parse_pipe(token_list, &node);
+    // printf("parse\n");
+    // printf("token type: %d\n", (*token_list)->token_type);
+    // if ((*token_list)->token_type == TK_WORD)
+    //     node = parse_word(&token_list, &node);
+    // else if ((*token_list)->token_type == TK_PIPE)
+    //     node = parse_pipe(&token_list, &node);
     // else if ((*token_list)->token_type == TK_LREDIR)
     //     node = parse_lredirect(token_list);
     // else if ((*token_list)->token_type == TK_RREDIR)
@@ -36,12 +56,12 @@ t_astnode   *parse(t_token *tokens)
     //     node = parse_dquote(token_list);
     // else if ((*token_list)->token_type == TK_S_QUOTE)
     //     node = parse_squote(token_list);
-    else
-        printf("syntax error\n"); // need to change this to destroy the tree and exit
-    if ((*token_list)->next != NULL)
-        node = parse((*token_list)->next);
-    return (node);
-}
+    // else
+    //     printf("syntax error\n"); // need to change this to destroy the tree and exit
+    // if ((*token_list)->next != NULL)
+    //     node = parse(token_list->next);
+    // return (node);
+
 
 // parse_command will be called when the token type is command
 // it will take the token as input and it should return a pointer 
