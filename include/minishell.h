@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/26 15:28:12 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/03/27 14:45:41 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,22 @@ typedef enum e_cid
 
 typedef enum e_token_type
 {
-	TK_WORD,
-	TK_COMMAND,
-	TK_ARG,
-	TK_OPTION,
-	TK_EXEC,
-	TK_PIPE,
-	TK_LREDIR,
-	TK_RREDIR,
-	TK_LAPPEND,
-	TK_RAPPEND,
-	TK_BUILTIN,
-	TK_D_QUOTE,
-	TK_S_QUOTE,
-	TK_ENV,
-	TK_OR,
-	TK_AND,
+	TK_WORD,        // 0
+	TK_COMMAND,     // 1
+	TK_ARG,			 // 2
+	TK_OPTION,		// 3	
+	TK_EXEC,		 // 4
+	TK_PIPE,  		// 5	
+	TK_LREDIR,		 // 6
+	TK_RREDIR,		// 7		
+	TK_LAPPEND,		 // 8
+	TK_RAPPEND,		 // 9
+	TK_BUILTIN,		 // 10
+	TK_D_QUOTE,		 // 11
+	TK_S_QUOTE,		// 12	
+	TK_ENV,			 // 13
+	TK_OR,			 // 14
+	TK_AND,			 // 15
 }	t_token_type;
 
 typedef struct s_astnode
@@ -137,9 +137,9 @@ void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
-t_astnode   *parse(t_token *tokens);
-t_astnode *parse_word(t_token **token_list, t_astnode **node);
-t_astnode *parse_pipe(t_token **token_list, t_astnode **node);
+t_astnode   *parse(t_token **tokens_iter);
+t_astnode **parse_word(t_token **token_list, t_astnode **node);
+t_astnode **parse_pipe(t_token **token_list, t_astnode **node);
 
 
 
