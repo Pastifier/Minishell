@@ -23,7 +23,10 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line) ;
 			ast = tokenize(line);
 			if (ast != NULL)
-				print_ast(ast);
+			{
+				printf("MAIN AST:\n");
+				// print_ast(ast);
+			}
 		}
 		free(line);
 	}

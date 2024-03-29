@@ -2,6 +2,7 @@
 NAME := minishell
 
 # Necessities
+# -L/usr/lib/x86_64-linux-gnu 
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline

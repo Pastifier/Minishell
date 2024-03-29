@@ -25,7 +25,7 @@ t_astnode	*tokenize(char *line)
     // print_tokens(&token_list);
     // call the parser to parse the tokens
     iter = token_list;
-    ast = parse(&iter);
+    ast = parse(&iter, &ast);
     return (ast);
 }
     
