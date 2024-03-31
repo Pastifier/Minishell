@@ -5,7 +5,9 @@ NAME := minishell
 # -L/usr/lib/x86_64-linux-gnu 
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3
+
+LIBS := -Llibft -Ilibft/includes -lft -lreadline
 
 SRC :=  main.c list_utils.c \
 		builtins_env.c builtins_cd.c \
@@ -24,7 +26,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS) $(INCLUDES)
 	@make -C libft
-	$(CC) $(CFLAGS) -I include $(SRCS) -Llibft -Ilibft/includes -lft -o $@
+	$(CC) $(CFLAGS) -Iinclude $(SRCS) $(LIBS) -o $@
 
 clean :
 	@make -C libft clean
