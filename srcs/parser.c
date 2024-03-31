@@ -33,7 +33,7 @@ t_astnode   *parse(t_token **tokens_iter, t_astnode **node)
     //     node = parse_squote(&tokens_iter);
     else
         printf("syntax error\n"); // need to change this to destroy the tree and exit
-    if ((*tokens_iter)->next != NULL)
+    if (*tokens_iter && (*tokens_iter)->next != NULL)
     {
         *tokens_iter = (*tokens_iter)->next;
         // printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
@@ -50,26 +50,27 @@ void parse_word(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
     
-    printf("parse_word: %s\n", (*token_list)->value);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         printf("malloc error\n"); // need to change this to destroy the tree and exit
     *node = new_node;
     new_node->data.builtin.id = get_builtin_id(token_list);
+	
+	// What is this????
     if (!new_node->data.builtin.id)
     {
         new_node->type = TK_EXEC;
         new_node->data.command.args = get_command_args(token_list);
         printf("command args DONE: %s - type: %d\n", new_node->data.command.args[0], new_node->type);
-        printf("????????" );
         if (!new_node->data.command.args)
             destroy_parser(token_list, node); // need to free the new_node
         return ;
     }
+
     new_node->type = TK_BUILTIN;
     new_node->data.builtin.args = get_command_args(token_list);
-    printf("command args: %s\n", new_node->data.builtin.args[0]);
-    printf("new_token: %s\n", (*token_list)->value);
+    // printf("new_token: %s\n", (*token_list)->value);
+    // printf("command args: %s\n", new_node->data.builtin.args[0]);
     if (!new_node->data.builtin.args)
         destroy_parser(token_list, node);
     if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)

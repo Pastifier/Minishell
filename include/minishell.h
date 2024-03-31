@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/31 11:33:09 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/03/31 13:55:55 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ typedef struct s_token
 {
 	t_token_type			token_type;
 	char					*value;
-	int						pasred;
 	struct s_token			*next;
 	struct s_token			*prev;
 }	t_token;

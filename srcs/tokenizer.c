@@ -15,7 +15,7 @@ static void add_char_token(t_token **token_list, char *line, unsigned int *i);
 t_astnode	*tokenize(char *line)
 {
     t_token     *token_list;
-    t_astnode      *ast;
+    t_astnode   *ast;
     t_token     *iter;
 
     token_list = token_ex(line);
@@ -25,7 +25,7 @@ t_astnode	*tokenize(char *line)
     // print_tokens(&token_list);
     // call the parser to parse the tokens
     iter = token_list;
-    ast = parse(&iter, &ast);
+	parse(&iter, &ast);
     return (ast);
 }
     

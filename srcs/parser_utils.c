@@ -8,13 +8,12 @@ char **get_command_args(t_token **token)
 
     i = 0;
     temp = (*token)->next;
-    // printf("temp_token: %s\n", temp->value);
     while (temp && temp->token_type == TK_WORD)
     {
         i++;
         temp = temp->next;
     }
-    args = (char **)malloc(sizeof(char *) * (i + 1));
+	args = ft_calloc(i + 1, sizeof(char *));
     if (!args)
         return (NULL);
     temp = (*token)->next;
@@ -27,8 +26,7 @@ char **get_command_args(t_token **token)
         i++;
         temp = temp->next;
     }
-    printf("args[0]: %s\n", args[0]);
-    return (args[i] = NULL, *token = temp, args);
+    return (*token = temp, args);
 }
 
 char *ft_str_toupper(char *str)
