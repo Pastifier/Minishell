@@ -4,6 +4,15 @@ Minishell is a 42 project where you have to create a simple bash interpreter wit
 - Redirections.
 - Piping.
 - Command execution.
+- Handling of the SIGINT, EOF/SIGQUIT, SIGQUIT behaviours (using signals).
+- Implementing:
+    ◦ echo with option -n
+    ◦ cd with only a relative or absolute path
+    ◦ pwd with no options
+    ◦ export with no options
+    ◦ unset with no options
+    ◦ env with no options or arguments
+    ◦ exit with no options
 - `$` (dollar-sign) expansion of variable expressions (only expansion of environment variables is required).
 - BONUS: handling `&&` and `||` with parentheses for priority.
 
