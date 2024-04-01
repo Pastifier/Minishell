@@ -9,10 +9,10 @@ Minishell is a 42 project where you have to create a simple bash interpreter wit
 
 ## The program's main structure:
 
-### Tokenizer:
+## Tokenizer:
     - Reading the line -> return the user input as a string.
     - tokenization -> make a list/queue/stack of tokens that you can arrange in abstract-form to feed your interpreter/proccessor.
-### Tokens -> parser:
+## Tokens -> parser:
     - Parse every token and ensure that it is valid in its syntax and its grammar.
     - Create an Abstract Syntax Tree (commonly referred to as AST) that represents the code in a simple hierarchical structure.
     -> return the tree
@@ -32,7 +32,7 @@ $> WORD1 | WORD2 > WORD3
 ```
 ### The parsing step is where all the syntax is checked for. A syntax error will stop the ongoing operation and will return an error!
     
-### AST -> Interpreter/Processor: execute the commands on the tree
+## AST -> Interpreter/Processor: execute the commands on the tree
     - Do a recursive, post-order depth-first search on the tree until you reach a leaf node.
     - Use `fork(2)` and `execve(2)` to execute commands.
     - Upon failure, check whether the commands are builtins. If so, go to the builtin behaviour of those commands.
