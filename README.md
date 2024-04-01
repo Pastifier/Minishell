@@ -6,7 +6,7 @@ Minishell is a 42 project where you have to create a simple bash interpreter wit
 - Command execution.
 - Handling of the SIGINT, EOF/SIGQUIT, SIGQUIT behaviours (using signals).
 - Implementing:
-    ◦ echo with option -n
+    ◦ echo with option -n\n
     ◦ cd with only a relative or absolute path
     ◦ pwd with no options
     ◦ export with no options
