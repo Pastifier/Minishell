@@ -15,6 +15,7 @@ Minishell is a 42 project where you have to create a simple bash interpreter wit
 - exit with no options
 - `$` (dollar-sign) expansion of variable expressions (only expansion of environment variables is required).
 - BONUS: handling `&&` and `||` with parentheses for priority.
+- BONUS: Wildcards should work for the current directory.
 
 ## The program's main structure:
 
