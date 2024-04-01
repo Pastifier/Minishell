@@ -1,20 +1,43 @@
 # Minishell
-Ahmed and Emran!
 
-## the program main structure:
+Minishell is a 42 project where you have to create a simple bash interpreter with the following features:
+- Redirections.
+- Piping.
+- Command execution.
+- `$` (dollar-sign) expansion of variable expressions (only expansion of environment variables is required).
+- BONUS: handling `&&` and `||` with parentheses for priority.
 
-- Reading the line -> return the user input as  a string.
-- String line -> tokenization split the line by spaces -> return token-list and specify every token type
-### token list -> parser: 
-    - Parse every token and ensure that it is valid in its syntax and its grammer
-    - Put every command in its location in the tree
+## The program's main structure:
+
+### Tokenizer:
+    - Reading the line -> return the user input as a string.
+    - tokenization -> make a list/queue/stack of tokens that you can arrange in abstract-form to feed your interpreter/proccessor.
+### Tokens -> parser:
+    - Parse every token and ensure that it is valid in its syntax and its grammar.
+    - Create an Abstract Syntax Tree (commonly referred to as AST) that represents the code in a simple hierarchical structure.
     -> return the tree
-### tree -> execution: execute the commands on the tree
+#### Example:
+```sh
+$> WORD1 | WORD2 > WORD3
+```
+    Will return this tree:
+```
+                                      ( REDIRECT_OUTPUT )
+                                    /                    \
+                                   /                      \
+                             ( PIPE )                   ( WORD3 )
+                            /        \
+                           /          \
+                      ( WORD1 )      ( WORD2 )
+```
+### The parsing step is where all the syntax is checked for. A syntax error will stop the ongoing operation and will return an error!
+    
+### AST -> Interpreter/Processor: execute the commands on the tree
     - Do a recursive, post-order depth-first search on the tree until you reach a leaf node.
     - Use `fork(2)` and `execve(2)` to execute commands.
     - Upon failure, check whether the commands are builtins. If so, go to the builtin behaviour of those commands.
     - The recursion will naturally resolve all tree nodes in ascending order.
-## Example:
+#### Example:
 ```sh
 $> WORD1 | WORD2 > WORD3
 
