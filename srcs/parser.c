@@ -16,13 +16,20 @@ which can then be used by other functions in this
 program to generate code and execute it.
 */
 
-t_astnode   *parse(t_token **tokens_iter, t_astnode **node)
+void   parse(t_token **tokens_iter, t_astnode **node)
 
 {
+    // printf("parse: token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
     if ((*tokens_iter)->token_type == TK_WORD)
+    {
         parse_word(tokens_iter, node);
+        // printf("node type: %d\n", (*node)->type);
+    }
     else if ((*tokens_iter)->token_type == TK_PIPE)
+    {
         parse_pipe(tokens_iter, node);
+        // printf("node type: %d\n", (*node)->type);
+    }
     // else if (tokens_iter->token_type == TK_LREDIR)
     //     node = parse_lredirect(&tokens_iter);
     // else if (tokens_iter->token_type == TK_RREDIR)
@@ -37,9 +44,9 @@ t_astnode   *parse(t_token **tokens_iter, t_astnode **node)
     {
         *tokens_iter = (*tokens_iter)->next;
         // printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
+        // printf("node type: %d\n", (*node)->type);
         parse(tokens_iter, node);
     }
-    return (*node);
 }
 
 // parse_command will be called when the token type is command
@@ -55,13 +62,10 @@ void parse_word(t_token **token_list, t_astnode **node)
         printf("malloc error\n"); // need to change this to destroy the tree and exit
     *node = new_node;
     new_node->data.builtin.id = get_builtin_id(token_list);
-	
-	// What is this????
     if (!new_node->data.builtin.id)
     {
         new_node->type = TK_EXEC;
         new_node->data.command.args = get_command_args(token_list);
-        printf("command args DONE: %s - type: %d\n", new_node->data.command.args[0], new_node->type);
         if (!new_node->data.command.args)
             destroy_parser(token_list, node); // need to free the new_node
         return ;
@@ -69,8 +73,6 @@ void parse_word(t_token **token_list, t_astnode **node)
 
     new_node->type = TK_BUILTIN;
     new_node->data.builtin.args = get_command_args(token_list);
-    // printf("new_token: %s\n", (*token_list)->value);
-    // printf("command args: %s\n", new_node->data.builtin.args[0]);
     if (!new_node->data.builtin.args)
         destroy_parser(token_list, node);
     if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)
@@ -94,7 +96,7 @@ void parse_pipe(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    printf("parse_pipe %s\n", (*token_list)->value);
+    // printf("parse_pipe %s\n", (*token_list)->value);
     if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
         && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
         destroy_parser(token_list, node);
@@ -104,12 +106,12 @@ void parse_pipe(t_token **token_list, t_astnode **node)
     new_node->type = TK_PIPE;
     new_node->left = *node;
 
-    node = &new_node;
+    *node = new_node;
     // print_ast(new_node->left);
     *token_list = (*token_list)->next;
     parse_word(token_list, &new_node->right);
     if (new_node->right == NULL)
         destroy_parser(token_list, node);
-    printf("PIPE DONE\n");
+    // printf("PIPE DONE\n");
     return;
 }

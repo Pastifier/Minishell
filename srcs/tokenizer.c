@@ -22,6 +22,7 @@ t_astnode	*tokenize(char *line)
     if (token_list == NULL)
         return (NULL);
     determine_token_type(&token_list); // need to recheck for ||, &&, <<, >>
+    // printf("tokens:\n");
     // print_tokens(&token_list);
     // call the parser to parse the tokens
     iter = token_list;

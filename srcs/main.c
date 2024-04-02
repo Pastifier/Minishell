@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 			if (ast != NULL)
 			{
 				printf("MAIN AST:\n");
-				// print_ast(ast);
+				print_ast(ast);
 			}
 		}
 		free(line);

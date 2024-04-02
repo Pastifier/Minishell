@@ -51,6 +51,7 @@ void print_ast(t_astnode *ast)
 	{
 		printf("exec: %s\n", ast->data.command.args[0]);
 	}
+	
 }
 
 

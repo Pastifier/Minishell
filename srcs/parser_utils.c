@@ -26,7 +26,9 @@ char **get_command_args(t_token **token)
         i++;
         temp = temp->next;
     }
-    return (*token = temp, args);
+    args[i] = NULL;
+    (*token)->next = temp;
+    return (args);
 }
 
 char *ft_str_toupper(char *str)
