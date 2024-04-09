@@ -72,6 +72,6 @@ void traverse(ASTNode *node)
 }
 ```
 Will traverse the tree from the top, going down until it reaches a leaf. Notice how each node in the tree has its special action, and that all leaf-nodes are words.
-In this simple case, the program will reach the left child of the `PIPE` node. Will check for its parent's special behaviour, execute accordingly, and resolve that branch of the tree. After those nodes are eliminated (by whichever method you choose), it will fetch the output of `WORD2` in redirect it to `WORD3`.
+In this simple case, the program will reach the left child of the `PIPE` node. Will check for its parent's special behaviour, execute accordingly, and resolve that branch of the tree. After those nodes are eliminated (by whichever method you choose), it will fetch the output of `WORD2` and redirect it to `WORD3`.
 
 ### Execution is where all the checks for existing commands, files, and access rights are done. The input can literally be the example above, and it will still get to the execution part. Why? Because it is syntactically correct.
