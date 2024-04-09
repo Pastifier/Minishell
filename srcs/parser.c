@@ -19,17 +19,10 @@ program to generate code and execute it.
 void   parse(t_token **tokens_iter, t_astnode **node)
 
 {
-    // printf("parse: token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
     if ((*tokens_iter)->token_type == TK_WORD)
-    {
         parse_word(tokens_iter, node);
-        // printf("node type: %d\n", (*node)->type);
-    }
     else if ((*tokens_iter)->token_type == TK_PIPE)
-    {
         parse_pipe(tokens_iter, node);
-        // printf("node type: %d\n", (*node)->type);
-    }
     // else if (tokens_iter->token_type == TK_LREDIR)
     //     node = parse_lredirect(&tokens_iter);
     // else if (tokens_iter->token_type == TK_RREDIR)
@@ -80,15 +73,6 @@ void parse_word(t_token **token_list, t_astnode **node)
     return;
 }
 
-// fill command node will be called in parse_command it will take the node and token as input
-// it will check the command type and parse the command accordingly to its grammer rules
-// and fill the node with the parsed data or destroy the tree and exit if there is a syntax error
-
-// 23-3 added parse builtins function to parse the builtins
-// need to check if other command can added to the parse builtins function
-// or if we need to create a new function for each command
-// also need to check for exit errors
-
 // parse_pipe will be called when the token type is pipe it will take the token as input
 // and check for the tree head must be a command node or a pipe node and the next node must be a command node
 
@@ -96,7 +80,6 @@ void parse_pipe(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    // printf("parse_pipe %s\n", (*token_list)->value);
     if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
         && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
         destroy_parser(token_list, node);
@@ -104,14 +87,46 @@ void parse_pipe(t_token **token_list, t_astnode **node)
     if (new_node == NULL)
         destroy_parser(token_list, node);
     new_node->type = TK_PIPE;
+    (*node)->parent = new_node;
     new_node->left = *node;
-
     *node = new_node;
-    // print_ast(new_node->left);
     *token_list = (*token_list)->next;
     parse_word(token_list, &new_node->right);
     if (new_node->right == NULL)
         destroy_parser(token_list, node);
-    // printf("PIPE DONE\n");
+    new_node->right->parent = new_node;
+    return;
+}
+/*
+parse_rredir will be called when the token type is rredir
+it will take the token as input and check for the tree head must be
+    - command node
+    - pipe node
+    - rredir node
+    and the next node must be a word node
+creat a new node and set the type to rredir
+set the left child to the tree head
+set the right child to the next node
+*/
+
+void parse_rredir(t_token **token_list, t_astnode **node)
+{
+    t_astnode *new_node;
+
+    if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
+        && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
+        destroy_parser(token_list, node);
+    new_node = (t_astnode *)malloc(sizeof(t_astnode));
+    if (new_node == NULL)
+        destroy_parser(token_list, node);
+    new_node->type = TK_RREDIR;
+    (*node)->parent = new_node;
+    new_node->left = *node;
+    *node = new_node;
+    *token_list = (*token_list)->next;
+    parse_word(token_list, &new_node->right);
+    if (new_node->right == NULL)
+        destroy_parser(token_list, node);
+    new_node->right->parent = new_node;
     return;
 }

@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/02 17:49:14 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:42:15 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,11 @@ void destroy_parser(t_token **token, t_astnode **node);
 void   parse(t_token **tokens_iter, t_astnode **node);
 void parse_word(t_token **token_list, t_astnode **node);
 void parse_pipe(t_token **token_list, t_astnode **node);
+void parse_rredir(t_token **token_list, t_astnode **node);
+void parse_lredir(t_token **token_list, t_astnode **node);
+void parse_lappend(t_token **token_list, t_astnode **node);
+void parse_rappend(t_token **token_list, t_astnode **node);
+
 
 
 
