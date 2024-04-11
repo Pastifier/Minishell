@@ -13,6 +13,10 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("falafel:~$ ");
 		ft_putendl_fd("bruh.", STDOUT_FILENO);
 		rl_on_new_line();
+		// if (!parser())
+		//		free(line), continue ;
+		// if (!interpreter())
+		//		free(line), free(tree), continue ;
 		add_history(line);
 		free(line);
 	}
