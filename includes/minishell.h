@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/18 05:04:21 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 02:05:25 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,56 +62,51 @@ typedef enum e_builtins
 	EXIT
 }	t_cid;
 
-typedef struct s_cmd
-{
-	t_cid	cmd_id;
-	char	*line;
-	t_split	command;
-	t_node	**envp;
-	t_node	**lnv;
-}	t_cmd;
-
 /*--- AST - NODE ---*/
 
 typedef enum e_token
 {
-	TK_COMMAND,
+	TK_WORD,
 	TK_PIPE,
 	TK_LREDIR,
 	TK_RREDIR,
 	TK_LAPPEND,
 	TK_RAPPEND,
 	TK_BUILTIN,
-	TK_DOLLAR
+	TK_DOLLAR,
+	TK_LPAREN,
+	TK_RPAREN,
+	TK_AND,
+	TK_OR
 }	t_token;
 
 typedef struct s_astnode
 {
-	t_token	type;
-	t_node	**envp;
-	union u_node_data
+	t_token				type;
+	struct s_astnode	*parent;
+	struct s_astnode	*left;
+	struct s_astnode	*right;
+	union u_data
 	{
 		struct s_command
 		{
-			char	*command;
-			char	**args;
+			char **args;
 		}	command;
-		struct s_pipe
+		struct s_redirection
 		{
-			struct s_astnode	*left;
-			struct s_astnode	*right;
-		}	pipe;
+			char	*filename;
+			int		fd;
+		}	redirection;
 		struct s_builtin
 		{
-			t_cid	cmd_id;
-			bool	option;
-			char	*args;
+			t_cid	id;
+			char	**args;
 		}	builtin;
-	}	data;	
+	} data;
 }	t_astnode;
 
 /*--- BUILTINS ---*/
 int		env(t_node **envp);
-int		export(t_node **envp, const char *variable, const char *value);
+int		bltin_export(t_node **envp, const char *variable, const char *value);
 int		unset(t_node **envp, const char *variable);
 #endif // !MINISHELL_H
