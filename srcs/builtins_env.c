@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/14 21:42:56 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 02:10:48 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	env(t_node **envp)
 	return (EXIT_SUCCESS);
 }
 
-int	export(t_node **envp, const char *variable, const char *value)
+int	bltin_export(t_node **envp, const char *variable, const char *value)
 {
 	char	*content;
 	size_t	var_length;
