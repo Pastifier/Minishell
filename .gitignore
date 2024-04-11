@@ -54,3 +54,7 @@ dkms.conf
 
 # VS Code
 .vscode
+
+# Tests
+test.c
+test
