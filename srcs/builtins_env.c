@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 02:10:48 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 02:28:31 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	env(t_node **envp)
 	iter = *envp;
 	while (iter)
 	{
-		printf("%s\n", (char *)iter->content);
+		ft_putendl_fd(iter->content, STDOUT_FILENO);
 		iter = iter->next;
 	}
 	return (EXIT_SUCCESS);

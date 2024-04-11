@@ -6,25 +6,16 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 02:05:25 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 02:26:46 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <unistd.h>
-# include <signal.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <stdbool.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <sys/ioctl.h>
 # include "libft.h"
+# include <sys/wait.h>
+# include <signal.h>
 
 /*--- ERROR - CODES ---*/
 enum e_errnos
