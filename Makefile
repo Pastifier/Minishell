@@ -11,7 +11,7 @@ SRC :=  main.c list_utils.c \
 SRCS := $(addprefix srcs/, $(SRC))
 
 INC := minishell.h
-INCLUDES := $(addprefix includes/, $(INC))
+INCLUDES := $(addprefix includes/, $(INC)) libft/includes/libft.h
 
 # Rules
 
