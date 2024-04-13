@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 02:26:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/13 01:30:36 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 # include "libft.h"
 # include <sys/wait.h>
 # include <signal.h>
+
+/*--- MISC. ---*/
+enum e_pipedes
+{
+	WRITE_END,
+	READ_END
+};
 
 /*--- ERROR - CODES ---*/
 enum e_errnos
@@ -81,7 +88,9 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			char **args;
+			char	**args;
+			int		exit;
+			int		fd[2];
 		}	command;
 		struct s_redirection
 		{
@@ -97,7 +106,16 @@ typedef struct s_astnode
 }	t_astnode;
 
 /*--- BUILTINS ---*/
+t_node	*find_variable(t_node **envp, const char *variable);
 int		env(t_node **envp);
 int		bltin_export(t_node **envp, const char *variable, const char *value);
 int		unset(t_node **envp, const char *variable);
+
+/*--- WRAPPER FUNCTIONS ---*/
+char	**list_cpy_to_str_arr(t_node *lst);
+void	str_arr_destroy(char **strarr);
+int		wexecve(t_astnode *word, t_node *envl);
+
+/*--- REDIRECTIONS ---*/
+int	handle_lredir(const char *filename, t_astnode *node, t_node *envl);
 #endif // !MINISHELL_H
