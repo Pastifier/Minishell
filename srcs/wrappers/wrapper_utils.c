@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 21:07:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 00:07:34 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	**list_cpy_to_str_arr(t_node *lst)
 	while (dummy)
 	{
 		self[--elem_count] = dummy->content;
-		dummy->prev;
+		dummy = dummy->prev;
 	}
 	return (self);
 }
