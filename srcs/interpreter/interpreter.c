@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/13 01:32:10 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:40:04 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	visit(t_astnode *node, t_node *envl)
 	else if (node->type == TK_RREDIR)
 		{/*handle_rredir()*/}
 	else if (node->type == TK_PIPE)
-		{/*handle_pipe()*/}
+		handle_pipe(node);
 	else if (node->type == TK_WORD)
 		{/*handle_word()*/}
 }
