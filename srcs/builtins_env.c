@@ -6,13 +6,13 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 02:28:31 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 18:47:17 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_node	*find_variable(t_node **envp, const char *variable);
+t_node	*find_variable(t_node **envp, const char *variable);
 
 int	env(t_node **envp)
 {
@@ -64,7 +64,7 @@ int	unset(t_node **envp, const char *variable)
 	return (EXIT_SUCCESS);
 }
 
-static t_node	*find_variable(t_node **envp, const char *variable)
+t_node	*find_variable(t_node **envp, const char *variable)
 {
 	size_t	var_length;
 	size_t	con_length;
