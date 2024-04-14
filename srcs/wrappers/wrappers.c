@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 16:55:21 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:28:43 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		wexecve(t_astnode *word, t_node *envl)
 		paths.array++;
 	}
 	execve(word->data.command.args[0], word->data.command.args, envp);
-	perror("execve");
+	perror("bash");
 	str_arr_destroy(paths.array - paths.wordcount);
 	free(envp);
 	return (EXIT_FAILURE);
