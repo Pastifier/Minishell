@@ -10,6 +10,7 @@ SRC :=  main.c list_utils.c \
 		builtins_env.c \
 		$(addprefix interpreter/, \
 				interpreter.c pipes.c redirections.c \
+				words.c \
 		) \
 		$(addprefix wrappers/, \
 				wrapper_utils.c wrappers.c)

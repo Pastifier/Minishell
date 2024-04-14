@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 08:45:56 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:05:05 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef enum e_token
 	TK_LREDIR,
 	TK_RREDIR,
 	TK_LAPPEND,
-	TK_RAPPEND,
+	TK_RAPPEND = O_APPEND,
 	TK_BUILTIN,
 	TK_DOLLAR,
 	TK_LPAREN,
