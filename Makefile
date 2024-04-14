@@ -9,7 +9,7 @@ CFLAGS := -Wall -Wextra -Werror -g3
 SRC :=  main.c list_utils.c \
 		builtins_env.c \
 		$(addprefix interpreter/, \
-				interpreter.c pipes.c redirections.c \
+				interpreter.c pipes.c \
 				words.c \
 		) \
 		$(addprefix wrappers/, \
