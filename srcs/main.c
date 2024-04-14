@@ -2,6 +2,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+int	g_signal = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_node	*envl;

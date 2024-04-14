@@ -6,11 +6,13 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/13 23:40:04 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 08:21:31 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int	g_signal;
 
 static void	visit(t_astnode *node, t_node *envl);
 
@@ -30,11 +32,11 @@ static void	visit(t_astnode *node, t_node *envl)
 	// if (!node->parent && !node->left && !node->right)
 	// 	/*handle_word()*/ ;
 	if (node->type == TK_LREDIR)
-		handle_lredir(node->right->data.redirection.filename, node, envl);
+		{/*handle_rredir()*/}
 	else if (node->type == TK_RREDIR)
 		{/*handle_rredir()*/}
 	else if (node->type == TK_PIPE)
-		handle_pipe(node);
+		handle_pipe(node, envl);
 	else if (node->type == TK_WORD)
 		{/*handle_word()*/}
 }

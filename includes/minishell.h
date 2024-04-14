@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 08:17:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 08:18:56 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,7 @@ int		wexecve(t_astnode *word, t_node *envl);
 
 /*--- REDIRECTIONS ---*/
 int	handle_lredir(const char *filename, t_astnode *node, t_node *envl);
+
+/*--- PIPES ---*/
+int	handle_pipe(t_astnode *pipenode, t_node *envl);
 #endif // !MINISHELL_H

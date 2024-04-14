@@ -8,8 +8,11 @@ CFLAGS := -Wall -Wextra -Werror -g3
 
 SRC :=  main.c list_utils.c \
 		builtins_env.c \
-		$(addprefix interpreter/, interpreter.c redirections.c) \
-		$(addprefix wrappers/, wrapper_utils.c wrappers.c)
+		$(addprefix interpreter/, \
+				interpreter.c pipes.c redirections.c \
+		) \
+		$(addprefix wrappers/, \
+				wrapper_utils.c wrappers.c)
 
 SRCS := $(addprefix srcs/, $(SRC))
 
