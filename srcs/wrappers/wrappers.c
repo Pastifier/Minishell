@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 00:11:42 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:38:36 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int		wexecve(t_astnode *word, t_node *envl)
 		paths.array++;
 		if (!*paths.array)
 			return (str_arr_destroy(paths.array - paths.wordcount),
-					free(envp), EXIT_FAILURE);
+					free(envp), perror(word->data.command.args[0]),
+					EXIT_FAILURE);
 	}
 	execve(word->data.command.args[0], word->data.command.args, envp);
 	perror("execve");

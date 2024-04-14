@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 12:49:42 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:35:50 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,20 @@ int	handle_word(t_astnode *word, t_node *envl)
 {
 	if (!word->parent)
 		return (execute_word_leaf_node(word, envl));
-	else if (word == word->parent->right)
-		return (EXIT_SUCCESS);
 	else if (word->parent->type == TK_PIPE)
 	{
 		if (pipe(word->data.command.fd) < 0)
-			return ((word->data.command.exit = EXIT_FAILURE));
+			return ((word->data.command.exit = EXIT_FATAL));
+		word->data.command.thereispipe = true;
 	}
 	else if (word->parent->parent
 		&& (word->parent->parent->type == TK_PIPE
 			|| word->parent->parent->type == TK_RREDIR))
+	{
 		if (pipe(word->data.command.fd) < 0)
 			return ((word->data.command.exit = EXIT_FAILURE));
+		word->data.command.thereispipe = true;
+	}
 	return (WEXITSTATUS(word->data.command.exit));
 }
 
