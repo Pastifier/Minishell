@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   words.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 15:05:57 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/14 20:55:16 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	handle_word(t_astnode *word, t_node *envl)
 {
 	if (!word->parent)
 		return (execute_word_leaf_node(word, envl));
-	else if (word->parent->type == TK_PIPE)
+	else if (word == word->parent->left
+		&& word->parent->type == TK_PIPE)
 	{
 		if (pipe(word->data.command.fd) < 0)
 			return ((word->data.command.exit = EXIT_FATAL));
-		word->data.command.thereispipe = true;
 	}
 	else if (word->parent->parent
 		&& (word->parent->parent->type == TK_PIPE

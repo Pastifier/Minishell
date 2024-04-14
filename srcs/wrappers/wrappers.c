@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 18:56:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 20:46:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int		wexecve(t_astnode *word, t_node *envl)
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, word->data.command.args[0]);
-		ft_putendl_fd(temp, STDOUT_FILENO);
 		execve(temp, word->data.command.args, envp);
 		(free(temp), paths.array++);
 	}
@@ -48,24 +47,26 @@ static char	**clean_up_paths(char **paths)
 {
 	char	*temp;
 	char	**dummy;
+	char	*hold;
 
 	if (!paths)
 		return (NULL);
 	temp = paths[0];
-	paths[0] = ft_strdup(temp + 4);
+	paths[0] = ft_strdup(temp + 5);
 	free(temp);
 	if (!paths[0])
 		return (str_arr_destroy(paths), NULL);
-	dummy = paths;
-	while (++dummy)
+	dummy = paths - 1;
+	while (*++dummy)
 	{
 		if ((*dummy)[ft_strlen(*dummy) - 1] != '/')
 		{
 			temp = *dummy;
-			*dummy = ft_strjoin(*dummy, "/");
+			hold = ft_strjoin(*dummy, "/");
 			free(temp);
-			if (!*dummy)
+			if (!hold)
 				return (str_arr_destroy(paths), NULL);
+			*dummy = hold;
 		}
 	}
 	return (paths);

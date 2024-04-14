@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 23:40:22 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 15:05:54 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/14 21:01:45 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	fork_for_left_child_and_commit(t_astnode *left, t_node *envl)
 {
 	pid_t	pid;
 
+	if (left->type == TK_PIPE)
+		left = left->right;
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork()"), EXIT_FATAL);
@@ -67,7 +69,9 @@ static int	fork_for_right_child_and_commit(t_astnode *right, t_node *envl)
 {
 	pid_t	pid;
 	int		*left_pipefd;
+	char	buf[2024];
 
+	(void)buf;
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork()"), EXIT_FATAL);
@@ -75,11 +79,11 @@ static int	fork_for_right_child_and_commit(t_astnode *right, t_node *envl)
 	if (pid == 0)
 	{
 		dup2(left_pipefd[READ_END], STDIN_FILENO);
-		close(left_pipefd[READ_END]);
 		if (right->data.command.thereispipe)
 			(close(right->data.command.fd[READ_END]),
 				dup2(right->data.command.fd[WRITE_END], STDOUT_FILENO));
 		wexecve(right, envl);
+		close(left_pipefd[READ_END]);
 		if (right->data.command.thereispipe)
 			close(right->data.command.fd[WRITE_END]);
 	}
