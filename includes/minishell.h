@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/13 01:30:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 07:30:11 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 /*--- MISC. ---*/
 enum e_pipedes
 {
-	WRITE_END,
-	READ_END
+	READ_END,
+	WRITE_END
 };
 
 /*--- ERROR - CODES ---*/
@@ -75,7 +75,9 @@ typedef enum e_token
 	TK_LPAREN,
 	TK_RPAREN,
 	TK_AND,
-	TK_OR
+	TK_OR,
+	TK_DBLQT,
+	TK_SGLQT
 }	t_token;
 
 typedef struct s_astnode
@@ -90,6 +92,7 @@ typedef struct s_astnode
 		{
 			char	**args;
 			int		exit;
+			bool	thereispipe;
 			int		fd[2];
 		}	command;
 		struct s_redirection
