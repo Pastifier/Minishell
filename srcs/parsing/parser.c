@@ -1,4 +1,6 @@
-# include "../include/minishell.h"
+#include "minishell.h"
+#include "parser.h"
+#include <stdio.h>
 
 /* 
 recursive decent parser:
@@ -57,7 +59,7 @@ void parse_word(t_token **token_list, t_astnode **node)
     new_node->data.builtin.id = get_builtin_id(token_list);
     if (!new_node->data.builtin.id)
     {
-        new_node->type = TK_EXEC;
+        new_node->type = TK_WORD;
         new_node->data.command.args = get_command_args(token_list);
         if (!new_node->data.command.args)
             destroy_parser(token_list, node); // need to free the new_node
@@ -80,7 +82,7 @@ void parse_pipe(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
+    if ((*node)->type != TK_BUILTIN && (*node)->type != TK_PIPE 
         && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
         destroy_parser(token_list, node);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
@@ -113,7 +115,7 @@ void parse_rredir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    if ((*node)->type != TK_COMMAND && (*node)->type != TK_PIPE 
+    if ((*node)->type != TK_BUILTIN && (*node)->type != TK_PIPE 
         && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
         destroy_parser(token_list, node);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));

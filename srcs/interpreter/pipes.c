@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 23:40:22 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 12:46:26 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:05:54 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "interpreter.h"
 #include <stdio.h>
 
 extern int	g_signal;

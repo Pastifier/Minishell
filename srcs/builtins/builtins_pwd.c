@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <stdio.h>
 
 int pwd(void)
 {

@@ -1,4 +1,5 @@
-# include "../include/minishell.h"
+#include "minishell.h"
+#include "parser.h"
 
 char **get_command_args(t_token **token)
 {
@@ -7,7 +8,7 @@ char **get_command_args(t_token **token)
     int i;
 
     i = 0;
-    temp = (*token)->next;
+    temp = *token;
     while (temp && temp->token_type == TK_WORD)
     {
         i++;
@@ -16,7 +17,7 @@ char **get_command_args(t_token **token)
 	args = ft_calloc(i + 1, sizeof(char *));
     if (!args)
         return (NULL);
-    temp = (*token)->next;
+    temp = *token;
     i = 0;
     while (temp && temp->token_type == TK_WORD)
     {

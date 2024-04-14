@@ -1,13 +1,14 @@
-# include "../include/minishell.h"
+# include "minishell.h"
+# include <stdio.h>
 
 void print_ast(t_astnode *ast)
 {
 	if (ast == NULL)
 		return ;
 	printf("type: %d\n", ast->type);
-	if (ast->type == TK_COMMAND)
+	if (ast->type == TK_WORD)
 	{
-		printf("command: %s\n", ast->data.command.args[0]);
+		print_array(ast->data.command.args);
 	}
 	else if (ast->type == TK_PIPE)
 	{
@@ -29,12 +30,12 @@ void print_ast(t_astnode *ast)
 		print_ast(ast->left);
 		print_ast(ast->right);
 	}
-	else if (ast->type == TK_D_QUOTE)
+	else if (ast->type == TK_DBLQT)
 	{
 		printf("double quote\n");
 		print_ast(ast->left);
 	}
-	else if (ast->type == TK_S_QUOTE)
+	else if (ast->type == TK_SGLQT)
 	{
 		printf("single quote\n");
 		print_ast(ast->left);
@@ -47,11 +48,6 @@ void print_ast(t_astnode *ast)
 	{
 		printf("builtin: %s\n", ast->data.builtin.args[0]);
 	}
-	else if (ast->type == TK_EXEC)
-	{
-		printf("exec: %s\n", ast->data.command.args[0]);
-	}
-	
 }
 
 
@@ -64,7 +60,7 @@ void print_array(char **array)
     printf("array: ");
 	while (array[i])
 	{
-		printf("%s, ", array[i]);
+		printf("%s\n", array[i]);
 		i++;
 	}
 }

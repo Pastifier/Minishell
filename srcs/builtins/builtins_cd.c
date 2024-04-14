@@ -1,4 +1,5 @@
-# include "minishell.h"
+#include "minishell.h"
+#include <stdio.h>
 
 static int set_env(char *name, char *value, t_node **envp);
 static int add_env(char *name, char *value, t_node **envp);

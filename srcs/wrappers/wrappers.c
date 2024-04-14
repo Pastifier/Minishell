@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 13:38:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:55:21 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,14 @@ int		wexecve(t_astnode *word, t_node *envl)
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, word->data.command.args[0]);
+		ft_putendl_fd(temp, STDOUT_FILENO);
 		execve(temp, word->data.command.args, envp);
 		free(temp);
 		paths.array++;
-		if (!*paths.array)
-			return (str_arr_destroy(paths.array - paths.wordcount),
-					free(envp), perror(word->data.command.args[0]),
-					EXIT_FAILURE);
 	}
 	execve(word->data.command.args[0], word->data.command.args, envp);
 	perror("execve");
-	str_arr_destroy(paths.array);
+	str_arr_destroy(paths.array - paths.wordcount);
 	free(envp);
 	return (EXIT_FAILURE);
 }
