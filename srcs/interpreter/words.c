@@ -6,18 +6,16 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 10:28:13 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:47:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+extern int	g_signal;
 
 int	execute_word_leaf_node(t_astnode *word, t_node *envl);
-// CHECKS WHETHER THE WORD NEEDS TO BE PIPED OR WHATNOT
-// MIGHT FILL IT WITH OTHER INFO SUCH AS THE FD OF THE FILE
-// (IF IT IS REFERRING TO ONE).
-// ASSUMES THAT A WORD CAN NEVER HAVE A WORD-PARENT
+
 int	handle_word(t_astnode *word, t_node *envl)
 {
 	if (!word->parent)
@@ -46,4 +44,11 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 		wexecve(word, envl);
 	else
 		wait(&word->data.command.exit);
+	if (WIFSIGNALED(word->data.command.exit))
+	{
+		// TODO:
+		// 	print the corresponding signal to STDOUT;
+		//	change g_signal to the corresponding signal;
+		//	remember that signals get sent to both the child and parent, so do something to avoid duplicate behaviours!
+	}
 }
