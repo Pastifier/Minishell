@@ -6,11 +6,12 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/13 02:56:38 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 00:11:42 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 int		wexecve(t_astnode *word, t_node *envl)
 {
@@ -21,13 +22,13 @@ int		wexecve(t_astnode *word, t_node *envl)
 
 	envp = list_cpy_to_str_arr(envl);
 	slash = ft_strchr(word->data.command.args[0], '/');
-	paths = ft_split(find_variable(envl, "PATH="), ":");
+	paths = ft_split(find_variable(&envl, "PATH=")->content, ":");
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, word->data.command.args[0]);
 		execve(temp, word->data.command.args, envp);
 		free(temp);
-		*paths.array++;
+		paths.array++;
 		if (!*paths.array)
 			return (str_arr_destroy(paths.array - paths.wordcount),
 					free(envp), EXIT_FAILURE);
@@ -36,4 +37,5 @@ int		wexecve(t_astnode *word, t_node *envl)
 	perror("execve");
 	str_arr_destroy(paths.array);
 	free(envp);
+	return (EXIT_FAILURE);
 }
