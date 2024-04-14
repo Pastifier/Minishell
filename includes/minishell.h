@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 08:18:56 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/14 08:45:56 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,14 @@ int		wexecve(t_astnode *word, t_node *envl);
 int	handle_lredir(const char *filename, t_astnode *node, t_node *envl);
 
 /*--- PIPES ---*/
+
+// @author Emran BinJamaan
+// @brief creates processes for left child and right child using `fork(2)`.
+// @return exit code of the right child.
+// @warning this function assumes that the AST is structured perfectly, a pipe node
+// requires a left and right child; it also assumes that the pipes were already
+// created when `pipenode`'s children were handled. It doesn't close the
+// READ_END of the pipe in `pipenode`'s right (if it exists), because that will
+// be used in the pipe after it.
 int	handle_pipe(t_astnode *pipenode, t_node *envl);
 #endif // !MINISHELL_H
