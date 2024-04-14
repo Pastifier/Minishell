@@ -4,13 +4,29 @@
 
 int	g_signal = 0;
 
+// minishell entry point
+/*
+main function calls readline and call the tokenizer and the  parser to execute commands
+*/
 int	main(int argc, char **argv, char **envp)
 {
-	t_node	*envl;
+	(void)argc;
+	(void)argv;
+	(void)envp;
+	char *prompt = "$> ";
+	char  *line;
 
-	(void)argc; (void)argv;
-	envl = NULL;
-	str_arr_dup_to_list(envp, &envl); // Add check and exit fatally if it fails (it returns a bool)
-	list_destroy(&envl);
+	while (1)
+	{
+		line = readline(prompt);
+		if (line == NULL)
+			break;
+		if (line[0] != '\0')
+		{
+			add_history(line) ;
+			tokenize(line);
+		}
+		free(line);
+	}
 	return (0);
 }

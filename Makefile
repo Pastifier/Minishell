@@ -4,7 +4,7 @@ NAME := minishell
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
 
 SRC :=  main.c list_utils.c \
 		builtins_env.c \
@@ -13,7 +13,11 @@ SRC :=  main.c list_utils.c \
 				words.c \
 		) \
 		$(addprefix wrappers/, \
-				wrapper_utils.c wrappers.c)
+				wrapper_utils.c wrappers.c) \
+		builtins_cd.c builtins_echo.c builtins_pwd.c \
+		parser.c parser_utils.c \
+		tokenizer.c parse_tokens.c \
+		destroy.c print.c
 
 SRCS := $(addprefix srcs/, $(SRC))
 
