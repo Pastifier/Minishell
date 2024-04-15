@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 15:59:58 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:43:11 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ enum e_pipedes
 /*--- ERROR - CODES ---*/
 enum e_errnos
 {
-	EXIT_FATAL = 2
+	EXIT_FATAL = 2,
+	EXIT_NEEDED
 };
 
 /*--- LINKED - LIST ---*/
