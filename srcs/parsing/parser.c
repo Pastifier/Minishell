@@ -55,6 +55,9 @@ void parse_word(t_token **token_list, t_astnode **node)
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         printf("malloc error\n"); // need to change this to destroy the tree and exit
+    new_node->parent = *node;
+    new_node->left = NULL;
+    new_node->right = NULL;
     *node = new_node;
     new_node->data.builtin.id = get_builtin_id(token_list);
     if (!new_node->data.builtin.id)
@@ -91,6 +94,7 @@ void parse_pipe(t_token **token_list, t_astnode **node)
     new_node->type = TK_PIPE;
     (*node)->parent = new_node;
     new_node->left = *node;
+    new_node->parent = NULL;
     *node = new_node;
     *token_list = (*token_list)->next;
     parse_word(token_list, &new_node->right);
