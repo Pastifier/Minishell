@@ -26,6 +26,7 @@ t_astnode	*tokenize(char *line)
     // printf("tokens:\n");
     // print_tokens(&token_list);
     // call the parser to parse the tokens
+    ast = NULL;
     iter = token_list;
 	parse(&iter, &ast);
     return (ast);
