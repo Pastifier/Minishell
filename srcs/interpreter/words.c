@@ -20,6 +20,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl);
 
 int	handle_word(t_astnode *word, t_node *envl)
 {
+
 	if (word->type != TK_WORD)
 		return (EXIT_NEEDED);
 	if (word->parent)
