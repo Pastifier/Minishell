@@ -6,6 +6,13 @@
 // @author Emran BinJamaan
 void	interpret(t_astnode *root, t_node *envl);
 
+/*--- PREORDER FUNCTIONS ---*/
+
+// @author Emran BinJamaan
+int		prepare_pipenode(t_astnode *pipenode);
+
+/*--- POSTORDER FUNCTIONS ---*/
+
 // @author Emran BinJamaan
 // @brief Creates processes for left child and right child using `fork(2)`,
 // executes, and pipes them.
@@ -15,7 +22,7 @@ void	interpret(t_astnode *root, t_node *envl);
 // created when `pipenode`'s children were handled. It doesn't close the
 // READ_END of the pipe in `pipenode`'s right (if it exists), because that will
 // be used in the pipe after it.
-int	handle_pipe(t_astnode *pipenode, t_node *envl);
+int		handle_pipe(t_astnode *pipenode, t_node *envl);
 
 // @author Emran BinJamaan
 // @brief fills in the struct with relevant metadata about the word (if any)
@@ -23,5 +30,5 @@ int	handle_pipe(t_astnode *pipenode, t_node *envl);
 // present.
 // @return Exit code of the word should it have executed. EXIT_FATAL if
 // execution needs to stop. EXIT_SUCCESS otherwise.
-int	handle_word(t_astnode *word, t_node *envl);
+int		handle_word(t_astnode *word, t_node *envl);
 #endif // !INTERPRETER_H
