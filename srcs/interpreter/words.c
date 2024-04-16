@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 01:57:17 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 07:30:09 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,20 @@ int	handle_word(t_astnode *word, t_node *envl)
 int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 {
 	pid_t	pid;
+	char	**envp;
 
+	envp = list_cpy_to_str_arr(envl);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
-		wexecve(word, envl);
+		wexecve(word, envl, envp);
+		(free(envp), list_destroy(&envl));
 		// destroy stuff.
 	}
 	else
-		wait(&word->data.command.exit);
+		(wait(&word->data.command.exit), free(envp));
 	if (WIFSIGNALED(word->data.command.exit))
 	{
 		// TODO:

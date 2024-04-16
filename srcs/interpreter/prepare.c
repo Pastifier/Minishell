@@ -6,12 +6,13 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 04:30:31 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 12:56:16 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "interpreter.h"
+#include <stdio.h>
 
 int	prepare_pipenode(t_astnode *pipenode)
 {
@@ -31,6 +32,16 @@ int	prepare_pipenode(t_astnode *pipenode)
 		if (pipe(left_child->right->data.command.fd) < 0)
 			return (EXIT_FATAL);
 		left_child->right->data.command.thereispipe = true;
+		if (pipenode->parent && pipenode->parent == NULL)
+			return (left_child->right->data.command.fd[READ_END]);
 	}
 	return (EXIT_SUCCESS);
 }
+
+/*
+			  (PIPE)
+		(PIPE)		CMD4
+	(PIPE)	  CMD3
+CMD1	  CMD2
+
+*/

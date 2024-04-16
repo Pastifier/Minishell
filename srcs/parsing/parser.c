@@ -66,6 +66,7 @@ void parse_word(t_token **token_list, t_astnode **node)
         new_node->data.command.args = get_command_args(token_list);
         if (!new_node->data.command.args)
             destroy_parser(token_list, node); // need to free the new_node
+		new_node->data.command.thereispipe = false;
         return ;
     }
 

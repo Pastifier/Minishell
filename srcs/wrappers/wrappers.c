@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 03:35:17 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 07:21:42 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,13 @@
 
 static char	**clean_up_paths(char **paths);
 
-int		wexecve(t_astnode *word, t_node *envl)
+int		wexecve(t_astnode *word, t_node *envl, char **envp)
 {
 	t_split	paths;
-	char	**envp;
 	void	*temp;
 	char	*slash;
 	t_node	*pathnode;
 
-	envp = list_cpy_to_str_arr(envl);
 	slash = ft_strchr(word->data.command.args[0], '/');
 	pathnode = find_variable(&envl, "PATH=");
 	temp = NULL;
@@ -35,12 +33,13 @@ int		wexecve(t_astnode *word, t_node *envl)
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, word->data.command.args[0]);
-		execve(temp, word->data.command.args, envp);
+		execve(temp, word->data.command.args, NULL);
 		(free(temp), paths.array++);
 	}
 	execve(word->data.command.args[0], word->data.command.args, envp);
 	(perror("bash"), str_arr_destroy(paths.array - paths.wordcount));
-	return (free(envp), EXIT_FAILURE);
+	free(envp);
+	return (EXIT_FAILURE);
 }
 
 static char	**clean_up_paths(char **paths)

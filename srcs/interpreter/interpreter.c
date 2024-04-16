@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 03:16:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 13:09:28 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,19 @@
 
 extern int	g_signal;
 
-static void	visit(t_astnode *node, t_node *envl);
+static void	visit(t_astnode *node, t_node *envl, int *fetch);
 
 void	interpret(t_astnode *root, t_node *envl)
 {
-	visit(root, envl);
+	int	std_in;
+	int	fetch;
+
+	std_in = dup(STDIN_FILENO);
+	visit(root, envl, &fetch);
+	dup2(fetch, std_in);
 }
 
-static void	visit(t_astnode *node, t_node *envl)
+static void	visit(t_astnode *node, t_node *envl, int *fetch)
 {
 	if (!node)
 		return ;
@@ -30,10 +35,10 @@ static void	visit(t_astnode *node, t_node *envl)
 	prepare_pipenode(node);
 
 	// Traversal
-	visit(node->left, envl);
-	visit(node->right, envl);
+	visit(node->left, envl, fetch);
+	visit(node->right, envl, fetch);
 
 	// Post-order stuff
-	handle_pipe(node, envl);
+	handle_pipe(node, envl, fetch);
 	handle_word(node, envl);
 }
