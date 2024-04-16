@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/14 20:55:16 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:57:17 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,12 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl);
 
 int	handle_word(t_astnode *word, t_node *envl)
 {
-	if (!word->parent)
-		return (execute_word_leaf_node(word, envl));
-	else if (word == word->parent->left
-		&& word->parent->type == TK_PIPE)
-	{
-		if (pipe(word->data.command.fd) < 0)
-			return ((word->data.command.exit = EXIT_FATAL));
-	}
-	else if (word->parent->parent
-		&& (word->parent->parent->type == TK_PIPE
-			|| word->parent->parent->type == TK_RREDIR))
-	{
-		if (pipe(word->data.command.fd) < 0)
-			return ((word->data.command.exit = EXIT_FAILURE));
-		word->data.command.thereispipe = true;
-	}
+
+	if (word->type != TK_WORD)
+		return (EXIT_NEEDED);
+	if (word->parent)
+		return (EXIT_NEEDED);
+	execute_word_leaf_node(word, envl);
 	return (WEXITSTATUS(word->data.command.exit));
 }
 
@@ -47,7 +37,10 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	if (pid < 0)
 		return (perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
+	{
 		wexecve(word, envl);
+		// destroy stuff.
+	}
 	else
 		wait(&word->data.command.exit);
 	if (WIFSIGNALED(word->data.command.exit))
