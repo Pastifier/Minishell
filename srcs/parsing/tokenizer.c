@@ -1,4 +1,5 @@
-#include "../include/minishell.h"
+#include "minishell.h"
+#include "parser.h"
 
 /*
  minishell tokenizer:
@@ -25,6 +26,7 @@ t_astnode	*tokenize(char *line)
     // printf("tokens:\n");
     // print_tokens(&token_list);
     // call the parser to parse the tokens
+    ast = NULL;
     iter = token_list;
 	parse(&iter, &ast);
     return (ast);
@@ -77,7 +79,7 @@ static void determine_token_type(t_token **token)
     while (iter)
     {
         if (iter->value[0] == '$')
-            iter->token_type = TK_ENV;
+            iter->token_type = TK_DOLLAR;
         else if (ft_strncmp(iter->value, "||", 2) == 0)
             iter->token_type = TK_OR;
         else if (ft_strncmp(iter->value, "&&", 2) == 0)

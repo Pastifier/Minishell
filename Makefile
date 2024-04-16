@@ -2,23 +2,30 @@
 NAME := minishell
 
 # Necessities
-# -L/usr/lib/x86_64-linux-gnu 
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3
-
-LIBS := -Llibft -Ilibft/includes -lft -lreadline
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
 
 SRC :=  main.c list_utils.c \
-		builtins_env.c builtins_cd.c \
-		builtins_echo.c builtins_pwd.c \
-		parser.c parser_utils.c \
-		tokenizer.c parse_tokens.c \
-		destroy.c print.c 
+		$(addprefix interpreter/, \
+				interpreter.c pipes.c words.c \
+				prepare.c \
+		) \
+		$(addprefix wrappers/, \
+				wrapper_utils.c wrappers.c \
+		) \
+		$(addprefix builtins/, \
+				builtins_cd.c builtins_pwd.c builtins_env.c \
+		) \
+		$(addprefix parsing/, \
+				tokenizer.c parser.c parser_utils.c \
+		) \
+		destroy.c print.c
+
 SRCS := $(addprefix srcs/, $(SRC))
 
-INC := minishell.h
-INCLUDES := $(addprefix include/, $(INC))
+INC := minishell.h parser.h interpreter.h
+INCLUDES := $(addprefix includes/, $(INC)) libft/includes/libft.h
 
 # Rules
 
@@ -26,7 +33,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS) $(INCLUDES)
 	@make -C libft
-	$(CC) $(CFLAGS) -Iinclude $(SRCS) $(LIBS) -o $@
+	$(CC) $(CFLAGS) -Iincludes $(SRCS) -Llibft -Ilibft/includes -lft -o $@ -lreadline -lcurses
 
 clean :
 	@make -C libft clean

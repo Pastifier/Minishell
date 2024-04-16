@@ -1,4 +1,10 @@
 #include "minishell.h"
+#include "parser.h"
+#include "interpreter.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+
+int	g_signal = 0;
 
 // minishell entry point
 /*
@@ -6,13 +12,13 @@ main function calls readline and call the tokenizer and the  parser to execute c
 */
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	char *prompt = "$> ";
-	char  *line;
-	t_astnode *ast;
+	char 		*prompt = "$> ";
+	char  		*line;
+	t_astnode	*ast;
+	t_node		*envl;
 
+	((void)argc, (void)argv, envl = NULL);
+	str_arr_dup_to_list(envp, &envl);
 	while (1)
 	{
 		line = readline(prompt);
@@ -22,17 +28,13 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line) ;
 			ast = tokenize(line);
-			if (ast != NULL)
+			if (ast)
 			{
-				printf("MAIN AST:\n");
-				print_ast(ast);
+				interpret(ast, envl);
+				destroy_ast(ast);
 			}
 		}
 		free(line);
 	}
 	return (0);
 }
-
-// print_ast function
-
-

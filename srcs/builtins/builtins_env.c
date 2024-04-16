@@ -6,13 +6,13 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/13 01:11:07 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/12 18:47:17 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_node	*find_variable(t_node **envp, const char *variable);
+t_node	*find_variable(t_node **envp, const char *variable);
 
 int	env(t_node **envp)
 {
@@ -23,13 +23,13 @@ int	env(t_node **envp)
 	iter = *envp;
 	while (iter)
 	{
-		printf("%s\n", (char *)iter->content);
+		ft_putendl_fd(iter->content, STDOUT_FILENO);
 		iter = iter->next;
 	}
 	return (EXIT_SUCCESS);
 }
 
-int	export(t_node **envp, const char *variable, const char *value)
+int	bltin_export(t_node **envp, const char *variable, const char *value)
 {
 	char	*content;
 	size_t	var_length;
@@ -64,13 +64,13 @@ int	unset(t_node **envp, const char *variable)
 	return (EXIT_SUCCESS);
 }
 
-static t_node	*find_variable(t_node **envp, const char *variable)
+t_node	*find_variable(t_node **envp, const char *variable)
 {
 	size_t	var_length;
 	size_t	con_length;
 	t_node	*iter;
 
-	if (!envp || !*envp)
+	if (!envp && !*envp)
 		return (NULL);
 	var_length = ft_strlen(variable);
 	iter = *envp;
