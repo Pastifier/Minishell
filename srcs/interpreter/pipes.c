@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 23:40:22 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 13:20:49 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/16 16:34:00 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,14 @@ static int	fork_for_left_child_and_commit(t_astnode *left, t_node *envl)
 		return (perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
-			close(left->data.command.fd[READ_END]);
-			dup2(left->data.command.fd[WRITE_END], STDOUT_FILENO);
-			wexecve(left, envl, envp);
-			close(left->data.command.fd[WRITE_END]);
+			if (left->parent->left != left)
+				dup2(left->parent->left->data.command.fd[READ_END], STDIN_FILENO);
+		dup2(left->data.command.fd[WRITE_END], STDOUT_FILENO);
+		if (close(left->data.command.fd[WRITE_END]))
+			printf("(%d) is write closed in child\n", left->data.command.fd[WRITE_END]);
+		if (close(left->data.command.fd[READ_END]))
+			printf("(%d) is read closed in child\n", left->data.command.fd[READ_END]);
+		wexecve(left, envl, envp);
 		(free(envp), list_destroy(&envl));
 		// destroy tree
 		exit(EXIT_FAILURE);
@@ -70,8 +74,15 @@ static int	fork_for_left_child_and_commit(t_astnode *left, t_node *envl)
 	else
 	{
 		(wait(&left->data.command.exit), free(envp));
-		close(left->data.command.fd[WRITE_END]);
-		dup2(left->data.command.fd[READ_END], 0);
+		if (close(left->data.command.fd[WRITE_END]))
+			printf("(%d) write is closed in parent\n", left->data.command.fd[WRITE_END]);
+	}
+	if (left->parent->parent && left->parent->parent->type == TK_PIPE)
+	{
+		if(close(left->parent->left->data.command.fd[READ_END]))
+			printf("(%d) write sibling is closed in parent\n", left->parent->left->data.command.fd[READ_END]);
+		if(close(left->parent->left->data.command.fd[WRITE_END]))
+			printf("(%d) write sibling is closed in parent\n", left->parent->left->data.command.fd[READ_END]);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -82,6 +93,7 @@ static int	fork_for_right_child_and_commit(t_astnode *right, t_node *envl, int *
 	t_astnode	*sibling;
 	char		**envp;
 
+	(void)fetch;
 	sibling = right->parent->left;
 	while (sibling->type != TK_WORD)
 		sibling = sibling->right;
@@ -91,22 +103,22 @@ static int	fork_for_right_child_and_commit(t_astnode *right, t_node *envl, int *
 		return (perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
-		close(sibling->data.command.fd[WRITE_END]);
 		dup2(sibling->data.command.fd[READ_END], STDIN_FILENO);
-		if (right->data.command.thereispipe)
-			dup2(right->data.command.fd[WRITE_END], STDOUT_FILENO);
+		if (close(sibling->data.command.fd[WRITE_END]))
+			printf("(%d) write sibling is closed in child.\n", sibling->data.command.fd[WRITE_END]);
+		if (close(sibling->data.command.fd[READ_END]))
+			printf("(%d) write sibling is closed in child.\n", sibling->data.command.fd[READ_END]);
 		wexecve(right, envl, envp);
-		close(sibling->data.command.fd[READ_END]);
-		if (sibling->data.command.thereispipe)
-			close(right->data.command.fd[WRITE_END]);
 		(free(envp), list_destroy(&envl));
 		exit(EXIT_FAILURE);
 		// Perhaps make a function that closes fds and destroys literally everything
 	}
 	else
 	{
-		close(sibling->data.command.fd[WRITE_END]);
-		*fetch = sibling->data.command.fd[READ_END];
+		if (close(sibling->data.command.fd[WRITE_END]))
+			printf("(%d) write sibling is closed in parent.\n", sibling->data.command.fd[WRITE_END]);
+		if (close(sibling->data.command.fd[READ_END]))			
+			printf("(%d) write sibling is closed in parent.\n", sibling->data.command.fd[READ_END]);
 		wait(&right->data.command.exit);
 		free(envp);
 	}
