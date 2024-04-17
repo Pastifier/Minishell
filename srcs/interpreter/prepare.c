@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 12:56:16 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/18 03:06:49 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 
 int	prepare_pipenode(t_astnode *pipenode)
 {
-	t_astnode *left_child;
+	t_astnode	*left_child;
+	t_astnode	*closest_left;
 
 	if (pipenode->type != TK_PIPE)
 		return (EXIT_NEEDED);
@@ -24,16 +25,19 @@ int	prepare_pipenode(t_astnode *pipenode)
 	if (left_child->type == TK_WORD)
 	{
 		if (pipe(left_child->data.command.fd) < 0)
-			return (EXIT_FATAL);
+			return (perror("pipe()"), EXIT_FATAL);
 		left_child->data.command.thereispipe = true;
+		pipenode->right->data.command.thereisprev = true;
+		pipenode->right->data.command.prevfd = left_child->data.command.fd;
 	}
 	else if (left_child->type == TK_PIPE)
 	{
-		if (pipe(left_child->right->data.command.fd) < 0)
-			return (EXIT_FATAL);
-		left_child->right->data.command.thereispipe = true;
-		if (pipenode->parent && pipenode->parent == NULL)
-			return (left_child->right->data.command.fd[READ_END]);
+		closest_left = left_child->right;
+		if (pipe(closest_left->data.command.fd) < 0)
+			return (perror("pipe()"), EXIT_FATAL);
+		closest_left->data.command.thereispipe = true;
+		pipenode->right->data.command.thereisprev = true;
+		pipenode->right->data.command.prevfd = closest_left->data.command.fd;
 	}
 	return (EXIT_SUCCESS);
 }
