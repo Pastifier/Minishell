@@ -22,7 +22,7 @@ int		prepare_pipenode(t_astnode *pipenode);
 // created when `pipenode`'s children were handled. It doesn't close the
 // READ_END of the pipe in `pipenode`'s right (if it exists), because that will
 // be used in the pipe after it.
-int		handle_pipe(t_astnode *pipenode, t_node *envl, int *fetch);
+int		handle_pipe(t_astnode *pipenode);
 
 // @author Emran BinJamaan
 // @brief fills in the struct with relevant metadata about the word (if any)

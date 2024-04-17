@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 07:08:30 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/18 03:04:53 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ typedef struct s_astnode
 			char	**args;
 			int		exit;
 			bool	thereispipe;
+			bool	thereisprev;
+			int		*prevfd;
 			int		fd[2];
 		}	command;
 		struct s_redirection
@@ -115,6 +117,11 @@ typedef struct s_astnode
 			t_cid	id;
 			char	**args;
 		}	builtin;
+		struct s_pipe
+		{
+			bool	thereisinput;
+			int		tempfd;
+		}	pipe;
 	} data;
 }	t_astnode;
 
