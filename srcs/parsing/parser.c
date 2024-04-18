@@ -56,7 +56,14 @@ void parse_word(t_token **token_list, t_astnode **node)
     if (new_node == NULL)
         printf("malloc error\n"); // need to change this to destroy the tree and exit
     // try to handle the case when the tree head is not null lrredir, rredir, pipe // but not complete
-    if ((*node)->type == TK_RREDIR || (*node)->type == TK_PIPE)
+    if (!(*node))
+    {
+        new_node->parent = NULL;
+        new_node->left = NULL;
+        new_node->right = NULL;
+        *node = new_node;
+    }
+    else if ((*node)->type == TK_RREDIR || (*node)->type == TK_PIPE)
     {
         new_node->parent = *node;
         new_node->right = NULL;
@@ -72,13 +79,6 @@ void parse_word(t_token **token_list, t_astnode **node)
         new_node->parent = (*node)->parent;
         new_node->left = NULL;
         (*node)->parent = new_node;
-        *node = new_node;
-    }
-    else if (!(*node))
-    {
-        new_node->parent = NULL;
-        new_node->left = NULL;
-        new_node->right = NULL;
         *node = new_node;
     }
     new_node->data.builtin.id = get_builtin_id(token_list);
