@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
+#include <stdio.h>
 
 /*
  minishell tokenizer:
@@ -119,7 +120,7 @@ static t_token *token_ex(char *line)
     {
         if (ft_strchr(" |><&", temp[i]) || temp[i + 1] == '\0')
         {
-            if (temp[i + 1] == '\0')
+            if (temp[i + 1] == '\0' || i == 0)
                 i++;
             new = ft_substr(temp, 0, i);
             if (new == NULL)

@@ -4,7 +4,10 @@
 void print_ast(t_astnode *ast)
 {
 	if (ast == NULL)
+	{
+		printf("ast is null\n");
 		return ;
+	}
 	printf("type: %d\n", ast->type);
 	if (ast->type == TK_WORD)
 	{
@@ -17,9 +20,9 @@ void print_ast(t_astnode *ast)
 	else if (ast->type == TK_PIPE)
 	{
 		printf("pipe\n");
-        printf("left:");
+        printf("left:\n");
 		print_ast(ast->left);
-        printf("right:");
+        printf("right:\n");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_LREDIR)
@@ -35,9 +38,9 @@ void print_ast(t_astnode *ast)
 	{
 		printf("right redirect\n");
 		printf("file name: %s\n", ast->data.redirection.filename);
-		printf("left:");
+		printf("left: \n");
 		print_ast(ast->left);
-		printf("right:");
+		printf("right: \n");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_DBLQT)
@@ -70,9 +73,10 @@ void print_array(char **array)
     printf("array: ");
 	while (array[i])
 	{
-		printf("%s\n", array[i]);
+		printf(" - %s", array[i]);
 		i++;
 	}
+	printf("\n");
 }
 
 void print_tokens(t_token **token)
