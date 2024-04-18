@@ -9,6 +9,10 @@ void print_ast(t_astnode *ast)
 	if (ast->type == TK_WORD)
 	{
 		print_array(ast->data.command.args);
+		printf("Left: \n");
+		print_ast(ast->left);
+		printf("Right: \n");
+		print_ast(ast->right);
 	}
 	else if (ast->type == TK_PIPE)
 	{
@@ -21,13 +25,19 @@ void print_ast(t_astnode *ast)
 	else if (ast->type == TK_LREDIR)
 	{
 		printf("left redirect\n");
+		printf("file name: %s\n", ast->data.redirection.filename);
+		printf("left:");
 		print_ast(ast->left);
+		printf("right:");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_RREDIR)
 	{
 		printf("right redirect\n");
+		printf("file name: %s\n", ast->data.redirection.filename);
+		printf("left:");
 		print_ast(ast->left);
+		printf("right:");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_DBLQT)

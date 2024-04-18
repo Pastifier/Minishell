@@ -5,7 +5,6 @@ NAME := minishell
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
-
 SRC :=  main.c list_utils.c \
 		$(addprefix interpreter/, \
 				interpreter.c pipes.c words.c \
