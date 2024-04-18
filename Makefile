@@ -4,20 +4,27 @@ NAME := minishell
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline
 
 SRC :=  main.c list_utils.c \
-		builtins_env.c \
 		$(addprefix interpreter/, \
-				interpreter.c pipes.c \
-				words.c \
+				interpreter.c pipes.c words.c \
+				prepare.c \
 		) \
 		$(addprefix wrappers/, \
-				wrapper_utils.c wrappers.c)
+				wrapper_utils.c wrappers.c \
+		) \
+		$(addprefix builtins/, \
+				builtins_cd.c builtins_pwd.c builtins_env.c \
+		) \
+		$(addprefix parsing/, \
+				tokenizer.c parser.c parser_utils.c \
+		) \
+		destroy.c print.c
 
 SRCS := $(addprefix srcs/, $(SRC))
 
-INC := minishell.h
+INC := minishell.h parser.h interpreter.h
 INCLUDES := $(addprefix includes/, $(INC)) libft/includes/libft.h
 
 # Rules

@@ -1,0 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prepare.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/04/18 03:06:49 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+#include "interpreter.h"
+#include <stdio.h>
+
+int	prepare_pipenode(t_astnode *pipenode)
+{
+	t_astnode	*left_child;
+	t_astnode	*closest_left;
+
+	if (pipenode->type != TK_PIPE)
+		return (EXIT_NEEDED);
+	left_child = pipenode->left;
+	if (left_child->type == TK_WORD)
+	{
+		if (pipe(left_child->data.command.fd) < 0)
+			return (perror("pipe()"), EXIT_FATAL);
+		left_child->data.command.thereispipe = true;
+		pipenode->right->data.command.thereisprev = true;
+		pipenode->right->data.command.prevfd = left_child->data.command.fd;
+	}
+	else if (left_child->type == TK_PIPE)
+	{
+		closest_left = left_child->right;
+		if (pipe(closest_left->data.command.fd) < 0)
+			return (perror("pipe()"), EXIT_FATAL);
+		closest_left->data.command.thereispipe = true;
+		pipenode->right->data.command.thereisprev = true;
+		pipenode->right->data.command.prevfd = closest_left->data.command.fd;
+	}
+	return (EXIT_SUCCESS);
+}
+
+/*
+			  (PIPE)
+		(PIPE)		CMD4
+	(PIPE)	  CMD3
+CMD1	  CMD2
+
+*/
