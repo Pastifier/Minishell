@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 12:02:43 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:37:36 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,10 @@ typedef struct s_astnode
 		{
 			t_node	*args;
 			int		exit;
-			bool	thereispipe;
 			bool	thereisprev;
+			bool	thereispipe;
+			bool	thereisout;
+			int		outfd;
 			int		*prevfd;
 			int		fd[2];
 		}	command;
