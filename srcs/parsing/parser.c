@@ -72,7 +72,11 @@ void parse_word(t_token **token_list, t_astnode **node)
         new_node->right = NULL;
         new_node->left = NULL;
         if ((*node)->type == TK_RREDIR)
-            (*node)->data.redirection.filename = (*token_list)->value;
+        {
+            (*node)->data.redirection.filename = (*token_list)->value; // move this to the parse_rredir function
+            // iter to the last left node
+            // creat t_node
+            // append the new t_node to the last left agrs list
         else
             (*node)->right = new_node;   
     }
