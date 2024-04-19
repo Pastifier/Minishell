@@ -9,6 +9,8 @@ void	interpret(t_astnode *root, t_node *envl);
 /*--- PREORDER FUNCTIONS ---*/
 
 // @author Emran BinJamaan
+// @brief Opens `filename` and stores its fd in the concerned word, so that
+// the word can redirect its output to that fd.
 int	prepare_rredir(t_astnode *rredir);
 
 // @author Emran BinJamaan
