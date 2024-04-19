@@ -24,4 +24,11 @@ void parse_lredir(t_token **token_list, t_astnode **node);
 void parse_lappend(t_token **token_list, t_astnode **node);
 void parse_rappend(t_token **token_list, t_astnode **node);
 
+/*--- PARSING - UTILS - WORD ---*/
+void initializ_new_ast_node(t_token **token_list, t_astnode **parent);
+void set_word_in_pipe(t_token **token_list, t_astnode **node);
+void set_word_in_rredir(t_token **token_list, t_astnode **node);
+void set_word_in_word(t_token **token_list, t_astnode **node);
+void set_word_in_lredir(t_token **token_list, t_astnode **node);
+
 #endif // !PARSER_H

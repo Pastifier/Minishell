@@ -16,7 +16,7 @@ SRC :=  main.c list_utils.c \
 				builtins_cd.c builtins_pwd.c builtins_env.c \
 		) \
 		$(addprefix parsing/, \
-				tokenizer.c parser.c parser_utils.c \
+				tokenizer.c parser.c parser_utils.c parse_word_utils.c\
 		) \
 		destroy.c print.c
 
