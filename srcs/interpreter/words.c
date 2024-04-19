@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 13:05:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/19 15:40:25 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	char		**envp;
 
 	envp = list_cpy_to_str_arr(envl);
+	if (!envp)
+		return (EXIT_FATAL);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork()"), EXIT_FATAL);
