@@ -54,7 +54,7 @@ void parse_word(t_token **token_list, t_astnode **node)
 {
     if (!(*node))
         initializ_new_ast_node(token_list, node);
-    else ((*node) && (*node)->type == TK_PIPE)
+    else if ((*node) && (*node)->type == TK_PIPE)
         set_word_in_pipe(token_list, node);
     else if ((*node) && (*node)->type == TK_RREDIR)
         set_word_in_rredir(token_list, node);

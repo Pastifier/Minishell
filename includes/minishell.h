@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/18 03:04:53 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/20 10:23:38 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			char	**args;
+			char 	*cmd;
+			t_node 	*args;
 			int		exit;
 			bool	thereispipe;
 			bool	thereisprev;
@@ -141,5 +142,6 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp);
 void	print_tokens(t_token **token);
 void	print_array(char **array);
 void	print_ast(t_astnode *ast);
+void	print_list(t_node **head);
 
 #endif // !MINISHELL_H
