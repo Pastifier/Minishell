@@ -5,7 +5,7 @@
 
 /*--- MAIN - SCOPE - FUNCTIONS ---*/
 
-t_astnode	*tokenize(char *line);
+t_astnode	*init_tokenizer(char *line);
 
 /*--- PARSING - UTILS ---*/
 

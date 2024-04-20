@@ -14,7 +14,7 @@ NAME := minishell
 
 # Necessities
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline -fsanitize=address -fsanitize=undefined
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -g3 -lreadline -fsanitize=address,undefined
 SRC :=  main.c list_utils.c \
 		$(addprefix parsing/, \
 				tokenizer.c parser.c parser_utils.c parse_word_utils.c\
