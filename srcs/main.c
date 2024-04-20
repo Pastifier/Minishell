@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **envp)
 			ast = tokenize(line);
 			if (ast)
 			{
-				print_ast(ast);
+				// print_ast(ast);
 				// interpret(ast, envl);
 				destroy_ast(ast);
 			}

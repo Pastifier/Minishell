@@ -24,8 +24,8 @@ t_astnode	*tokenize(char *line)
     if (token_list == NULL)
         return (NULL);
     determine_token_type(&token_list); // need to recheck for ||, &&, <<, >>
-    // printf("tokens:\n");
-    // print_tokens(&token_list);
+    printf("tokens:\n");
+    print_tokens(&token_list);
     // call the parser to parse the tokens
     ast = NULL;
     iter = token_list;
@@ -95,6 +95,16 @@ static void determine_token_type(t_token **token)
             iter->token_type = TK_RREDIR;
         else if (ft_strncmp(iter->value, "<", 1) == 0)
             iter->token_type = TK_LREDIR;
+        else if (ft_strncmp(iter->value, "&", 1) == 0)
+            iter->token_type = TK_DOLLAR;
+        else if (ft_strncmp(iter->value, "(", 1) == 0)
+            iter->token_type = TK_LPAREN;
+        else if (ft_strncmp(iter->value, ")", 1) == 0)
+            iter->token_type = TK_RPAREN;
+        else if (ft_strncmp(iter->value, "\"", 1) == 0)
+            iter->token_type = TK_DBLQT;
+        else if (ft_strncmp(iter->value, "'", 1) == 0)
+            iter->token_type = TK_SGLQT;
         else
             iter->token_type = TK_WORD;
         iter = iter->next;
@@ -110,6 +120,7 @@ static t_token *token_ex(char *line)
     char *temp;
     char *new;
     unsigned int i;
+    int j;
     t_token *token_list;
     t_token *new_token;
 
@@ -118,13 +129,28 @@ static t_token *token_ex(char *line)
     i = 0;
     while (temp[i])
     {
-        if (ft_strchr(" |><&", temp[i]) || temp[i + 1] == '\0')
+        if (ft_strchr(" |><&()\"'", temp[i]) || temp[i + 1] == '\0')
         {
             if (temp[i + 1] == '\0' || i == 0)
                 i++;
-            new = ft_substr(temp, 0, i);
-            if (new == NULL)
-                return (NULL);
+            if (temp[i] == '"' || temp[i] == '\'')
+            {
+                j = i + 1;
+                while (temp[j] && temp[j] != temp[i])
+                    j++;
+                if (temp[j] == '\0')
+                    return (NULL);
+                new = ft_substr(temp, i, j - i);
+                if (new == NULL)
+                    return (NULL);
+                i = j + 1;
+            }
+            else
+            {
+                new = ft_substr(temp, 0, i);
+                if (new == NULL)
+                    return (NULL);
+            }
             new_token = token_create(new);
             if (new_token == NULL)
             {
