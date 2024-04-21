@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 12:37:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/21 11:26:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			t_node	*args;
+			char 	*cmd;
+			t_node 	*args;
 			int		exit;
 			bool	thereisprev;
 			bool	thereispipe;
@@ -143,5 +144,6 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp);
 void	print_tokens(t_token **token);
 void	print_array(char **array);
 void	print_ast(t_astnode *ast);
+void	print_list(t_node **head);
 
 #endif // !MINISHELL_H
