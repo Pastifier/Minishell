@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/20 10:23:38 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/21 11:26:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,10 @@ typedef struct s_astnode
 			char 	*cmd;
 			t_node 	*args;
 			int		exit;
-			bool	thereispipe;
 			bool	thereisprev;
+			bool	thereispipe;
+			bool	thereisout;
+			int		outfd;
 			int		*prevfd;
 			int		fd[2];
 		}	command;

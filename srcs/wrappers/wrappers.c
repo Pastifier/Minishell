@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/16 07:21:42 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/19 15:44:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,28 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	void	*temp;
 	char	*slash;
 	t_node	*pathnode;
+	char	**args;
 
-	slash = ft_strchr(word->data.command.args[0], '/');
+	args = list_cpy_to_str_arr(word->data.command.args);
+	if (!args)
+		return (EXIT_FATAL);
+	slash = ft_strchr(args[0], '/');
 	pathnode = find_variable(&envl, "PATH=");
 	temp = NULL;
 	if (pathnode)
 		temp = pathnode->content;
 	paths = ft_split(temp, ":");
 	if (!clean_up_paths(paths.array))
-		return (str_arr_destroy(paths.array), free(envp), EXIT_FATAL);
+		return (str_arr_destroy(paths.array), free(envp), free(args), EXIT_FATAL);
 	while (!slash && paths.array && *paths.array)
 	{
-		temp = ft_strjoin(*paths.array, word->data.command.args[0]);
-		execve(temp, word->data.command.args, NULL);
+		temp = ft_strjoin(*paths.array, args[0]);
+		execve(temp, args, NULL);
 		(free(temp), paths.array++);
 	}
-	execve(word->data.command.args[0], word->data.command.args, envp);
+	execve(args[0], word->data.command.args, envp);
 	(perror("bash"), str_arr_destroy(paths.array - paths.wordcount));
-	free(envp);
+	(free(args), free(envp));
 	return (EXIT_FAILURE);
 }
 
