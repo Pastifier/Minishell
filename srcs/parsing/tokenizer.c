@@ -49,11 +49,13 @@ static void tokenize(char *line, t_token **token_list)
     if (!temp || !*temp) 
         return ;
     escape_special_char(temp, &i);
+    if (temp[i] && (temp[i] == '"' || temp[i] == '\''))
+        escape_quots(temp, &i);
     if (i != 0)
         get_token(temp, i, token_list);
-    if (temp[i] == '"' || temp[i] == '\'')
-        get_quot_token(&temp[i], &i, token_list);
-    else if (temp[i] != '\0' && temp[i] != ' ')
+    // if (temp[i] == '"' || temp[i] == '\'')
+    //     get_quot_token(&temp[i], &i, token_list);
+    if (temp[i] != '\0' && temp[i] != ' ')
         get_special_char_token(&temp[i], &i, token_list);
     if (temp && temp[i] && temp[i + 1])
         tokenize(&temp[i + 1], token_list);
@@ -65,6 +67,21 @@ static void escape_special_char(char *temp, unsigned int *i)
 {
     while (temp && temp[*i] && char_in_str(temp[*i], " |><&()\"'$"))
         (*i)++;
+}
+
+static int escape_quots(char *temp, unsigned int *i)
+{
+    char c;
+
+    c = temp[*i];
+    (*i)++;
+    while (temp && temp[*i] && temp[*i] != c)
+        (*i)++;
+    if (temp[*i] == '\0')
+        return (0);
+    if (temp && temp[(*i) + 1] && (temp[(*i) + 1] == '"' || temp[(*i) + 1] == '\''))
+        return (escape_quots(&temp[(*i) + 1], i));
+    return (1);
 }
 
 static void get_token(char *temp, unsigned int i, t_token **token_list)
