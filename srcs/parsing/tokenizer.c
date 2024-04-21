@@ -17,6 +17,7 @@ static void get_token(char *temp, unsigned int i, t_token **token_list);
 static void get_quot_token(char *temp, unsigned int *i, t_token **token_list);
 static void get_special_char_token(char *temp, unsigned int *i, t_token **token_list);
 static int char_in_str(char c, char *str);
+static void join_quot_token(char *temp, unsigned int *i, t_token **token_list);
 // static t_token *token_ex(char *line);
 // static void add_char_token(t_token **token_list, char *line, unsigned int *i);
 
@@ -72,29 +73,64 @@ static void get_token(char *temp, unsigned int i, t_token **token_list)
     t_token *new_token;
 
     new = ft_substr(temp, 0, i);
-    printf("new: %s\n", new);
     if (new == NULL)
         return ;
     new_token = token_create(new);
     if (new_token == NULL)
         return ;
     token_list_append(token_list, new_token);
-    printf("new_token: %s\n", new_token->value);
 }
 
 static void get_quot_token(char *temp, unsigned int *i, t_token **token_list)
 {
     // need to handle the case where the "str1""str2" - "str"'str2' with and without $
-    int j;
+    unsigned int j;
 
     j = 1;
-    printf("temp: %s\n", temp);
-    while (temp[j] && temp[j] != temp[*i])
+    while (temp[j] && temp[j] != temp[0])
         j++;
     if (temp[j] == '\0')
         return ;
     get_token(temp, j, token_list);
-    *i = j + 1;
+    *i += j;
+    if (temp[j + 1] && (temp[j + 1] == '"' || temp[j + 1] == '\''))
+    {
+        j++;
+        join_quot_token(&temp[j], i, token_list);
+    }
+}
+
+static void join_quot_token(char *temp, unsigned int *i, t_token **token_list)
+{
+    unsigned int j;
+    char *new;
+    char *value;
+    t_token *last;
+
+    j = 1;
+    while (temp[j] && temp[j] != temp[0])
+        j++;
+    if (temp[j] == '\0')
+        return ;
+    new = ft_substr(temp, 0, j);
+    if (new == NULL)
+        return ; // need to destory parser
+    last = (*token_list);
+    while (last && last->next)
+        last = last->next;
+    value = last->value;
+    last->value = ft_strjoin(last->value, new);
+    if (last->value == NULL)
+    {
+        free(new);
+        return ; // need to destory parser
+    }
+    free(new);
+    free(value);
+    if (temp[j + 1] && (temp[j + 1] == '"' || temp[j + 1] == '\''))
+        join_quot_token(&temp[j + 1], &j, token_list);
+    else
+        *i += j + 1;
 }
 
 static void get_special_char_token(char *temp, unsigned int *i, t_token **token_list)
@@ -160,6 +196,7 @@ static void determine_token_type(t_token **token)
     iter = *token;
     while (iter)
     {
+        printf("type: %d value: %s\n", iter->token_type, iter->value);
         if (iter->value[0] == '$')
             iter->token_type = TK_DOLLAR;
         else if (ft_strncmp(iter->value, "||", 2) == 0)
