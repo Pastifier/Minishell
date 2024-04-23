@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 			ast = init_tokenizer(line);
 			if (ast)
 			{
-				print_ast(ast);
+				// print_ast(ast);
 				interpret(ast, envl);
 				// destroy_ast(ast);
 				add_history(line);
