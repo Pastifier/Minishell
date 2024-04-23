@@ -49,7 +49,9 @@ static void tokenize(char *line, t_token **token_list)
     i = 0;
     if (!temp || !*temp) 
         return ;
+    printf("temp before: %s i: %d\n", temp, i);
     escape_special_char(temp, &i);
+    printf("temp after: %s i: %d\n", temp, i);
     if (temp[i] && (temp[i] == '"' || temp[i] == '\''))
         if (!escape_quots(temp, &i))
             destroy_tokens(token_list);
@@ -80,7 +82,7 @@ static int escape_quots(char *temp, unsigned int *i)
     if (temp[*i] == '\0')
         return (0);
     (*i)++;
-    while (temp[(*i)] && char_in_str(temp[(*i)], " |><&()"))
+    while (temp[(*i)] && char_in_str(temp[(*i)], " \"'|><&()"))
         (*i)++;
     if (temp && temp[(*i)] && (temp[(*i)] == '"' || temp[(*i)] == '\''))
         return (escape_quots(temp, i));
@@ -210,5 +212,9 @@ int char_in_str(char c, char *str)
     return (1);
 }
 
+/*
+    "     w      |     w    "
+    t1 -> t2 -> t3 -> t4 -> t5
 
+*/
 
