@@ -21,6 +21,8 @@ program to generate code and execute it.
 void   parse(t_token **tokens_iter, t_astnode **node)
 
 {
+    if ((*tokens_iter))
+        printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
     if ((*tokens_iter)->token_type == TK_WORD)
         parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_PIPE)
@@ -50,55 +52,75 @@ void   parse(t_token **tokens_iter, t_astnode **node)
 
 void parse_word(t_token **token_list, t_astnode **node)
 {
-    t_astnode *new_node;
+    if (!(*node))
+        initializ_new_ast_node(token_list, node);
+    else if ((*node) && (*node)->type == TK_PIPE)
+        set_word_in_pipe(token_list, node);
+    else if ((*node) && (*node)->type == TK_RREDIR)
+        set_word_in_rredir(token_list, node);
+    else if ((*node) && (*node)->type == TK_WORD)
+        set_word_in_word(token_list, node);
+    else if ((*node) && (*node)->type == TK_LREDIR)
+        set_word_in_lredir(token_list, node);
+    // new_node = (t_astnode *)malloc(sizeof(t_astnode));
+    // if (new_node == NULL)
+    //     printf("malloc error\n"); // need to change this to destroy the tree and exit
+    // // try to handle the case when the tree head is not null lrredir, rredir, pipe // but not complete
     
-    new_node = (t_astnode *)malloc(sizeof(t_astnode));
-    if (new_node == NULL)
-        printf("malloc error\n"); // need to change this to destroy the tree and exit
-    // try to handle the case when the tree head is not null lrredir, rredir, pipe // but not complete
-    if ((*node)->type == TK_RREDIR || (*node)->type == TK_PIPE)
-    {
-        new_node->parent = *node;
-        new_node->right = NULL;
-        new_node->left = NULL;
-        if ((*node)->type == TK_RREDIR)
-            (*node)->right = new_node;
-        else
-            (*node)->left = new_node;   
-    }
-    else if ((*node)->type == TK_LREDIR)
-    {
-        new_node->right = *node;
-        new_node->parent = (*node)->parent;
-        new_node->left = NULL;
-        (*node)->parent = new_node;
-        *node = new_node;
-    }
-    else if (!(*node))
-    {
-        new_node->parent = NULL;
-        new_node->left = NULL;
-        new_node->right = NULL;
-        *node = new_node;
-    }
-    new_node->data.builtin.id = get_builtin_id(token_list);
-    if (!new_node->data.builtin.id)
-    {
-        new_node->type = TK_WORD;
-        new_node->data.command.args = get_command_args(token_list);
-        if (!new_node->data.command.args)
-            destroy_parser(token_list, node); // need to free the new_node
-		new_node->data.command.thereispipe = false;
-		new_node->data.command.thereisprev = false;
-        return ;
-    }
-    new_node->type = TK_BUILTIN;
-    new_node->data.builtin.args = get_command_args(token_list);
-    if (!new_node->data.builtin.args)
-        destroy_parser(token_list, node);
-    if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)
-        destroy_parser(token_list, node);
-    return;
+    // if (!(*node))
+    // {
+    //     new_node->parent = NULL;
+    //     new_node->left = NULL;
+    //     new_node->right = NULL;
+    //     *node = new_node;
+    // }
+    // else if ((*node) && ((*node)->type == TK_RREDIR || (*node)->type == TK_PIPE) || (*node)->type == TK_WORD)
+    // {
+    //     new_node->parent = *node;
+    //     new_node->right = NULL;
+    //     new_node->left = NULL;
+    //     if ((*node)->type == TK_RREDIR)
+    //     {
+    //         // iter to the last left node
+    //         iter = *node;
+    //         while (iter->left)
+    //             iter = iter->left;
+    //         new_t_node = node_create((*token_list)->value);
+    //         if (!new_t_node)
+    //             destroy_parser(token_list, node);
+    //         list_append(&iter->data.redirection.args, new_t_node);
+    //         // creat t_node
+    //         // append the new t_node to the last left agrs list
+    //     }
+    //     else
+    //         (*node)->right = new_node;   
+    // }
+    // else if ((*node)->type == TK_LREDIR)
+    // {
+    //     new_node->right = *node;
+    //     new_node->parent = (*node)->parent;
+    //     new_node->left = NULL;
+    //     (*node)->parent = new_node;
+    //     *node = new_node;
+    // }
+    // new_node->data.builtin.id = get_builtin_id(token_list);
+    // if (!new_node->data.builtin.id)
+    // {
+    //     new_node->type = TK_WORD;
+    //     new_node->data.command.args = get_command_args(token_list);
+    //     if (!new_node->data.command.args)
+    //         destroy_parser(token_list, node); // need to free the new_node
+	// 	new_node->data.command.thereispipe = false;
+	// 	new_node->data.command.thereisprev = false;
+    //     return ;
+    // }
+    // new_node->type = TK_BUILTIN;
+    // new_node->data.builtin.args = get_command_args(token_list);
+    // if (!new_node->data.builtin.args)
+    //     destroy_parser(token_list, node);
+    // // if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)
+    //     // destroy_parser(token_list, node);
+    // return;
 }
 
 // parse_pipe will be called when the token type is pipe it will take the token as input
@@ -108,8 +130,7 @@ void parse_pipe(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    if ((*node)->type != TK_BUILTIN && (*node)->type != TK_PIPE 
-        && (*node)->type != TK_RREDIR && (*token_list)->next->token_type != TK_WORD)
+    if (!(*node) || ((*node)->type == TK_AND || (*node)->type == TK_OR)) 
         destroy_parser(token_list, node);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
@@ -119,11 +140,12 @@ void parse_pipe(t_token **token_list, t_astnode **node)
     new_node->left = *node;
     new_node->parent = NULL;
     *node = new_node;
-    *token_list = (*token_list)->next;
-    parse_word(token_list, &new_node->right);
-    if (new_node->right == NULL)
-        destroy_parser(token_list, node);
-    new_node->right->parent = new_node;
+    // *token_list = (*token_list)->next;
+    new_node->right = NULL;
+    // parse_word(token_list, &new_node->right);
+    // if (new_node->right == NULL)
+    //     destroy_parser(token_list, node);
+    // new_node->right->parent = new_node;
     return;
 }
 /*
@@ -138,13 +160,14 @@ void parse_rredir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
-    if ((*token_list)->next->token_type != TK_WORD)
-        destroy_parser(token_list, node);
+    if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD) || !(*token_list)->next)    
+        destroy_parser(token_list, node); // destory need fixes & gards
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         destroy_parser(token_list, node);
     new_node->type = TK_RREDIR;
-    (*node)->parent = new_node;
+    if (*node)
+        (*node)->parent = new_node;
     new_node->parent = NULL;
     new_node->left = *node;
     new_node->right = NULL;
@@ -167,7 +190,7 @@ void parse_lredir(t_token **token_list, t_astnode **node)
     t_astnode *new_node;
     t_astnode *iter;
 
-    if ((*token_list)->next->token_type != TK_WORD)
+    if (!(*token_list)->next || (*token_list)->next->token_type != TK_WORD)
         destroy_parser(token_list, node);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
