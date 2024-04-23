@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 15:45:24 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:14:17 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	}
 	else
 	{
-		free(envp);
+		str_arr_destroy(envp);
 		// temp solution.
 		wait(&word->data.command.exit);
 		if (word->data.command.thereisprev)

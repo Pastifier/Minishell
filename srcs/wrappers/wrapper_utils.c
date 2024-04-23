@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 15:39:04 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:19:05 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,13 @@ void	str_arr_destroy(char **strarr)
 {
 	char	**dummy;
 
+	if (!strarr)
+		return ;
 	dummy = strarr;
 	while (*dummy)
-		free(*dummy++);
+	{
+		free(*dummy);
+		dummy++;
+	}
 	free(strarr);
 }

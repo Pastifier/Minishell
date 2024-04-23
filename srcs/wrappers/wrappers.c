@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 14:58:01 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:27:49 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		(free(temp), paths.array++);
 	}
 	execve(args[0], args, envp);
-	(perror("bash"), str_arr_destroy(paths.array - paths.wordcount));
-	(str_arr_destroy(args), str_arr_destroy(envp));
+	write(STDERR_FILENO, "bash: ", 6);
+	(perror(args[0]), str_arr_destroy(paths.array - paths.wordcount));
+	(str_arr_destroy(args));
 	return (EXIT_FAILURE);
 }
 
