@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/21 16:41:37 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:45:10 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 		if (word->data.command.thereisout)
 			dup2(word->data.command.outfd, STDOUT_FILENO);
 		wexecve(word, envl, envp);
-		(free(envp), list_destroy(&envl));
+		(str_arr_destroy(envp), list_destroy(&envl));
 		// destroy stuff.
+		exit(EXIT_FAILURE);
 	}
 	else
 	{

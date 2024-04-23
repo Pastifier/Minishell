@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 15:44:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:45:37 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		execve(temp, args, NULL);
 		(free(temp), paths.array++);
 	}
-	execve(args[0], word->data.command.args, envp);
+	execve(args[0], args, envp);
 	(perror("bash"), str_arr_destroy(paths.array - paths.wordcount));
-	(free(args), free(envp));
+	(str_arr_destroy(args), str_arr_destroy(envp));
 	return (EXIT_FAILURE);
 }
 
@@ -68,7 +68,7 @@ static char	**clean_up_paths(char **paths)
 			hold = ft_strjoin(*dummy, "/");
 			free(temp);
 			if (!hold)
-				return (str_arr_destroy(paths), NULL);
+				return (NULL);
 			*dummy = hold;
 		}
 	}

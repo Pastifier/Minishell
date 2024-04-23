@@ -26,13 +26,13 @@ int	main(int argc, char **argv, char **envp)
 			break;
 		if (line[0] != '\0')
 		{
-			add_history(line) ;
 			ast = init_tokenizer(line);
 			if (ast)
 			{
 				// print_ast(ast);
-				// interpret(ast, envl);
+				interpret(ast, envl);
 				destroy_ast(ast);
+				add_history(line);
 			}
 		}
 		free(line);

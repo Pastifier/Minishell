@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 19:47:41 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:44:51 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ char	**list_cpy_to_str_arr(t_node *lst)
 		if (!dummy->next)
 			elem_count++;
 	}
-	self = malloc(sizeof(char *) * (elem_count + 1));
-	self[elem_count] = 0;
+	self = ft_calloc((elem_count + 1), sizeof(char *));
 	while (dummy)
 	{
-		self[--elem_count] = dummy->content;
+		self[--elem_count] = ft_strdup(dummy->content);
+		// guard ft_strdup somehow
 		dummy = dummy->prev;
 	}
 	return (self);

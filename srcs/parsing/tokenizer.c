@@ -31,8 +31,8 @@ t_astnode	*init_tokenizer(char *line)
     token_list = NULL;
     tokenize(line, &token_list);
     determine_token_type(&token_list); // need to recheck for ||, &&, <<, >>
-    printf("tokens:\n");
-    print_tokens(&token_list);
+    // printf("tokens:\n");
+    // print_tokens(&token_list);
     // call the parser to parse the tokens
     ast = NULL;
     iter = token_list;

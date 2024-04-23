@@ -21,8 +21,8 @@ program to generate code and execute it.
 void   parse(t_token **tokens_iter, t_astnode **node)
 
 {
-    if ((*tokens_iter))
-        printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
+    // if ((*tokens_iter))
+    //     printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
     if ((*tokens_iter)->token_type == TK_WORD)
         parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_PIPE)
