@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/03/13 01:10:08 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:25:28 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

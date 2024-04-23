@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 13:43:03 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:41:25 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "interpreter.h"
+#include <stdio.h>
 
 extern int	g_signal;
 

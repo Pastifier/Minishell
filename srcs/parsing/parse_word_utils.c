@@ -15,8 +15,12 @@ void initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     new_node->parent = (*parent);
     new_node->left = NULL;
     new_node->right = NULL;
+    *parent = new_node;
+    new_node->data.command.thereisout = false;
+    new_node->data.command.thereispipe = false;
+    new_node->data.command.thereisprev = false;
     new_node->data.command.args = NULL;
-    *parent = new_node;   
+    set_word_in_word(token_list, &new_node);   
 }
 void set_word_in_pipe(t_token **token_list, t_astnode **node)
 {

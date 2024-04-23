@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/19 13:42:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:41:16 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	prepare_rredir(t_astnode *rredir)
 	concerned_node->data.command.outfd = *fd;
 	return (EXIT_SUCCESS);
 }
+
 
 /*
 			  (PIPE)

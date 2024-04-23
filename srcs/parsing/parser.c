@@ -62,65 +62,6 @@ void parse_word(t_token **token_list, t_astnode **node)
         set_word_in_word(token_list, node);
     else if ((*node) && (*node)->type == TK_LREDIR)
         set_word_in_lredir(token_list, node);
-    // new_node = (t_astnode *)malloc(sizeof(t_astnode));
-    // if (new_node == NULL)
-    //     printf("malloc error\n"); // need to change this to destroy the tree and exit
-    // // try to handle the case when the tree head is not null lrredir, rredir, pipe // but not complete
-    
-    // if (!(*node))
-    // {
-    //     new_node->parent = NULL;
-    //     new_node->left = NULL;
-    //     new_node->right = NULL;
-    //     *node = new_node;
-    // }
-    // else if ((*node) && ((*node)->type == TK_RREDIR || (*node)->type == TK_PIPE) || (*node)->type == TK_WORD)
-    // {
-    //     new_node->parent = *node;
-    //     new_node->right = NULL;
-    //     new_node->left = NULL;
-    //     if ((*node)->type == TK_RREDIR)
-    //     {
-    //         // iter to the last left node
-    //         iter = *node;
-    //         while (iter->left)
-    //             iter = iter->left;
-    //         new_t_node = node_create((*token_list)->value);
-    //         if (!new_t_node)
-    //             destroy_parser(token_list, node);
-    //         list_append(&iter->data.redirection.args, new_t_node);
-    //         // creat t_node
-    //         // append the new t_node to the last left agrs list
-    //     }
-    //     else
-    //         (*node)->right = new_node;   
-    // }
-    // else if ((*node)->type == TK_LREDIR)
-    // {
-    //     new_node->right = *node;
-    //     new_node->parent = (*node)->parent;
-    //     new_node->left = NULL;
-    //     (*node)->parent = new_node;
-    //     *node = new_node;
-    // }
-    // new_node->data.builtin.id = get_builtin_id(token_list);
-    // if (!new_node->data.builtin.id)
-    // {
-    //     new_node->type = TK_WORD;
-    //     new_node->data.command.args = get_command_args(token_list);
-    //     if (!new_node->data.command.args)
-    //         destroy_parser(token_list, node); // need to free the new_node
-	// 	new_node->data.command.thereispipe = false;
-	// 	new_node->data.command.thereisprev = false;
-    //     return ;
-    // }
-    // new_node->type = TK_BUILTIN;
-    // new_node->data.builtin.args = get_command_args(token_list);
-    // if (!new_node->data.builtin.args)
-    //     destroy_parser(token_list, node);
-    // // if (new_node->data.builtin.id == ENV && new_node->data.builtin.args)
-    //     // destroy_parser(token_list, node);
-    // return;
 }
 
 // parse_pipe will be called when the token type is pipe it will take the token as input

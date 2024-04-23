@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   words.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 12:45:10 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:45:24 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 			close(word->data.command.prevfd[READ_END]);
 		if (word->data.command.thereispipe)
 			close(word->data.command.fd[WRITE_END]);
+		if (word->data.command.thereisout)
+			close(word->data.command.outfd);
 	}
 	return (EXIT_SUCCESS);
 }

@@ -49,9 +49,7 @@ static void tokenize(char *line, t_token **token_list)
     i = 0;
     if (!temp || !*temp) 
         return ;
-    printf("temp before: %s i: %d\n", temp, i);
     escape_special_char(temp, &i);
-    printf("temp after: %s i: %d\n", temp, i);
     if (temp[i] && (temp[i] == '"' || temp[i] == '\''))
         if (!escape_quots(temp, &i))
             destroy_tokens(token_list);

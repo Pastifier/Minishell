@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 12:45:37 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:58:01 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		temp = pathnode->content;
 	paths = ft_split(temp, ":");
 	if (!clean_up_paths(paths.array))
-		return (str_arr_destroy(paths.array), free(envp), free(args), EXIT_FATAL);
+		return (str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, args[0]);

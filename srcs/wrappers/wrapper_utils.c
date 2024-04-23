@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 12:44:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:39:04 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,30 @@ char	**list_cpy_to_str_arr(t_node *lst)
 {
 	size_t	elem_count;
 	t_node	*dummy;
+	size_t	i;
 	char	**self;
 
 	if (!lst)
 		return (NULL);
 	dummy = lst;
 	elem_count = 0;
-	if (!dummy->next)
-		elem_count++;
-	while (dummy->next)
+	while (dummy)
 	{
 		elem_count++;
 		dummy = dummy->next;
-		if (!dummy->next)
-			elem_count++;
 	}
+	if (elem_count == 0)
+		return (NULL);
 	self = ft_calloc((elem_count + 1), sizeof(char *));
-	while (dummy)
+	i = 0;
+	while (i < elem_count)
 	{
-		self[--elem_count] = ft_strdup(dummy->content);
+		self[i] = ft_strdup(lst->content);
 		// guard ft_strdup somehow
-		dummy = dummy->prev;
+		// if (!self[i])
+		// 		return (str_arr_destroy(self), NULL);
+		lst = lst->next;
+		i++;
 	}
 	return (self);
 }
