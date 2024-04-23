@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 16:41:16 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:26:39 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	prepare_pipenode(t_astnode *pipenode)
 	t_astnode	*left_child;
 	t_astnode	*closest_left;
 
-	pipenode->data.pipe.thereisinput = false;
 	if (pipenode->type != TK_PIPE)
 		return (EXIT_NEEDED);
 	left_child = pipenode->left;
@@ -53,9 +52,10 @@ int	prepare_rredir(t_astnode *rredir)
 	if (rredir->type != TK_RREDIR)
 		return (EXIT_NEEDED);
 	fd = &rredir->data.redirection.fd;
-	*fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY);
+	*fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY, 0755);
 	if (*fd < 0)
 		return (EXIT_FATAL);
+	// it executes the word normally if this doesn't exist. (it's a fatal error. It should stop).
 	concerned_node = rredir->left;
 	if (concerned_node->type == TK_PIPE)
 		concerned_node = concerned_node->right;
