@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 		}
 		free(line);
+		rl_on_new_line();
 	}
 	return (0);
 }
