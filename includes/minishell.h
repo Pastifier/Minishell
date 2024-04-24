@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/21 11:26:06 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/24 02:00:14 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ typedef struct s_astnode
 		struct s_command
 		{
 			char 	*cmd;
+			pid_t	pid;
+			bool	isrightmost;
 			t_node 	*args;
 			int		exit;
 			bool	thereisprev;
