@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 19:26:39 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/04/23 23:02:58 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	prepare_rredir(t_astnode *rredir)
 	if (rredir->type != TK_RREDIR)
 		return (EXIT_NEEDED);
 	fd = &rredir->data.redirection.fd;
+	unlink(rredir->data.redirection.filename);
 	*fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY, 0755);
 	if (*fd < 0)
 		return (EXIT_FATAL);
