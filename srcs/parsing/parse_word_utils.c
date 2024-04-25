@@ -55,7 +55,10 @@ void set_word_in_word(t_token **token_list, t_astnode **node)
     new_t_node = node_create((*token_list)->value);
     if (!new_t_node)
         destroy_parser(token_list, node);
-    
+    if ((*token_list)->token_type == TK_ENV)
+        new_t_node->is_env = true;
+    else
+        new_t_node->is_env = false;
     list_append(&(*node)->data.command.args, new_t_node);
 }
 

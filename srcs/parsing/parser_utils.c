@@ -68,3 +68,44 @@ t_cid get_builtin_id(t_token **token)
         return (0);
 }
 
+// void remove_char(char *str, char c)
+// {
+//     int i;
+//     int j;
+//     char c;
+
+//     i = 0;
+//     j = 0;
+//     while (str[i])
+//     {
+//         if (str[i] == '"' || str[i] == '\'')
+//         {
+//             c = str[i];
+//             i++;
+//             while (str[i] != c)
+//             {
+//                 str[j] = str[i];
+//                 j++;
+//                 i++;
+//             }
+//         }
+//         i++;
+//     }
+//     str[j] = '\0';
+// }
+
+// int expansion_check(t_token **token_list)
+// {
+//     char *temp;
+
+//     temp = (*token_list)->value;
+//     while (temp)
+//     {
+//         if (*temp == '$' && ft_isalnum(*(temp + 1)))
+//             return (1);
+//         temp++;
+//     }
+//     return (0);
+// }
+    
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/21 11:26:06 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/04/24 10:36:36 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_node
 	struct s_node	*next;
 	struct s_node	*prev;
 	void			*content;
+	bool 			is_env;
 }	t_node;
 
 t_node	*node_create(void *content);
@@ -78,7 +79,8 @@ typedef enum e_token
 	TK_AND,
 	TK_OR,
 	TK_DBLQT,
-	TK_SGLQT
+	TK_SGLQT,
+	TK_ENV
 }	t_token_type;
 
 typedef struct s_token

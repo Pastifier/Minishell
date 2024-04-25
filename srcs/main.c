@@ -27,13 +27,13 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0')
 		{
 			ast = init_tokenizer(line);
-			if (ast)
-			{
-				// print_ast(ast);
-				interpret(ast, envl);
-				// destroy_ast(ast);
+			// if (ast)
+			// {
+			// 	// print_ast(ast);
+			// 	interpret(ast, envl);
+			// 	// destroy_ast(ast);
 				add_history(line);
-			}
+			// }
 		}
 		free(line);
 	}

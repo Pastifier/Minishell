@@ -31,10 +31,10 @@ void   parse(t_token **tokens_iter, t_astnode **node)
         parse_lredir(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_RREDIR)
         parse_rredir(tokens_iter, node);
-    // else if (tokens_iter->token_type == TK_D_QUOTE)
-    //     node = parse_dquote(&tokens_iter);
-    // else if (tokens_iter->token_type == TK_S_QUOTE)
-    //     node = parse_squote(&tokens_iter);
+    // else if ((*tokens_iter)->token_type == TK_DBLQT)
+    //     parse_dquote(&tokens_iter, node);
+    // else if ((*tokens_iter)->token_type == TK_SGLQT)
+    //     parse_squote(&tokens_iter, node);
     else
         printf("syntax error\n"); // need to change this to destroy the tree and exit
     if (*tokens_iter && (*tokens_iter)->next != NULL)
@@ -155,3 +155,18 @@ void parse_lredir(t_token **token_list, t_astnode **node)
     new_node->data.redirection.filename = (*token_list)->next->value;
     *token_list = (*token_list)->next;
 }
+
+void parse_squote(t_token **token_list, t_astnode **node)
+{
+    // remove_quots((*token_list)->value);
+    parse_word(token_list, node);
+}
+
+void parse_dquote(t_token **token_list, t_astnode **node)
+{
+    
+    // remove_quots((*token_list)->value);
+    parse_word(token_list, node);
+}
+
+
