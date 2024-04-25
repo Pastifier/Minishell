@@ -56,7 +56,7 @@ static void tokenize(char *line, t_token **token_list)
         destroy_tokens(token_list);
     else if (i != 0)
         get_token(temp, i, token_list);
-    if (temp[i] && temp[i] != '$')
+    if (temp[i] && temp[i] != '$' && temp[i] != '"' && temp[i] != '\'') // need to check for special characters
         get_special_char_token(&temp[i], &i, token_list);
     if (temp && temp[i] && temp[i + 1])
         tokenize(&temp[i + 1], token_list);
