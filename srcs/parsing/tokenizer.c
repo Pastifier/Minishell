@@ -15,7 +15,7 @@ static void tokenize(char *line, t_token **token_list);
 static void escape_special_char(char *temp, unsigned int *i);
 static void get_token(char *temp, unsigned int i, t_token **token_list);
 // static void get_quot_token(char *temp, unsigned int *i, t_token **token_list);
-static void get_special_char_token(char *temp, unsigned int *i, t_token **token_list);
+static int get_special_char_token(char *temp, unsigned int *i, t_token **token_list);
 static int char_in_str(char c, char *str);
 static int escape_quots(char *temp, unsigned int *i, t_token **token_list);
 static void dollar_check(char *str, t_token **token_list, unsigned int *i);
@@ -52,14 +52,12 @@ static void tokenize(char *line, t_token **token_list)
     if (!temp || !*temp) 
         return ;
     escape_special_char(temp, &i);
-    if (i == 0 && (temp[i] == '"' || temp[i] == '\'') && !escape_quots(temp, &i, token_list))
-        destroy_tokens(token_list);
-    else if (i != 0)
+    if (i != 0)
         get_token(temp, i, token_list);
-    if (temp[i] && temp[i] != '$' && temp[i] != '"' && temp[i] != '\'') // need to check for special characters
-        get_special_char_token(&temp[i], &i, token_list);
-    if (temp && temp[i] && temp[i + 1])
-        tokenize(&temp[i + 1], token_list);
+    if (temp[i] && !get_special_char_token(&temp[i], &i, token_list))
+        return ;
+    if (temp && temp[i])
+        tokenize(&temp[i], token_list);
     else
         return;
 }
@@ -81,9 +79,9 @@ static int escape_quots(char *temp, unsigned int *i, t_token **token_list)
     if (temp[*i] == '\0')
         return (0);
     if (c == '"')
-        dollar_check(temp, token_list, i);
+        dollar_check(&temp[1], token_list, i);
     else if (c == '\'')
-        get_token(temp, *i, token_list);
+        get_token(&temp[1], *i, token_list);
     (*i)++;
     return (1);
 }
@@ -93,17 +91,24 @@ void dollar_check(char *str, t_token **token_list, unsigned int *i)
     unsigned int j;
     unsigned int k;
 
+    //"$'ahmed'$|'samy'"
+    // $
+    // 'ahmed'
+    // $|'samy'
+    // |'samy'
     j = 0;
-    while (str[j] && str[j] != '$' && j != *i)
+    while (str[j] && str[j] != '$' && str[j] != '"')
         j++;
-    get_token(str, j + 1, token_list);
+    if (j != 0)
+        get_token(str, j, token_list);
     if (str[j] == '$')
     {
-        k = j;
-        escape_special_char(str, &j);
-        get_token(&str[k], j, token_list);
+        k = 1;
+        escape_special_char(&str[j], &k);
+        get_token(&str[j], k, token_list);
+        j += k;
     }
-    if (j != *i)
+    if (str[j] != '"') // need to prevent double calls
         dollar_check(&str[j], token_list, i);
 }
 
@@ -112,10 +117,11 @@ static void get_token(char *temp, unsigned int i, t_token **token_list)
     char *new;
     t_token *new_token;
 
-    printf("temp: i = %d\n", i);
+    printf("temp: %s i: %d\n", temp, i);
     new = ft_substr(temp, 0, i);
     if (new == NULL)
         return ;
+    printf("new: %s\n", new);
     new_token = token_create(new);
     if (new_token == NULL)
         return ;
@@ -131,16 +137,36 @@ if it is in a double quote, and there is no argment after it, it should be consi
 */
 
 
-static void get_special_char_token(char *temp, unsigned int *i, t_token **token_list)
+static int get_special_char_token(char *temp, unsigned int *i, t_token **token_list)
 {
-    printf("temp: %s\n", temp);
-    if (*temp == *(temp + 1))
+    unsigned int j;
+
+    j = 0;
+    if (*temp == '"' || *temp == '\'')
+    {
+        if (!escape_quots(temp, &j, token_list))
+            return (0);
+        else
+            *i += j;
+    }
+    else if (*temp == '$')
+    {
+        j = 1;
+        escape_special_char(temp, &j);
+        get_token(temp, j, token_list);
+        *i += j;
+    }
+    else if (*(temp + 1) && *temp == *(temp + 1))
     {
         get_token(temp, 2, token_list);
-        *i += 1;
+        *i += 2;
     }
     else
+    {
         get_token(temp, 1, token_list);
+        (*i)++;
+    }
+    return (1);
 }
     
 
