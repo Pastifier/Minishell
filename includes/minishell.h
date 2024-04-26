@@ -80,7 +80,7 @@ typedef enum e_token
 	TK_OR,
 	TK_DBLQT,
 	TK_SGLQT,
-	TK_ENV
+	TK_SPACE,
 }	t_token_type;
 
 typedef struct s_token

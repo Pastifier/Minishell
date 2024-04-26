@@ -22,6 +22,7 @@ void initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     new_node->data.command.args = NULL;
     set_word_in_word(token_list, &new_node);   
 }
+
 void set_word_in_pipe(t_token **token_list, t_astnode **node)
 {
     if ((*node) && !(*node)->right)
@@ -55,7 +56,7 @@ void set_word_in_word(t_token **token_list, t_astnode **node)
     new_t_node = node_create((*token_list)->value);
     if (!new_t_node)
         destroy_parser(token_list, node);
-    if ((*token_list)->token_type == TK_ENV)
+    if ((*token_list)->token_type == TK_DOLLAR)
         new_t_node->is_env = true;
     else
         new_t_node->is_env = false;
