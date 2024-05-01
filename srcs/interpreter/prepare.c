@@ -65,7 +65,6 @@ int	prepare_rredir(t_astnode *rredir)
 	return (EXIT_SUCCESS);
 }
 
-
 /*
 			  (PIPE)
 		(PIPE)		CMD4

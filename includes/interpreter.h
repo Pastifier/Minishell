@@ -36,4 +36,10 @@ int	handle_pipe(t_astnode *pipenode);
 // @return Exit code of the word should it have executed. EXIT_FATAL if
 // execution needs to stop. EXIT_SUCCESS otherwise.
 int	handle_word(t_astnode *word, t_node *envl);
+
+// @author Emran BinJamaan
+int handle_lredir(t_astnode *lredir);
+
+// @author Emran BinJamaan
+int handle_rredir(t_astnode *rredir);
 #endif // !INTERPRETER_H

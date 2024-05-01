@@ -16,49 +16,54 @@
 
 extern int	g_signal;
 
-static void	visit(t_astnode *node, t_node *envl, int *fetch);
+static void	visit(t_astnode *node, t_node *envl);
 static void	find_rightmost_word(t_astnode *root, t_astnode **to_set);
 
 int	interpret(t_astnode *root, t_node *envl)
 {
-	// int	std_in;
 	int			fetch;
 	int			wstatus;
 	int			exit_status;
 	t_astnode	*rightmost_word;
 
-	// std_in = dup(STDIN_FILENO)
 	if (!root)
 		return (EXIT_FAILURE);
 	rightmost_word = NULL;
+  int std_in = dup(STDIN_FILENO);
+  int std_out = dup(STDOUT_FILENO);
 	find_rightmost_word(root, &rightmost_word);
-	visit(root, envl, &fetch);
+	visit(root, envl);
 	// wait for children (if any)
-	fetch = 1;
-	exit_status = 0;
+  fetch = 1;
+  exit_status = 0;
 	while (fetch > 0)
 	{
 		fetch = wait(&wstatus);
 		if (fetch == rightmost_word->data.command.pid)
 			exit_status = wstatus;
 	}
+  dup2(std_in, STDIN_FILENO);
+  close(std_in);
+  dup2(std_out, STDOUT_FILENO);
+  close(std_out);
 	return (WEXITSTATUS(exit_status));
 }
 
-static void	visit(t_astnode *node, t_node *envl, int *fetch)
+static void	visit(t_astnode *node, t_node *envl)
 {
 	if (!node)
 		return ;
 	// Pre-order stuff
 	prepare_pipenode(node);
 	prepare_rredir(node);
+  handle_lredir(node);
+  handle_rredir(node);
 
 	// Traversal
-	visit(node->left, envl, fetch);
-	visit(node->right, envl, fetch);
+	visit(node->left, envl);
+	visit(node->right, envl);
 
 	// Post-order stuff
-	// handle_pipe(node);
 	handle_word(node, envl);
 }
 

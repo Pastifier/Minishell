@@ -130,6 +130,13 @@ typedef struct s_astnode
 	} data;
 }	t_astnode;
 
+typedef struct s_tree
+{
+  t_astnode *root;
+  t_astnode *last_command;
+  int       exit_code;
+} t_tree;
+
 /*--- BUILTINS ---*/
 t_node	*find_variable(t_node **envp, const char *variable);
 int		env(t_node **envp);
