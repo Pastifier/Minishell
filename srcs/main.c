@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	command = (t_astnode){0};
 	t_node *args = malloc(sizeof(t_node));
 	t_node *args2 = malloc(sizeof(t_node));
-	args->content = "ls";
+	args->content = "cat";
 	args->next = NULL;
 	args->prev = NULL;
 	args2->content = "cat";
@@ -60,8 +60,8 @@ int	main(int argc, char **argv, char **envp)
 	{
 	  .type = TK_WORD,
 	  .parent = &root,
-	  .left = &redirection1,
-	  .right = NULL,
+	  .left = NULL,
+	  .right = &redirection1,
 	  .data.command.args = args
 	};
 	command2 = (t_astnode)

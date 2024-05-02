@@ -43,8 +43,8 @@ int	interpret(t_astnode *root, t_node *envl)
 			exit_status = wstatus;
 	}
   dup2(std_in, STDIN_FILENO);
-  close(std_in);
   dup2(std_out, STDOUT_FILENO);
+  close(std_in);
   close(std_out);
 	return (WEXITSTATUS(exit_status));
 }
@@ -70,11 +70,8 @@ void find_rightmost_word(t_astnode *root, t_astnode **to_set)
 {
 	if (!root)
 		return;
-	find_rightmost_word(root->right, to_set);
-	if (root->type == TK_WORD && !root->right && !(*to_set))
-	{
+	if (root->type == TK_WORD)
 		*to_set = root;
-		return;
-	}
 	find_rightmost_word(root->left, to_set);
+	find_rightmost_word(root->right, to_set);
 }

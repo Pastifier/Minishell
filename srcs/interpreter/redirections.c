@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 int handle_lredir(t_astnode *lredir)
 {
@@ -7,8 +8,8 @@ int handle_lredir(t_astnode *lredir)
 
   if (lredir->type != TK_LREDIR)
     return (EXIT_NEEDED);
-  if (!access(lredir->data.redirection.filename, F_OK))
-    unlink(lredir->data.redirection.filename);
+  if (access(lredir->data.redirection.filename, F_OK))
+    return (perror(lredir->data.redirection.filename), EXIT_NEEDED);
   close(STDIN_FILENO);
   fd = open(lredir->data.redirection.filename, O_CREAT | O_RDONLY, 0755);
   if (fd < 0)
