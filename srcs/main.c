@@ -15,10 +15,10 @@ int	main(int argc, char **argv, char **envp)
   //char 		*prompt = "$> ";
   //char		*line;
   //t_astnode	*ast;
-  t_node		*envl;
+	t_node		*envl;
 
-  ((void)argc, (void)argv, envl = NULL);
-  str_arr_dup_to_list(envp, &envl);
+	((void)argc, (void)argv, envl = NULL);
+	str_arr_dup_to_list(envp, &envl);
   //while (1)
   //{
   //	line = readline(prompt);
@@ -38,39 +38,60 @@ int	main(int argc, char **argv, char **envp)
   //	free(line);
   //	rl_on_new_line();
   //}
-  t_astnode root, command, redirection1, redirection2;
-  command = (t_astnode){0};
-  command = (t_astnode)
-    {
-      .type = TK_WORD,
-      .parent = NULL,
-      .left = &redirection1,
-      .right = NULL,
-      .data.command.args = malloc(sizeof(t_node)),
-      .data.command.args->content = "ls",
-      .data.command.args->next = NULL,
-      .data.command.args->prev = NULL
-    };
-  redirection1 = (t_astnode){0};
-  redirection1 = (t_astnode)
-    {
-      .type = TK_RREDIR,
-      .parent = &command,
-      .left = &redirection2,
-      .right = NULL,
-      .data.redirection.filename = "falafel",
-    };
+	t_astnode root, command, command2, redirection1, redirection2;
+	command = (t_astnode){0};
+	t_node *args = malloc(sizeof(t_node));
+	t_node *args2 = malloc(sizeof(t_node));
+	args->content = "ls";
+	args->next = NULL;
+	args->prev = NULL;
+	args2->content = "cat";
+	args2->next = NULL;
+	args2->prev = NULL;
+	root = (t_astnode){0};
+	root = (t_astnode)
+	{
+		.type = TK_PIPE,
+		.parent = NULL,
+		.left = &command,
+		.right = &command2
+	};
+	command = (t_astnode)
+	{
+	  .type = TK_WORD,
+	  .parent = &root,
+	  .left = &redirection1,
+	  .right = NULL,
+	  .data.command.args = args
+	};
+	command2 = (t_astnode)
+	{
+		.type = TK_WORD,
+		.parent = &root,
+		.left = NULL,
+		.right = NULL,
+		.data.command.args = args2
+	};
 
-  redirection2 = (t_astnode){0};
-  redirection2 = (t_astnode)
-    {
-      .type = TK_RREDIR,
-      .parent = &redirection1,
-      .left = NULL,
-      .right = NULL,
-      .data.redirection.filename = "falafel2",
-    };
-  (void)root;
-  interpret(&command, envl);
-  return (0);
+	redirection1 = (t_astnode){0};
+	redirection1 = (t_astnode)
+	{
+	  .type = TK_LREDIR,
+	  .parent = &command,
+	  .left = NULL,
+	  .right = &redirection2,
+	  .data.redirection.filename = "falafel",
+	};
+
+  	redirection2 = (t_astnode){0};
+  	redirection2 = (t_astnode)
+	{
+	  .type = TK_LREDIR,
+	  .parent = &redirection1,
+	  .left = NULL,
+	  .right = NULL,
+	  .data.redirection.filename = "falafel2",
+	};
+	interpret(&command, envl);
+	return (0);
 }

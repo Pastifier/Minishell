@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/24 02:36:00 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/02 04:20:58 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	{
 		if (word->data.command.thereisprev)
 		{
-			dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
+			if (!word->right)
+				dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
 			close(word->data.command.prevfd[READ_END]);
 		}
 		if (word->data.command.thereispipe)
 		{
 			close(word->data.command.fd[READ_END]);
-			dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
+			if (!word->left)
+				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
 			close(word->data.command.fd[WRITE_END]);
 		}
 		//if (word->data.command.thereisout)

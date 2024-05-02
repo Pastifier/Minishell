@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/24 02:38:22 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/02 02:09:28 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,11 @@ int	interpret(t_astnode *root, t_node *envl)
 static void	visit(t_astnode *node, t_node *envl)
 {
 	if (!node)
-		return ;
+		return;
 	// Pre-order stuff
 	prepare_pipenode(node);
-	prepare_rredir(node);
-  handle_lredir(node);
-  handle_rredir(node);
+	handle_lredir(node);
+	handle_rredir(node);
 
 	// Traversal
 	visit(node->left, envl);
@@ -67,15 +66,15 @@ static void	visit(t_astnode *node, t_node *envl)
 	handle_word(node, envl);
 }
 
-void	find_rightmost_word(t_astnode *root, t_astnode **to_set)
+void find_rightmost_word(t_astnode *root, t_astnode **to_set)
 {
 	if (!root)
-		return ;
+		return;
 	find_rightmost_word(root->right, to_set);
-	if (root->type == TK_WORD && !root->left && !root->right && !(*to_set))
+	if (root->type == TK_WORD && !root->right && !(*to_set))
 	{
 		*to_set = root;
-		return ;
+		return;
 	}
 	find_rightmost_word(root->left, to_set);
 }

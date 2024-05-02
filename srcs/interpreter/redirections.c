@@ -26,7 +26,7 @@ int handle_rredir(t_astnode *rredir)
   if (!access(rredir->data.redirection.filename, F_OK))
     unlink(rredir->data.redirection.filename);
   close(STDOUT_FILENO);
-  fd = open(rredir->data.redirection.filename, O_CREAT | O_RDONLY, 0755);
+  fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY, 0755);
   if (fd < 0)
     return (EXIT_FATAL);
   rredir->data.redirection.fd = fd;
