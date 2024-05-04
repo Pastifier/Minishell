@@ -42,14 +42,14 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	{
 		if (word->data.command.thereisprev)
 		{
-			if (!word->right)
+			if (!word->left)
 				dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
 			close(word->data.command.prevfd[READ_END]);
 		}
 		if (word->data.command.thereispipe)
 		{
 			close(word->data.command.fd[READ_END]);
-			if (!word->left)
+			if (!word->right)
 				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
 			close(word->data.command.fd[WRITE_END]);
 		}
