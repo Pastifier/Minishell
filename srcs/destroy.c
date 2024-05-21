@@ -4,6 +4,8 @@ void destroy_str_arr(char **str_arr)
 {
     int i;
 
+    if (!str_arr || !*str_arr)
+        return ;
     i = 0;
     while (str_arr[i])
     {
@@ -17,6 +19,8 @@ void destroy_tokens(t_token **tokens)
 {
     t_token *temp;
 
+    if (!tokens || !*tokens)
+        return ;
     while (tokens)
     {
         temp = *tokens;
