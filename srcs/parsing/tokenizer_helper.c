@@ -26,6 +26,7 @@ int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type typ
     if (new_token == NULL)
         return (1);
     token_list_append(token_list, new_token);
+    return (0);
 }
 
 /* 
@@ -68,7 +69,7 @@ if it is in a double quote, and there is no argment after it, it should be consi
     }
     else
     {
-        get_token(temp, 1, token_list, get_token_type(temp, 1));
+        ret = get_token(temp, 1, token_list, get_token_type(temp, 1));
         if (ret)
             return (ret);
         (*i)++;

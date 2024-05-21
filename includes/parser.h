@@ -5,22 +5,22 @@
 
 /*--- MAIN - SCOPE - FUNCTIONS ---*/
 
-t_astnode	*init_tokenizer(char *line);
+int init_tokenizer(char *line, t_astnode **ast);
 
 /*---Tokenization---*/
- t_token	*token_create(char *value, t_token_type type);
- void	token_list_append(t_token **head, t_token *to_append);
+t_token	*token_create(char *value, t_token_type type);
+void	token_list_append(t_token **head, t_token *to_append);
  t_token *token_list_last(t_token **token_list);
 //  void determine_token_type(t_token **token);
- void tokenize(char *line, t_token **token_list);
- void escape_special_char(char *temp, unsigned int *i);
+int tokenize(char *line, t_token **token_list);
+void escape_special_char(char *temp, unsigned int *i);
 
  int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type);
 //  void get_quot_token(char *temp, unsigned int *i, t_token **token_list);
  int get_special_char_token(char *temp, unsigned int *i, t_token **token_list);
  int char_in_str(char c, char *str);
  int escape_quots(char *temp, unsigned int *i, t_token **token_list);
- void dollar_check(char *str, t_token **token_list, unsigned int *i);
+ int dollar_check(char *str, t_token **token_list, unsigned int *i);
  t_token_type get_token_type(char *str, int len);
 
 /*--- PARSING - UTILS ---*/
