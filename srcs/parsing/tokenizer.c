@@ -10,6 +10,7 @@
 // */
 static t_token	*token_create(char *value, t_token_type type);
 static void	token_list_append(t_token **head, t_token *to_append);
+static t_token *token_list_last(t_token **token_list);
 // static void determine_token_type(t_token **token);
 static void tokenize(char *line, t_token **token_list);
 static void escape_special_char(char *temp, unsigned int *i);
@@ -33,10 +34,6 @@ t_astnode	*init_tokenizer(char *line)
     token_list = NULL;
     tokenize(line, &token_list);
     print_tokens(&token_list);
-    // determine_token_type(&token_list); // need to recheck for ||, &&, <<, >>
-    // // printf("tokens:\n");
-    // // print_tokens(&token_list);
-    // // call the parser to parse the tokens
     ast = NULL;
     // iter = token_list;
 	// parse(&iter, &ast);
@@ -117,10 +114,28 @@ static void get_token(char *temp, unsigned int i, t_token **token_list, t_token_
 {
     char *new;
     t_token *new_token;
+    t_token *last_token;
 
     new = ft_substr(temp, 0, i);
     if (new == NULL)
         return ;
+    if (token_list && (*token_list))
+    {
+        last_token = token_list_last(token_list);
+        if ((type == TK_WORD && last_token->token_type == TK_WORD)
+                || (type == TK_SPACE && last_token->token_type == TK_SPACE))
+        {
+            last_token->value = ft_strjoin(token_list_last(token_list)->value, new);
+            if (!last_token->value)
+            {
+                free (new);
+                // destroy_tokens; need destory
+                return ;
+            }
+            free(new);
+            return ;
+        }
+    }
     new_token = token_create(new, type);
     if (new_token == NULL)
         return ;
@@ -232,6 +247,8 @@ static t_token_type get_token_type(char *str, int len)
             return (TK_RREDIR);
         else if (ft_strncmp(str, "<<", 2) == 0)
             return (TK_LREDIR);
+        else if (ft_strncmp(str, "  ", 2) == 0)
+            return (TK_SPACE);
     }
     return (TK_WORD);
 }
@@ -248,6 +265,16 @@ int char_in_str(char c, char *str)
         i++;
     }
     return (0);
+}
+
+static t_token *token_list_last(t_token **token_list)
+{
+    t_token *iter;
+
+    iter = *token_list;
+    while (iter && iter->next)
+        iter = iter->next;
+    return (iter);
 }
 
 /*
