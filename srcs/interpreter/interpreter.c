@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/02 02:09:28 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/21 04:11:24 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,23 @@ int	interpret(t_astnode *root, t_node *envl)
 	if (!root)
 		return (EXIT_FAILURE);
 	rightmost_word = NULL;
-  int std_in = dup(STDIN_FILENO);
-  int std_out = dup(STDOUT_FILENO);
+	int std_in = dup(STDIN_FILENO);
+	int std_out = dup(STDOUT_FILENO);
 	find_rightmost_word(root, &rightmost_word);
 	visit(root, envl);
 	// wait for children (if any)
-  fetch = 1;
-  exit_status = 0;
+	fetch = 1;
+	exit_status = 0;
 	while (fetch > 0)
 	{
 		fetch = wait(&wstatus);
 		if (fetch == rightmost_word->data.command.pid)
 			exit_status = wstatus;
 	}
-  dup2(std_in, STDIN_FILENO);
-  dup2(std_out, STDOUT_FILENO);
-  close(std_in);
-  close(std_out);
+	dup2(std_in, STDIN_FILENO);
+	dup2(std_out, STDOUT_FILENO);
+	close(std_in);
+	close(std_out);
 	return (WEXITSTATUS(exit_status));
 }
 

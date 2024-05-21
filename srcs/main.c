@@ -29,9 +29,9 @@ int	main(int argc, char **argv, char **envp)
 			ast = init_tokenizer(line);
 			if (ast)
 			{
-				// print_ast(ast);
+				//print_ast(ast);
 				interpret(ast, envl);
-				// destroy_ast(ast);
+				//destroy_ast(ast);
 				add_history(line);
 			}
 		}
@@ -39,3 +39,4 @@ int	main(int argc, char **argv, char **envp)
 		rl_on_new_line();
 	}
 }
+
