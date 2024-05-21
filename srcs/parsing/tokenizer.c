@@ -57,31 +57,37 @@ void escape_special_char(char *temp, unsigned int *i)
  int escape_quots(char *temp, unsigned int *i, t_token **token_list)
 {
     char c;
+    int ret;
 
     c = temp[*i];
     (*i)++;
     while (temp[*i] && temp[*i] != c)
         (*i)++;
     if (temp[*i] == '\0')
-        return (0);
+        return (3);
     if (c == '"')
         dollar_check(&temp[1], token_list, i);
     else if (c == '\'')
-        get_token(&temp[1], *i, token_list, TK_WORD);
+        ret = get_token(&temp[1], *i, token_list, TK_WORD);
+    if (ret)
+        return (ret);
     (*i)++;
-    return (1);
+    return (0);
 }
 
 void dollar_check(char *str, t_token **token_list, unsigned int *i)
 {
     unsigned int j;
     unsigned int k;
+    int ret;
 
     j = 0;
     while (str[j] && str[j] != '$' && str[j] != '"')
         j++;
     if (j != 0)
-        get_token(str, j, token_list, TK_WORD);
+        ret = get_token(str, j, token_list, TK_WORD);
+    if (ret)
+        
     if (str[j] == '$')
     {
         k = 1;

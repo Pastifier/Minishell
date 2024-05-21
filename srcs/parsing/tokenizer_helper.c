@@ -1,7 +1,7 @@
 # include "minishell.h"
 # include "parser.h"
 
-void get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type)
+int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type)
 {
     char *new;
     t_token *new_token;
@@ -9,7 +9,7 @@ void get_token(char *temp, unsigned int i, t_token **token_list, t_token_type ty
 
     new = ft_substr(temp, 0, i);
     if (new == NULL)
-        return ;
+        return (1);
     if (token_list && (*token_list))
     {
         last_token = token_list_last(token_list);
@@ -18,18 +18,13 @@ void get_token(char *temp, unsigned int i, t_token **token_list, t_token_type ty
         {
             last_token->value = ft_strjoin(token_list_last(token_list)->value, new);
             if (!last_token->value)
-            {
-                free (new);
-                // destroy_tokens; need destory
-                return ;
-            }
-            free(new);
-            return ;
+                return (free (new), 1);
+            return (free(new), 0);
         }
     }
     new_token = token_create(new, type);
     if (new_token == NULL)
-        return ;
+        return (1);
     token_list_append(token_list, new_token);
 }
 
@@ -45,12 +40,13 @@ if it is in a double quote, and there is no argment after it, it should be consi
  int get_special_char_token(char *temp, unsigned int *i, t_token **token_list)
 {
     unsigned int j;
+    int          ret;
 
     j = 0;
     if (*temp == '"' || *temp == '\'')
     {
         if (!escape_quots(temp, &j, token_list))
-            return (0);
+            return (3);
         else
             *i += j;
     }
@@ -58,20 +54,26 @@ if it is in a double quote, and there is no argment after it, it should be consi
     {
         j = 1;
         escape_special_char(temp, &j);
-        get_token(temp, j, token_list, TK_DOLLAR);
+        ret = get_token(temp, j, token_list, TK_DOLLAR);
+        if (ret)
+            return (ret);
         *i += j;
     }
     else if (*(temp + 1) && *temp == *(temp + 1))
     {
-        get_token(temp, 2, token_list, get_token_type(temp, 2));
+        ret = get_token(temp, 2, token_list, get_token_type(temp, 2));
+        if (ret)
+            return (ret);
         *i += 2;
     }
     else
     {
         get_token(temp, 1, token_list, get_token_type(temp, 1));
+        if (ret)
+            return (ret);
         (*i)++;
     }
-    return (1);
+    return (0);
 }
     
 

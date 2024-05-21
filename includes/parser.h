@@ -14,7 +14,8 @@ t_astnode	*init_tokenizer(char *line);
 //  void determine_token_type(t_token **token);
  void tokenize(char *line, t_token **token_list);
  void escape_special_char(char *temp, unsigned int *i);
- void get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type);
+
+ int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type);
 //  void get_quot_token(char *temp, unsigned int *i, t_token **token_list);
  int get_special_char_token(char *temp, unsigned int *i, t_token **token_list);
  int char_in_str(char c, char *str);
