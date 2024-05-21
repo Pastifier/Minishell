@@ -48,7 +48,7 @@ t_astnode	*init_tokenizer(char *line)
         return;
 }
 
- void escape_special_char(char *temp, unsigned int *i)
+void escape_special_char(char *temp, unsigned int *i)
 {
     while (temp && temp[*i] && !char_in_str(temp[*i], " $|><&()\"'"))
         (*i)++;
@@ -77,11 +77,6 @@ void dollar_check(char *str, t_token **token_list, unsigned int *i)
     unsigned int j;
     unsigned int k;
 
-    //"$'ahmed'$|'samy'"
-    // $
-    // 'ahmed'
-    // $|'samy'
-    // |'samy'
     j = 0;
     while (str[j] && str[j] != '$' && str[j] != '"')
         j++;
@@ -98,3 +93,8 @@ void dollar_check(char *str, t_token **token_list, unsigned int *i)
         dollar_check(&str[j], token_list, i);
 }
 
+//"$'ahmed'$|'samy'"
+    // $
+    // 'ahmed'
+    // $|'samy'
+    // |'samy'

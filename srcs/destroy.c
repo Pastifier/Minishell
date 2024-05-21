@@ -56,3 +56,9 @@ void destroy_parser(t_token **token, t_astnode **node)
     destroy_ast(*node);
     exit(1);
 }
+
+void exit_faliure(char *msg)
+{
+    write(2, msg, ft_strlen(msg));
+    exit(1);
+}
