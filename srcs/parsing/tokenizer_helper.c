@@ -46,7 +46,7 @@ if it is in a double quote, and there is no argment after it, it should be consi
     j = 0;
     if (*temp == '"' || *temp == '\'')
     {
-        if (!escape_quots(temp, &j, token_list))
+        if (escape_quots(temp, &j, token_list))
             return (3);
         else
             *i += j;

@@ -21,8 +21,8 @@ program to generate code and execute it.
 void   parse(t_token **tokens_iter, t_astnode **node)
 
 {
-    // if ((*tokens_iter))
-    //     printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
+    if ((*tokens_iter)->token_type == TK_SPACE)
+        (*tokens_iter) = (*tokens_iter)->next;
     if ((*tokens_iter)->token_type == TK_WORD)
         parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_PIPE)
@@ -31,10 +31,6 @@ void   parse(t_token **tokens_iter, t_astnode **node)
         parse_lredir(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_RREDIR)
         parse_rredir(tokens_iter, node);
-    // else if ((*tokens_iter)->token_type == TK_DBLQT)
-    //     parse_dquote(&tokens_iter, node);
-    // else if ((*tokens_iter)->token_type == TK_SGLQT)
-    //     parse_squote(&tokens_iter, node);
     else
         printf("syntax error\n"); // need to change this to destroy the tree and exit
     if (*tokens_iter && (*tokens_iter)->next != NULL)

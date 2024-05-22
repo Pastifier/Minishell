@@ -17,15 +17,15 @@ int	init_tokenizer(char *line, t_astnode **ast)
 {
     t_token     *token_list;
     int tokenize_ret;
-    // t_token     *iter;
+    t_token     *iter;
 
     token_list = NULL;
     tokenize_ret = tokenize(line, &token_list);
     if (tokenize_ret)
         return (tokenize_ret);
     print_tokens(&token_list);
-    // iter = token_list;
-	// parse(&iter, &ast);
+    iter = token_list;
+	parse(&iter, ast);
     if (ast)
         print_ast(*(ast));
     return (0);
@@ -80,7 +80,7 @@ void escape_special_char(char *temp, unsigned int *i)
         dollar_check(&temp[1], token_list, i);
     else if (c == '\'')
     {
-        ret = get_token(&temp[1], *i, token_list, TK_WORD);
+        ret = get_token(&temp[1], *i - 1, token_list, TK_WORD);
         if (ret)
             return (ret);
     }
@@ -98,9 +98,11 @@ int dollar_check(char *str, t_token **token_list, unsigned int *i)
     while (str[j] && str[j] != '$' && str[j] != '"')
         j++;
     if (j != 0)
+    {
         ret = get_token(str, j, token_list, TK_WORD);
-    if (ret)
-        return (1);
+        if (ret)
+            return (1);
+    }
     if (str[j] == '$')
     {
         k = 1;
@@ -110,7 +112,7 @@ int dollar_check(char *str, t_token **token_list, unsigned int *i)
             return (1);
         j += k;
     }
-    if (str[j] != '"') // need to prevent double calls
+    if (str[j] != '"')
         return (dollar_check(&str[j], token_list, i));
     return (0);
 }

@@ -14,7 +14,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char 		*prompt = "$> ";
 	char  		*line;
-	t_astnode	**ast;
+	t_astnode	*ast;
 	t_node		*envl;
 	int parse_ret;
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **envp)
 		ast = NULL;
 		if (line[0] != '\0')
 		{
-			parse_ret = init_tokenizer(line, ast);
+			parse_ret = init_tokenizer(line, &ast);
 			if (parse_ret)
 			{
 				printf("%i\n", parse_ret);
