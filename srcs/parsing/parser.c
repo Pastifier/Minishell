@@ -96,6 +96,7 @@ set the filename to the next node
 void parse_rredir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
+    t_astnode *iter;
 
     if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD) || !(*token_list)->next)    
         destroy_parser(token_list, node); // destory need fixes & gards
@@ -103,13 +104,13 @@ void parse_rredir(t_token **token_list, t_astnode **node)
     if (new_node == NULL)
         destroy_parser(token_list, node);
     new_node->type = TK_RREDIR;
-    if (*node)
-        (*node)->parent = new_node;
-    new_node->parent = NULL;
-    new_node->left = *node;
     new_node->right = NULL;
     new_node->data.redirection.filename = (*token_list)->next->value;
-    *node = new_node;
+    iter = *node;
+    while (iter)
+        iter = iter->right;
+    iter = new_node;
+    new_node->parent = iter->parent;
     *token_list = (*token_list)->next;
     return;
 }
@@ -141,10 +142,12 @@ void parse_lredir(t_token **token_list, t_astnode **node)
     else
     {
         iter = *node;
-        while (iter && iter->left)
+        if (iter->type == TK_PIPE)
+            iter = iter->right;
+        while (iter)
             iter = iter->left;
         new_node->parent = iter->parent;    
-        iter->left = new_node;
+        iter = new_node;
     }
     new_node->left = NULL;
     new_node->right = NULL;
