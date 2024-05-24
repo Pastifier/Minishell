@@ -23,7 +23,9 @@ int	init_tokenizer(char *line, t_astnode **ast)
     tokenize_ret = tokenize(line, &token_list);
     if (tokenize_ret)
         return (tokenize_ret);
-    print_tokens(&token_list);
+    // print_tokens(&token_list);
+    remove_spaces(&token_list);
+    // print_tokens(&token_list);
     iter = token_list;
 	parse(&iter, ast);
     if (ast)

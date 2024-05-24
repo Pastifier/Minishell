@@ -10,7 +10,9 @@ int init_tokenizer(char *line, t_astnode **ast);
 /*---Tokenization---*/
 t_token	*token_create(char *value, t_token_type type);
 void	token_list_append(t_token **head, t_token *to_append);
- t_token *token_list_last(t_token **token_list);
+void    token_list_remove(t_token **token);
+t_token *token_list_last(t_token **token_list);
+void remove_spaces(t_token **token_list);
 //  void determine_token_type(t_token **token);
 int tokenize(char *line, t_token **token_list);
 void escape_special_char(char *temp, unsigned int *i);

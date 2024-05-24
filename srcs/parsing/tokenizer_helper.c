@@ -76,8 +76,25 @@ if it is in a double quote, and there is no argment after it, it should be consi
     }
     return (0);
 }
-    
 
+void remove_spaces(t_token **token_list)
+{
+    t_token *iter;
+    t_token *temp;
+
+    iter = *token_list;
+    while (iter)
+    {
+        if (iter->next && iter->next->token_type == TK_SPACE)
+        {
+            temp = iter->next;
+            iter->next = iter->next->next;
+            free(temp->value);
+            free(temp);
+        }
+        iter = iter->next;
+    }
+}
 
 /*
     "     w      |     w    "

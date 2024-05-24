@@ -21,7 +21,7 @@ void destroy_tokens(t_token **tokens)
 
     if (!tokens || !*tokens)
         return ;
-    while (tokens)
+    while (tokens && (*tokens)->next)
     {
         temp = *tokens;
         *tokens = (*tokens)->next;

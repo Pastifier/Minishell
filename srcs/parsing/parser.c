@@ -36,8 +36,8 @@ void   parse(t_token **tokens_iter, t_astnode **node)
     if (*tokens_iter && (*tokens_iter)->next != NULL)
     {
         *tokens_iter = (*tokens_iter)->next;
-        // printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
-        // printf("node type: %d\n", (*node)->type);
+        printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
+        printf("node type: %d\n", (*node)->type);
         parse(tokens_iter, node);
     }
 }
@@ -98,27 +98,24 @@ void parse_rredir(t_token **token_list, t_astnode **node)
     t_astnode *new_node;
     t_astnode *iter;
 
+    printf("hi\n");
     if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD) || !(*token_list)->next)    
         destroy_parser(token_list, node); // destory need fixes & gards
+    printf("hi222\n");
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         destroy_parser(token_list, node);
     new_node->type = TK_RREDIR;
     new_node->right = NULL;
+    new_node->left = NULL;
     new_node->data.redirection.filename = (*token_list)->next->value;
-    if (!(*node))
-    {
-        (*node) = new_node;
-        new_node->parent = NULL;
-    }
-    else
-    {
-        iter = *node;
-        while (iter)
-            iter = iter->right;
-        iter = new_node;
-        new_node->parent = iter->parent;
-    }
+    iter = *node;
+    if (!iter)
+        printf("hiiī\n");
+    while (iter && iter->right)
+        iter = iter->right;
+    new_node->parent = iter;
+    iter = new_node;
     *token_list = (*token_list)->next;
     return;
 }

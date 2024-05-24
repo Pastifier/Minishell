@@ -94,3 +94,16 @@ t_token *token_list_last(t_token **token_list)
         iter = iter->next;
     return (iter);
 }
+
+void token_list_remove(t_token **token)
+{
+    t_token *iter;
+
+    iter = *token;
+    if (iter->prev)
+        iter->prev->next = iter->next;
+    if (iter->next)
+        iter->next->prev = iter->prev;
+    free(iter->value);
+    free(iter);
+}
