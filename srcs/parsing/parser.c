@@ -109,13 +109,21 @@ void parse_rredir(t_token **token_list, t_astnode **node)
     new_node->right = NULL;
     new_node->left = NULL;
     new_node->data.redirection.filename = (*token_list)->next->value;
-    iter = *node;
-    if (!iter)
-        printf("hiiī\n");
-    while (iter && iter->right)
-        iter = iter->right;
-    new_node->parent = iter;
-    iter = new_node;
+    if (!(*node))
+    {
+        (*node) = new_node;
+        new_node->parent = NULL;
+    }
+    else
+    {    
+        iter = *node;
+        if (iter)
+            printf("hiiī\n");
+        while (iter && iter->right)
+            iter = iter->right;
+        new_node->parent = iter;
+        iter->right = new_node;
+    }
     *token_list = (*token_list)->next;
     return;
 }
@@ -149,10 +157,10 @@ void parse_lredir(t_token **token_list, t_astnode **node)
         iter = *node;
         if (iter->type == TK_PIPE)
             iter = iter->right;
-        while (iter)
+        while (iter && iter->left)
             iter = iter->left;
         new_node->parent = iter->parent;    
-        iter = new_node;
+        iter->left= new_node;
     }
     new_node->left = NULL;
     new_node->right = NULL;
