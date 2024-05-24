@@ -106,11 +106,19 @@ void parse_rredir(t_token **token_list, t_astnode **node)
     new_node->type = TK_RREDIR;
     new_node->right = NULL;
     new_node->data.redirection.filename = (*token_list)->next->value;
-    iter = *node;
-    while (iter)
-        iter = iter->right;
-    iter = new_node;
-    new_node->parent = iter->parent;
+    if (!(*node))
+    {
+        (*node) = new_node;
+        new_node->parent = NULL;
+    }
+    else
+    {
+        iter = *node;
+        while (iter)
+            iter = iter->right;
+        iter = new_node;
+        new_node->parent = iter->parent;
+    }
     *token_list = (*token_list)->next;
     return;
 }
