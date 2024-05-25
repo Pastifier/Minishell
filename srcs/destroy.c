@@ -50,15 +50,30 @@ void destroy_ast(t_astnode *node)
     }
 }
 
-void destroy_parser(t_token **token, t_astnode **node)
+void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 {
     destroy_tokens(token);
     destroy_ast(*node);
-    exit(1);
+    show_error(exit_status);
 }
 
-void exit_faliure(char *msg)
+void show_error(int exit_status)
 {
+    char *msg;
+
+    if (exit_status == 0)
+        exit(0);
+    if (exit_status == 1)
+        msg = "Error: malloc failed\n";
+    else if (exit_status == 2)
+        msg = "Error: syntax error\n";
+    else if (exit_status == 3)
+        msg = "Error: unclosed quotes\n";
+    else if (exit_status == 4)
+        msg = "Error: command not found\n";
+    else if (exit_status == 5)
+        msg = "Error: fork failed\n";
+    else if (exit_status == 6)
+        msg = "Error: execve failed\n";
     write(2, msg, ft_strlen(msg));
-    exit(1);
 }

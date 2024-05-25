@@ -13,18 +13,16 @@
 //  t_token *token_ex(char *line);
 //  void add_char_token(t_token **token_list, char *line, unsigned int *i);
 
-int	init_tokenizer(char *line, t_astnode **ast)
+int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list)
 {
-    t_token     *token_list;
     int ret;
     t_token     *iter;
 
-    token_list = NULL;
-    ret = tokenize(line, &token_list);
+    ret = tokenize(line, token_list);
     if (ret)
         return (ret);
-    remove_spaces(&token_list);
-    iter = token_list;
+    remove_spaces(token_list);
+    iter = *token_list;
 	ret = parse(&iter, ast);
     if (ret)
         return (ret);

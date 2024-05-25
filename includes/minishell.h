@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/25 13:26:45 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/05/25 14:20:52 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,13 @@ void	print_tokens(t_token **token);
 void	print_array(char **array);
 void	print_ast(t_astnode *ast);
 void	print_list(t_node **head);
+
+/*--- DESTROY FUNCTIONS ---*/
+void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void destroy_str_arr(char **str_arr);
+void destroy_tokens(t_token **token);
+void destroy_ast(t_astnode *node);
+void destroy_parser(t_token **token, t_astnode **node);
+void show_error(int exit_status);
 
 #endif // !MINISHELL_H

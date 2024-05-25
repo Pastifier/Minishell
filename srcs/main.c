@@ -15,6 +15,7 @@ int	main(int argc, char **argv, char **envp)
 	char 		*prompt = "$> ";
 	char  		*line;
 	t_astnode	*ast;
+	t_token *token_list;
 	t_node		*envl;
 	int parse_ret;
 
@@ -26,12 +27,14 @@ int	main(int argc, char **argv, char **envp)
 		if (line == NULL)
 			break;
 		ast = NULL;
+		token_list = NULL;
 		if (line[0] != '\0')
 		{
-			parse_ret = init_tokenizer(line, &ast);
+			parse_ret = init_tokenizer(line, &ast, &token_list);
 			if (parse_ret)
 			{
-				printf("%i\n", parse_ret);
+				printf("error value: %d\n", parse_ret);
+				destroy_mini_shell(&token_list, &ast, parse_ret);
 			}
 			// 	// print_ast(ast);
 			// 	interpret(ast, envl);
