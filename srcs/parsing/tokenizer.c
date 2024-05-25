@@ -16,16 +16,18 @@
 int	init_tokenizer(char *line, t_astnode **ast)
 {
     t_token     *token_list;
-    int tokenize_ret;
+    int ret;
     t_token     *iter;
 
     token_list = NULL;
-    tokenize_ret = tokenize(line, &token_list);
-    if (tokenize_ret)
-        return (tokenize_ret);
+    ret = tokenize(line, &token_list);
+    if (ret)
+        return (ret);
     remove_spaces(&token_list);
     iter = token_list;
-	parse(&iter, ast);
+	ret = parse(&iter, ast);
+    if (ret)
+        return (ret);
     if (ast)
         print_ast(*(ast));
     return (0);

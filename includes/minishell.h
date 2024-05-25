@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/24 10:36:36 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/05/25 13:26:45 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ typedef struct s_astnode
 			bool	thereisprev;
 			bool	thereispipe;
 			bool	thereisout;
+			bool	execute;
 			int		outfd;
 			int		*prevfd;
 			int		fd[2];

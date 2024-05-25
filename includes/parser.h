@@ -34,19 +34,19 @@ void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
-void   parse(t_token **tokens_iter, t_astnode **node);
-void parse_word(t_token **token_list, t_astnode **node);
-void parse_pipe(t_token **token_list, t_astnode **node);
-void parse_rredir(t_token **token_list, t_astnode **node);
-void parse_lredir(t_token **token_list, t_astnode **node);
-void parse_lappend(t_token **token_list, t_astnode **node);
-void parse_rappend(t_token **token_list, t_astnode **node);
+int   parse(t_token **tokens_iter, t_astnode **node);
+int parse_word(t_token **token_list, t_astnode **node);
+int parse_pipe(t_token **token_list, t_astnode **node);
+int parse_rredir(t_token **token_list, t_astnode **node);
+int parse_lredir(t_token **token_list, t_astnode **node);
+int parse_lappend(t_token **token_list, t_astnode **node);
+int parse_rappend(t_token **token_list, t_astnode **node);
 
 /*--- PARSING - UTILS - WORD ---*/
-void initializ_new_ast_node(t_token **token_list, t_astnode **parent);
-void set_word_in_pipe(t_token **token_list, t_astnode **node);
-void set_word_in_rredir(t_token **token_list, t_astnode **node);
-void set_word_in_word(t_token **token_list, t_astnode **node);
-void set_word_in_lredir(t_token **token_list, t_astnode **node);
+int initializ_new_ast_node(t_token **token_list, t_astnode **parent);
+int set_word_in_pipe(t_token **token_list, t_astnode **node);
+int set_word_in_rredir(t_token **token_list, t_astnode **node);
+int set_word_in_word(t_token **token_list, t_astnode **node);
+int set_word_in_lredir(t_token **token_list, t_astnode **node);
 
 #endif // !PARSER_H

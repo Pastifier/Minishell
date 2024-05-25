@@ -21,16 +21,23 @@ program to generate code and execute it.
 int   parse(t_token **tokens_iter, t_astnode **node)
 
 {
+    int ret;
+
+    ret = 0;
     if ((*tokens_iter)->token_type == TK_SPACE)
         (*tokens_iter) = (*tokens_iter)->next;
     if ((*tokens_iter)->token_type == TK_WORD)
-        return (parse_word(tokens_iter, node));
+        ret = parse_word(tokens_iter, node);
+    else if ((*tokens_iter)->token_type == TK_DOLLAR)
+        ret = parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_PIPE)
-        return (parse_pipe(tokens_iter, node));
+        ret = parse_pipe(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_LREDIR)
-        return (parse_lredir(tokens_iter, node));
+        ret = parse_lredir(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_RREDIR)
-        return (parse_rredir(tokens_iter, node));
+        ret = parse_rredir(tokens_iter, node);
+    if (ret)
+        return (ret);
     if (*tokens_iter && (*tokens_iter)->next != NULL)
     {
         *tokens_iter = (*tokens_iter)->next;
@@ -57,6 +64,7 @@ int parse_word(t_token **token_list, t_astnode **node)
         return (set_word_in_word(token_list, node));
     else if ((*node) && (*node)->type == TK_LREDIR)
         return (set_word_in_lredir(token_list, node));
+    return (0);
 }
 
 // parse_pipe will be called when the token type is pipe it will take the token as input
@@ -66,6 +74,7 @@ int parse_pipe(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
 
+    (void)token_list;
     if (!(*node) || ((*node)->type == TK_AND || (*node)->type == TK_OR)) 
         return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
