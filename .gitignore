@@ -56,5 +56,6 @@ dkms.conf
 .vscode
 
 # Tests
-test.c
-test
+*test*
+*.txt
+
