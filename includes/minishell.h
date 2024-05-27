@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/24 11:41:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:33:53 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_node
 	struct s_node	*next;
 	struct s_node	*prev;
 	void			*content;
+	bool 			is_env;
 }	t_node;
 
 t_node	*node_create(void *content);
@@ -78,7 +79,8 @@ typedef enum e_token
 	TK_AND,
 	TK_OR,
 	TK_DBLQT,
-	TK_SGLQT
+	TK_SGLQT,
+	TK_SPACE,
 }	t_token_type;
 
 typedef struct s_token
@@ -99,10 +101,10 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			char 	*cmd;
+			char	*cmd;
 			pid_t	pid;
 			bool	isrightmost;
-			t_node 	*args;
+			t_node	*args;
 			int		exit;
 			bool	thereisprev;
 			bool	thereispipe;
@@ -127,33 +129,41 @@ typedef struct s_astnode
 		{
 			bool	thereisinput;
 			int		tempfd;
-		}	pipe;
-	} data;
+		} pipe;
+	}	data;
 }	t_astnode;
 
 typedef struct s_tree
 {
-  t_astnode *root;
-  t_astnode *last_command;
-  int       exit_code;
+	t_astnode *root;
+	t_astnode *last_command;
+	int exit_code;
 } t_tree;
 
 /*--- BUILTINS ---*/
-t_node	*find_variable(t_node **envp, const char *variable);
-int		env(t_node **envp);
-int		bltin_export(t_node **envp, const char *variable, const char *value);
-int		unset(t_node **envp, const char *variable);
+t_node *find_variable(t_node **envp, const char *variable);
+int env(t_node **envp);
+int bltin_export(t_node **envp, const char *variable, const char *value);
+int unset(t_node **envp, const char *variable);
 
 /*--- WRAPPER FUNCTIONS ---*/
-char	**list_cpy_to_str_arr(t_node *lst);
-void	str_arr_destroy(char **strarr);
-int		wexecve(t_astnode *word, t_node *envl, char **envp);
+char **list_cpy_to_str_arr(t_node *lst);
+void str_arr_destroy(char **strarr);
+int wexecve(t_astnode *word, t_node *envl, char **envp);
 
 /*--- TEMPERORY DEBUGGING FUNCTIONS*/
 
-void	print_tokens(t_token **token);
-void	print_array(char **array);
-void	print_ast(t_astnode *ast);
-void	print_list(t_node **head);
+void print_tokens(t_token **token);
+void print_array(char **array);
+void print_ast(t_astnode *ast);
+void print_list(t_node **head);
+
+/*--- DESTROY FUNCTIONS ---*/
+void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void destroy_str_arr(char **str_arr);
+void destroy_tokens(t_token **token);
+void destroy_ast(t_astnode *node);
+void destroy_parser(t_token **token, t_astnode **node);
+void show_error(int exit_status);
 
 #endif // !MINISHELL_H

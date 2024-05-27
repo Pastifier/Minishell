@@ -97,9 +97,11 @@ void print_list(t_node **head)
 	t_node *iter;
 
 	iter = *head;
+	printf("args:");
 	while (iter)
 	{
-		printf("node: %s\n", (char *)iter->content);
+		printf(" %s,", (char *)iter->content);
 		iter = iter->next;
 	}
+	printf("\n");
 }
