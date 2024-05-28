@@ -26,8 +26,8 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list)
 	ret = parse(&iter, ast);
     if (ret)
         return (ret);
-    if (ast)
-        print_ast(*(ast));
+    // if (ast)
+    //     print_ast(*(ast));
     return (0);
 }
 

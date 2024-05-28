@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/27 15:33:53 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/28 05:41:35 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,10 @@ typedef struct s_astnode
 			bool	thereisinput;
 			int		tempfd;
 		} pipe;
+		struct s_heredoc
+		{
+			char	*eof;
+		}	heredoc;
 	}	data;
 }	t_astnode;
 

@@ -36,11 +36,13 @@ int	main(int argc, char **argv, char **envp)
 				printf("error value: %d\n", parse_ret);
 				destroy_mini_shell(&token_list, &ast, parse_ret);
 			}
+			else
+			{
 			// 	// print_ast(ast);
-			// 	interpret(ast, envl);
+				interpret(ast, envl);
 				// destroy_ast(ast);
 				add_history(line);
-			// }
+			}
 		}
 		free(line);
 		rl_on_new_line();

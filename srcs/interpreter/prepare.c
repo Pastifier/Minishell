@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 23:02:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/28 00:12:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ int	prepare_pipenode(t_astnode *pipenode)
 		if (pipe(left_child->data.command.fd) < 0)
 			return (perror("pipe()"), EXIT_FATAL);
 		left_child->data.command.thereispipe = true;
-		pipenode->right->data.command.thereisprev = true;
-		pipenode->right->data.command.prevfd = left_child->data.command.fd;
-		pipenode->data.pipe.thereisinput = true;
+		if (pipenode->right)
+		{
+			pipenode->right->data.command.thereisprev = true;
+			pipenode->right->data.command.prevfd = left_child->data.command.fd;
+			pipenode->data.pipe.thereisinput = true;
+		}
 	}
 	else if (left_child->type == TK_PIPE)
 	{
@@ -37,9 +40,12 @@ int	prepare_pipenode(t_astnode *pipenode)
 		if (pipe(closest_left->data.command.fd) < 0)
 			return (perror("pipe()"), EXIT_FATAL);
 		closest_left->data.command.thereispipe = true;
-		pipenode->right->data.command.thereisprev = true;
-		pipenode->right->data.command.prevfd = closest_left->data.command.fd;
-		pipenode->data.pipe.thereisinput = true;
+		if (pipenode->right)
+		{
+			pipenode->right->data.command.thereisprev = true;
+			pipenode->right->data.command.prevfd = closest_left->data.command.fd;
+			pipenode->data.pipe.thereisinput = true;
+		}
 	}
 	return (EXIT_SUCCESS);
 }
