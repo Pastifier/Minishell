@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 14:29:22 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/29 14:35:46 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,13 +136,6 @@ typedef struct s_astnode
 		}	heredoc;
 	}	data;
 }	t_astnode;
-
-typedef struct s_tree
-{
-	t_astnode *root;
-	t_astnode *last_command;
-	int exit_code;
-} t_tree;
 
 /*--- BUILTINS ---*/
 t_node *find_variable(t_node **envp, const char *variable);
