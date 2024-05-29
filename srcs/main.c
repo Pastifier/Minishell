@@ -15,27 +15,37 @@ int	main(int argc, char **argv, char **envp)
 	char 		*prompt = "$> ";
 	char  		*line;
 	t_astnode	*ast;
+	t_token		*token_list;
 	t_node		*envl;
+	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
 	str_arr_dup_to_list(envp, &envl);
-	while (1)
+	while (true)
 	{
 		line = readline(prompt);
 		if (line == NULL)
 			break;
+		ast = NULL;
+		token_list = NULL;
 		if (line[0] != '\0')
 		{
-			ast = init_tokenizer(line);
-			if (ast)
+			parse_ret = init_tokenizer(line, &ast, &token_list);
+			if (parse_ret)
 			{
-				// print_ast(ast);
+				printf("error value: %d\n", parse_ret);
+				destroy_mini_shell(&token_list, &ast, parse_ret);
+			}
+			else
+			{
+			// 	// print_ast(ast);
 				interpret(ast, envl);
 				// destroy_ast(ast);
 				add_history(line);
 			}
 		}
 		free(line);
+		rl_on_new_line();
 	}
-	return (0);
 }
+
