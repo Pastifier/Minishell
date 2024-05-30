@@ -20,7 +20,8 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 		closest_word = lredir->parent;
 		while (closest_word && closest_word->type != TK_WORD)
 			closest_word = closest_word->parent;
-		closest_word->data.command.execute = false;
+		if (closest_word)
+			closest_word->data.command.execute = false;
 		return (perror(lredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
@@ -48,7 +49,8 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 		closest_word = rredir->parent;
 		while (closest_word && closest_word->type != TK_WORD)
 			closest_word = closest_word->parent;
-		closest_word->data.command.execute = false;
+		if (closest_word)
+			closest_word->data.command.execute = false;
 		return (perror(rredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}

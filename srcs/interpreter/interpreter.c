@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 14:32:06 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/30 14:21:15 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_signal;
 
-static t_shcontext	init_context(t_astnode *root);
+static t_shcontext	init_context(t_astnode *root, t_node *envl);
 static void			visit(t_astnode *node, t_node *envl,
 	t_shcontext *mshcontext);
 static void			find_rightmost_word(t_astnode *root, t_astnode **to_set);
@@ -27,20 +27,25 @@ int	interpret(t_astnode *root, t_node *envl)
 
 	if (!root)
 		return (EXIT_FAILURE);
-	init_context(root);
-	mshcontext.stds[0] = dup(STDIN_FILENO);
-	mshcontext.stds[1] = dup(STDOUT_FILENO);
-	mshcontext.envl = envl;
+	mshcontext = init_context(root, envl);
+	// mshcontext.stds[0] = dup(STDIN_FILENO);
+	// mshcontext.stds[1] = dup(STDOUT_FILENO);
+	// mshcontext.envl = envl;
+	// mshcontext.permissions_clear = true;
 	find_rightmost_word(root, &mshcontext.rightmost_word);
 	visit(root, envl, &mshcontext);
 	fetch = 1;
-	while (fetch > 0)
+	while (fetch > 0 && mshcontext.rightmost_word)
 	{
 		fetch = wait(&mshcontext.wstatus);
 		if (fetch == mshcontext.rightmost_word->data.command.pid)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
 	restore_iodes(&mshcontext);
+	// if (WIFSIGNALED(mshcontext.exit_status))
+	// {
+	// 	ft_putnbr_fd(WTERMSIG(mshcontext.exit_status), STDERR_FILENO);
+	// }
 	return (WEXITSTATUS(mshcontext.exit_status));
 }
 
@@ -72,16 +77,19 @@ void find_rightmost_word(t_astnode *root, t_astnode **to_set)
 	find_rightmost_word(root->right, to_set);
 }
 
-static t_shcontext	init_context(t_astnode *root)
+static t_shcontext	init_context(t_astnode *root, t_node *envl)
 {
 	return ((t_shcontext)
 	{
+		.envl = envl,
 		.terminate = false,
 		.permissions_clear = true,
 		.root = root,
 		.last_command = NULL,
 		.rightmost_word = NULL,
+		.wstatus = -1,
 		.exit_status = 0,
+		.stds = { dup(STDIN_FILENO), dup(STDOUT_FILENO) }
 	});
 }
 

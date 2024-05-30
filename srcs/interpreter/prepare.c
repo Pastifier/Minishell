@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 14:32:42 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/30 12:07:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 	if (pipenode->type != TK_PIPE/* || mshcontext->terminate*/)
 		return (EXIT_NEEDED);
 	left_child = pipenode->left;
-	if (left_child->type == TK_WORD)
+	if (left_child && left_child->type == TK_WORD)
 	{
 		if (pipe(left_child->data.command.fd) < 0)
 			return (perror("pipe()"), mshcontext->terminate = true, EXIT_FATAL);
@@ -34,7 +34,7 @@ int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 			pipenode->data.pipe.thereisinput = true;
 		}
 	}
-	else if (left_child->type == TK_PIPE)
+	else if (left_child && left_child->type == TK_PIPE)
 	{
 		closest_left = left_child->right;
 		if (pipe(closest_left->data.command.fd) < 0)
