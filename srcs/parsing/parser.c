@@ -2,24 +2,7 @@
 #include "parser.h"
 #include <stdio.h>
 
-/* 
-recursive decent parser:
-    - parse the input string
-    - check for syntax errors
-    - build a parse tree
-    - generate code
-    - execute the code
-
-the parser function will be called after the tokenization
-is done, 
-it will take the tokenized string as input
-and it should return a pointer to the parse tree
-which can then be used by other functions in this
-program to generate code and execute it.
-*/
-
-int   parse(t_token **tokens_iter, t_astnode **node)
-
+int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
 {
     int ret;
 
@@ -29,7 +12,7 @@ int   parse(t_token **tokens_iter, t_astnode **node)
     if ((*tokens_iter)->token_type == TK_WORD)
         ret = parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_DOLLAR)
-        ret = parse_word(tokens_iter, node);
+        ret = parse_env(tokens_iter, node, envl);
     else if ((*tokens_iter)->token_type == TK_PIPE)
         ret = parse_pipe(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_LREDIR)
@@ -43,14 +26,10 @@ int   parse(t_token **tokens_iter, t_astnode **node)
         *tokens_iter = (*tokens_iter)->next;
         // printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
         // printf("node type: %d\n", (*node)->type);
-        return (parse(tokens_iter, node));
+        return (parse(tokens_iter, node, envl));
     }
     return (0);
 }
-
-// parse_command will be called when the token type is command
-// it will take the token as input and it should return a pointer 
-// to the parse tree for the command
 
 int parse_word(t_token **token_list, t_astnode **node)
 {
@@ -66,9 +45,6 @@ int parse_word(t_token **token_list, t_astnode **node)
         return (set_word_in_lredir(token_list, node));
     return (0);
 }
-
-// parse_pipe will be called when the token type is pipe it will take the token as input
-// and check for the tree head must be a command node or a pipe node and the next node must be a command node
 
 int parse_pipe(t_token **token_list, t_astnode **node)
 {
@@ -88,21 +64,14 @@ int parse_pipe(t_token **token_list, t_astnode **node)
     new_node->right = NULL;
     return (0);
 }
-/*
-parse_rredir will be called when the token type is rredir
-the next node must be a word node
-creat a new node and set the type to rredir
-set the left child to the tree head  
-set the filename to the next node
-*/
- //done but need to handle the case when the tree is empty
+
 int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as parse_lredir
 {
     t_astnode *new_node;
     t_astnode *iter;
 
     if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD) || !(*token_list)->next)    
-        return (2); // destory need fixes & gards
+        return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
@@ -131,14 +100,6 @@ int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as p
     return (0);
 }
 
-/*
-parse_lredir will be called when the token type is lredir
-it will take the token as input and it should return a pointer to ast
-the next node must be a word node
-creat a new node and set the type to rredir
-reach the end of the tree and set the left child to the new node
-*/
- //done but need to handle the case when the tree is empty
 int parse_lredir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
@@ -172,6 +133,27 @@ int parse_lredir(t_token **token_list, t_astnode **node)
     new_node->data.redirection.filename = (*token_list)->next->value;
     *token_list = (*token_list)->next;
     return (0);
+}
+
+int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
+{
+    t_node *iter;
+    char *env_value;
+
+    iter = *envl;
+    env_value = &(*token_list)->value[1];
+    while (iter && iter->next)
+    {
+        if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
+        {
+            free((*token_list)->value);
+            (*token_list)->value = iter->content;
+            return (parse_word(token_list, node));
+        }
+        iter = iter->next;
+    }
+    (*token_list)->value = "";
+    return (parse_word(token_list, node));
 }
 
 

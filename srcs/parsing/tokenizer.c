@@ -1,18 +1,8 @@
 #include "parser.h"
 #include <stdio.h>
 
-// /*
-//  minishell tokenizer:
-//     1- split the input line into tokens
-//     2- create a linked list of tokens
-//     3- call the parser to parse the tokens  
-// */
-
-//  void join_quot_token(char *temp, unsigned int *i, t_token **token_list);
-//  t_token *token_ex(char *line);
-//  void add_char_token(t_token **token_list, char *line, unsigned int *i);
-
-int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list)
+int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
+                    t_node **envl)
 {
     int ret;
     t_token     *iter;
@@ -22,11 +12,9 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list)
         return (ret);
     remove_spaces(token_list);
     iter = *token_list;
-	ret = parse(&iter, ast);
+	ret = parse(&iter, ast, envl);
     if (ret)
         return (ret);
-    // if (ast)
-    //     print_ast(*(ast));
     return (0);
 }
 

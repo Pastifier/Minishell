@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **envp)
 		token_list = NULL;
 		if (line[0] != '\0')
 		{
-			parse_ret = init_tokenizer(line, &ast, &token_list);
+			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
 			if (parse_ret)
 			{
 				printf("error value: %d\n", parse_ret); // should be in stderr

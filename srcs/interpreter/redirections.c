@@ -78,6 +78,7 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	if (heredoc->type != TK_LAPPEND /* || mshcontext->terminate*/)
 		return (EXIT_NEEDED);
 	input = NULL;
+	buffer = NULL;
 	while (buffer)
 	{
 		buffer = readline("> ");
