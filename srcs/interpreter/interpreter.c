@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/31 12:16:55 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:31:10 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,14 @@ int	interpret(t_astnode *root, t_node *envl)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
 	restore_iodes(&mshcontext);
-	ft_putnbr_fd(WEXITSTATUS(mshcontext.exit_status), STDOUT_FILENO);
 	// if (WIFSIGNALED(mshcontext.exit_status))
 	// {
 	// 	ft_putnbr_fd(WTERMSIG(mshcontext.exit_status), STDERR_FILENO);
 	// }
-	return (WEXITSTATUS(mshcontext.exit_status));
+	if (mshcontext.rightmost_word->data.command.execute)
+		return (WEXITSTATUS(mshcontext.exit_status));
+	// ft_putnbr_fd(EXIT_FAILURE, STDOUT_FILENO);
+	return (EXIT_FAILURE);
 }
 
 static void	visit(t_astnode *node, t_node *envl, t_shcontext *mshcontext)
