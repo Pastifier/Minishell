@@ -13,35 +13,35 @@ void print_ast(t_astnode *ast)
 	{
 		printf("cmd: %s\n", ast->data.command.cmd);
 		print_list(&ast->data.command.args);
-		printf("Left: \n");
+		printf("%s Left: \n", ast->data.command.cmd);
 		print_ast(ast->left);
-		printf("Right: \n");
+		printf("%s Right: \n", ast->data.command.cmd);
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_PIPE)
 	{
 		printf("pipe\n");
-        printf("left:\n");
+        printf("pipe left:\n");
 		print_ast(ast->left);
-        printf("right:\n");
+        printf("pipe right:\n");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_LREDIR)
 	{
 		printf("left ledirect\n");
 		printf("file name: %s\n", ast->data.redirection.filename);
-		printf("left:");
+		printf("left of LEFTRDIR:");
 		print_ast(ast->left);
-		printf("right: ");
+		printf("right of LEFTRDIR: ");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_RREDIR)
 	{
 		printf("right redirect\n");
 		printf("file name: %s\n", ast->data.redirection.filename);
-		printf("left: ");
+		printf("left of RREDIR: ");
 		print_ast(ast->left);
-		printf("right: ");
+		printf("right RREDIR: ");
 		print_ast(ast->right);
 	}
 	else if (ast->type == TK_DBLQT)

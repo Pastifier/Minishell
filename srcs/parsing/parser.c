@@ -92,11 +92,11 @@ int parse_pipe(t_token **token_list, t_astnode **node)
 parse_rredir will be called when the token type is rredir
 the next node must be a word node
 creat a new node and set the type to rredir
-set the left child to the tree head
+set the left child to the tree head  
 set the filename to the next node
 */
  //done but need to handle the case when the tree is empty
-int parse_rredir(t_token **token_list, t_astnode **node)
+int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as parse_lredir
 {
     t_astnode *new_node;
     t_astnode *iter;
@@ -118,7 +118,6 @@ int parse_rredir(t_token **token_list, t_astnode **node)
     else
     {    
         iter = *node;
-        if (iter)
         while (iter && iter->right)
             iter = iter->right;
         new_node->parent = iter;
@@ -145,7 +144,7 @@ int parse_lredir(t_token **token_list, t_astnode **node)
         return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
-        return (0);
+        return (1);
     new_node->type = TK_LREDIR;
     if (!(*node))
     {
@@ -155,12 +154,10 @@ int parse_lredir(t_token **token_list, t_astnode **node)
     else
     {
         iter = *node;
-        if (iter->type == TK_PIPE)
+        while (iter && iter->right)
             iter = iter->right;
-        while (iter && iter->left)
-            iter = iter->left;
-        new_node->parent = iter->parent;    
-        iter->left= new_node;
+        new_node->parent = iter;
+        iter->right = new_node;
     }
     new_node->left = NULL;
     new_node->right = NULL;

@@ -29,6 +29,7 @@ int initializ_new_ast_node(t_token **token_list, t_astnode **parent)
 int set_word_in_pipe(t_token **token_list, t_astnode **node)
 {
     int ret;
+    t_astnode *temp;
 
     if ((*node) && !(*node)->right)
     {
@@ -37,8 +38,15 @@ int set_word_in_pipe(t_token **token_list, t_astnode **node)
             return (1);
         (*node)->right->parent = (*node);
     }
-    else if ((*node) && (*node)->right->type == TK_PIPE)
-        return (set_word_in_pipe(token_list, &(*node)->right));
+    else if ((*node) && ((*node)->right->type == TK_RREDIR || (*node)->right->type == TK_LREDIR))
+    
+    {
+        temp = (*node)->right;
+        ret = initializ_new_ast_node(token_list, &(*node)->right);
+        if (ret)
+            return (1);
+        (*node)->right->right = temp;
+    }
     else if ((*node) && (*node)->right)
         return (set_word_in_word(token_list, &(*node)->right));
     return (0);
