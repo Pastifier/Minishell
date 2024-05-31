@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/25 14:20:52 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:59:57 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef enum e_token
 	TK_DBLQT,
 	TK_SGLQT,
 	TK_SPACE,
+	TK_DUMMY
 }	t_token_type;
 
 typedef struct s_token
@@ -101,12 +102,15 @@ typedef struct s_astnode
 	{
 		struct s_command
 		{
-			char 	*cmd;
-			t_node 	*args;
+			char	*cmd;
+			pid_t	pid;
+			bool	isrightmost;
+			t_node	*args;
 			int		exit;
 			bool	thereisprev;
 			bool	thereispipe;
 			bool	thereisout;
+			bool	thereisin;
 			bool	execute;
 			int		outfd;
 			int		*prevfd;
@@ -127,30 +131,34 @@ typedef struct s_astnode
 		{
 			bool	thereisinput;
 			int		tempfd;
-		}	pipe;
-	} data;
+		} pipe;
+		struct s_heredoc
+		{
+			char	*eof;
+		}	heredoc;
+	}	data;
 }	t_astnode;
 
 /*--- BUILTINS ---*/
-t_node	*find_variable(t_node **envp, const char *variable);
-int		env(t_node **envp);
-int		bltin_export(t_node **envp, const char *variable, const char *value);
-int		unset(t_node **envp, const char *variable);
+t_node *find_variable(t_node **envp, const char *variable);
+int env(t_node **envp);
+int bltin_export(t_node **envp, const char *variable, const char *value);
+int unset(t_node **envp, const char *variable);
 
 /*--- WRAPPER FUNCTIONS ---*/
-char	**list_cpy_to_str_arr(t_node *lst);
-void	str_arr_destroy(char **strarr);
-int		wexecve(t_astnode *word, t_node *envl, char **envp);
+char **list_cpy_to_str_arr(t_node *lst);
+void str_arr_destroy(char **strarr);
+int wexecve(t_astnode *word, t_node *envl, char **envp);
 
 /*--- TEMPERORY DEBUGGING FUNCTIONS*/
 
-void	print_tokens(t_token **token);
-void	print_array(char **array);
-void	print_ast(t_astnode *ast);
-void	print_list(t_node **head);
+void print_tokens(t_token **token);
+void print_array(char **array);
+void print_ast(t_astnode *ast);
+void print_list(t_node **head);
 
 /*--- DESTROY FUNCTIONS ---*/
-void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
 void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);

@@ -15,13 +15,13 @@ int	main(int argc, char **argv, char **envp)
 	char 		*prompt = "$> ";
 	char  		*line;
 	t_astnode	*ast;
-	t_token *token_list;
+	t_token		*token_list;
 	t_node		*envl;
-	int parse_ret;
+	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
 	str_arr_dup_to_list(envp, &envl);
-	while (1)
+	while (true)
 	{
 		line = readline(prompt);
 		if (line == NULL)
@@ -33,16 +33,19 @@ int	main(int argc, char **argv, char **envp)
 			parse_ret = init_tokenizer(line, &ast, &token_list);
 			if (parse_ret)
 			{
-				printf("error value: %d\n", parse_ret);
+				printf("error value: %d\n", parse_ret); // should be in stderr
 				destroy_mini_shell(&token_list, &ast, parse_ret);
 			}
+			else
+			{
 			// 	// print_ast(ast);
-			// 	interpret(ast, envl);
+				interpret(ast, envl);
 				// destroy_ast(ast);
 				add_history(line);
-			// }
+			}
 		}
 		free(line);
+		rl_on_new_line();
 	}
-	return (0);
 }
+

@@ -3,6 +3,8 @@
 		"minishell.h": "c",
 		"readline.h": "c",
 		"stdio.h": "c",
-		"__locale": "c"
+		"__locale": "c",
+		"parser.h": "c",
+		"interpreter.h": "c"
 	}
 }

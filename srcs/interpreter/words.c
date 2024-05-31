@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   words.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 19:14:17 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:12:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,24 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 		return (EXIT_FATAL);
 	pid = fork();
 	if (pid < 0)
-		return (perror("fork()"), EXIT_FATAL);
+		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
 		if (word->data.command.thereisprev)
 		{
-			dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
+			if (!word->data.command.thereisin && word->data.command.execute)
+				dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
 			close(word->data.command.prevfd[READ_END]);
 		}
 		if (word->data.command.thereispipe)
 		{
 			close(word->data.command.fd[READ_END]);
-			dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
+			if (!word->data.command.thereisout && word->data.command.execute)
+				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
 			close(word->data.command.fd[WRITE_END]);
 		}
-		if (word->data.command.thereisout)
-			dup2(word->data.command.outfd, STDOUT_FILENO);
-		wexecve(word, envl, envp);
+		// if (word->data.command.execute)
+			wexecve(word, envl, envp);
 		(str_arr_destroy(envp), list_destroy(&envl));
 		// destroy stuff.
 		exit(EXIT_FAILURE);
@@ -62,13 +63,13 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl)
 	{
 		str_arr_destroy(envp);
 		// temp solution.
-		wait(&word->data.command.exit);
 		if (word->data.command.thereisprev)
 			close(word->data.command.prevfd[READ_END]);
 		if (word->data.command.thereispipe)
 			close(word->data.command.fd[WRITE_END]);
 		if (word->data.command.thereisout)
 			close(word->data.command.outfd);
+		word->data.command.pid = pid;
 	}
 	return (EXIT_SUCCESS);
 }

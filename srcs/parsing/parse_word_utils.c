@@ -19,6 +19,7 @@ int initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     new_node->data.command.thereisout = false;
     new_node->data.command.thereispipe = false;
     new_node->data.command.thereisprev = false;
+	new_node->data.command.isrightmost = false;
     new_node->data.command.execute = true;
     new_node->data.command.args = NULL;
     if (set_word_in_word(token_list, &new_node))

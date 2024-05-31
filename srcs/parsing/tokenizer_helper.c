@@ -1,4 +1,3 @@
-# include "minishell.h"
 # include "parser.h"
 
 int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type)
