@@ -106,6 +106,10 @@ int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as p
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
+    if ((*token_list)->token_type == TK_RAPPEND)
+        new_node->data.redirection.mode = O_APPEND;
+    else
+        new_node->data.redirection.mode = 0;
     new_node->type = TK_RREDIR;
     new_node->right = NULL;
     new_node->left = NULL;
@@ -145,6 +149,10 @@ int parse_lredir(t_token **token_list, t_astnode **node)
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
+    if ((*token_list)->token_type == TK_LAPPEND)
+        new_node->data.redirection.mode = O_APPEND;
+    else
+        new_node->data.redirection.mode = 0;
     new_node->type = TK_LREDIR;
     if (!(*node))
     {
