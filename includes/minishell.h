@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 14:35:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:59:57 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef enum e_token
 	TK_DBLQT,
 	TK_SGLQT,
 	TK_SPACE,
+	TK_DUMMY
 }	t_token_type;
 
 typedef struct s_token
@@ -109,6 +110,7 @@ typedef struct s_astnode
 			bool	thereisprev;
 			bool	thereispipe;
 			bool	thereisout;
+			bool	thereisin;
 			bool	execute;
 			int		outfd;
 			int		*prevfd;

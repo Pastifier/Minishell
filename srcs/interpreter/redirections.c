@@ -10,29 +10,32 @@
 int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 {
 	int			fd;
+	int			pipedes[2];
 	t_astnode	*closest_word;
 
-	if (lredir->type != TK_LREDIR /*|| !mshcontext->permissions_clear*/)
+	if (lredir->type != TK_LREDIR || !mshcontext->permissions_clear)
 		return (EXIT_NEEDED);
+	closest_word = lredir->parent;
+	while (closest_word && closest_word->type != TK_WORD)
+		closest_word = closest_word->parent;
+	close(STDIN_FILENO);
 	if (access(lredir->data.redirection.filename, F_OK)
 		|| access(lredir->data.redirection.filename, R_OK))
 	{
-		closest_word = lredir->parent;
-		while (closest_word && closest_word->type != TK_WORD)
-			closest_word = closest_word->parent;
+		if (pipe(pipedes) < 0)
+			return (EXIT_FATAL);
+		close(pipedes[WRITE_END]);
+		dup2(pipedes[READ_END], STDIN_FILENO);
 		if (closest_word)
 			closest_word->data.command.execute = false;
 		return (perror(lredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
-	if (mshcontext->permissions_clear)
-	{
-		close(STDIN_FILENO);
-		fd = open(lredir->data.redirection.filename, O_CREAT | O_RDONLY, 0755);
-		if (fd < 0)
-			return (EXIT_FATAL);
-		lredir->data.redirection.fd = fd;
-	}
+	fd = open(lredir->data.redirection.filename, O_CREAT | O_RDONLY, 0755);
+	if (fd < 0)
+		return (EXIT_FATAL);
+	if (closest_word)
+		closest_word->data.command.thereisin = true;
 	return (EXIT_SUCCESS);
 }
 
@@ -41,27 +44,25 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 	int			fd;
 	t_astnode	*closest_word;
 
-	if (rredir->type != TK_RREDIR /*|| !mshcontext->permissions_clear*/)
+	if (rredir->type != TK_RREDIR || !mshcontext->permissions_clear)
 		return (EXIT_NEEDED);
+	closest_word = rredir->parent;
+	while (closest_word && closest_word->type != TK_WORD)
+		closest_word = closest_word->parent;
 	if (!access(rredir->data.redirection.filename, F_OK)
 		&& access(rredir->data.redirection.filename, W_OK))
 	{ // stop nearest word from executing.
-		closest_word = rredir->parent;
-		while (closest_word && closest_word->type != TK_WORD)
-			closest_word = closest_word->parent;
 		if (closest_word)
 			closest_word->data.command.execute = false;
 		return (perror(rredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
-	if (mshcontext->permissions_clear)
-	{
-		close(STDOUT_FILENO);
-		fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | O_TRUNC /* | append*/, 0755);
-		if (fd < 0)
-			return (EXIT_FATAL);
-		rredir->data.redirection.fd = fd;
-	}
+	close(STDOUT_FILENO);
+	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | O_TRUNC /* | append*/, 0755);
+	if (fd < 0)
+		return (EXIT_FATAL);
+	if (closest_word)
+		closest_word->data.command.thereisout = true;
 	return (EXIT_SUCCESS);
 }
 

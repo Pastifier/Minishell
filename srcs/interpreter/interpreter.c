@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/30 14:21:15 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:16:55 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	interpret(t_astnode *root, t_node *envl)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
 	restore_iodes(&mshcontext);
+	ft_putnbr_fd(WEXITSTATUS(mshcontext.exit_status), STDOUT_FILENO);
 	// if (WIFSIGNALED(mshcontext.exit_status))
 	// {
 	// 	ft_putnbr_fd(WTERMSIG(mshcontext.exit_status), STDERR_FILENO);
