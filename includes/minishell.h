@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/31 11:59:57 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/02 20:14:39 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ int unset(t_node **envp, const char *variable);
 
 /*--- WRAPPER FUNCTIONS ---*/
 char **list_cpy_to_str_arr(t_node *lst);
-void str_arr_destroy(char **strarr);
 int wexecve(t_astnode *word, t_node *envl, char **envp);
 
 /*--- TEMPERORY DEBUGGING FUNCTIONS*/
@@ -159,10 +158,11 @@ void print_list(t_node **head);
 
 /*--- DESTROY FUNCTIONS ---*/
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void str_arr_destroy(char **strarr);
 void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
-void show_error(int exit_status);
 
+void show_error(int exit_status);
 #endif // !MINISHELL_H
