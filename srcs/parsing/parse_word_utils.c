@@ -48,6 +48,7 @@ int set_word_in_pipe(t_token **token_list, t_astnode **node)
         if (ret)
             return (1);
         (*node)->right->right = temp;
+        temp->parent = (*node)->right;
     }
     else if ((*node) && (*node)->right)
         return (set_word_in_word(token_list, &(*node)->right));

@@ -34,6 +34,7 @@ void print_ast(t_astnode *ast)
 		print_ast(ast->left);
 		printf("right of LEFTRDIR: ");
 		print_ast(ast->right);
+		printf("parent of LEFTRDIR: %d\n", ast->parent->type);
 	}
 	else if (ast->type == TK_RREDIR)
 	{
@@ -43,6 +44,7 @@ void print_ast(t_astnode *ast)
 		print_ast(ast->left);
 		printf("right RREDIR: ");
 		print_ast(ast->right);
+		printf("parent of RREDIR: %d\n", ast->parent->type);
 	}
 	else if (ast->type == TK_DBLQT)
 	{
