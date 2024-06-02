@@ -49,7 +49,7 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 		return (EXIT_NEEDED);
 	closest_word = rredir->parent;
 	if (closest_word)
-		while (closest_word && closest_word->parent && closest_word->type != TK_WORD)
+		while (closest_word->parent && closest_word->type != TK_WORD)
 			closest_word = closest_word->parent;
 	if (!access(rredir->data.redirection.filename, F_OK)
 		&& access(rredir->data.redirection.filename, W_OK))
