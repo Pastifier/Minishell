@@ -1,15 +1,28 @@
-#include "minishell.h"
+#include "interpreter.h"
 #include <stdio.h>
 
-static int set_env(char *name, char *value, t_node **envp);
-static int add_env(char *name, char *value, t_node **envp);
+static int	set_env(char *name, char *value, t_node **envp);
+static int	add_env(char *name, char *value, t_node **envp);
+static int	cd(char *path, t_node **envp);
 
-int cd(char *path, t_node **envp)
+int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
+{
+	t_node	*cdarg;
+
+	cdarg = cdnode->data.command.args->next;
+	if (cdarg)
+		return (cd(cdarg->content, &(mshcontext->envl)));
+	return (cd(NULL, &(mshcontext->envl)));
+}
+
+static int cd(char *path, t_node **envp)
 {
     char *oldpwd;
     char *pwd;
     // long arg_limit;
 
+	if (!path)
+		return ((void)write(STDERR_FILENO, "Read the subject, habibi.\n", 26), EXIT_NEEDED);
     oldpwd = getcwd(NULL, 0);    
     if (chdir(path) == -1)
     {

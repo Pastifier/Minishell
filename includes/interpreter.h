@@ -64,4 +64,9 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext);
 // @author Emran BinJamaan
 int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
 
+// @author Emran BinJamaan
+int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
+
+int wcd(t_astnode *cdnode, t_shcontext *mshcontext);
+
 #endif // !INTERPRETER_H

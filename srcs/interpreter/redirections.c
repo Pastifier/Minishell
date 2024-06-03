@@ -15,28 +15,32 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 
 	if (lredir->type != TK_LREDIR || !mshcontext->permissions_clear)
 		return (EXIT_NEEDED);
-	closest_word = lredir->parent;
-	if (closest_word)
-		while (closest_word->parent && closest_word->type != TK_WORD)
-			closest_word = closest_word->parent;
-	close(STDIN_FILENO);
-	if (access(lredir->data.redirection.filename, F_OK)
-		|| access(lredir->data.redirection.filename, R_OK))
+	if (lredir->data.redirection.mode == O_APPEND)
+		return (handle_heredoc(lredir, mshcontext));
+	else
 	{
-		if (pipe(pipedes) < 0)
-			return (EXIT_FATAL);
-		close(pipedes[WRITE_END]);
-		dup2(pipedes[READ_END], STDIN_FILENO);
+		closest_word = lredir->parent;
 		if (closest_word)
-			closest_word->data.command.execute = false;
-		return (perror(lredir->data.redirection.filename),
-			mshcontext->permissions_clear = false, EXIT_FAILURE);
+			while (closest_word->parent && closest_word->type != TK_WORD)
+				closest_word = closest_word->parent;
+		close(STDIN_FILENO);
+		if (access(lredir->data.redirection.filename, F_OK) || access(lredir->data.redirection.filename, R_OK))
+		{
+			if (pipe(pipedes) < 0)
+				return (EXIT_FATAL);
+			close(pipedes[WRITE_END]);
+			dup2(pipedes[READ_END], STDIN_FILENO);
+			if (closest_word)
+				closest_word->data.command.execute = false;
+			return (perror(lredir->data.redirection.filename),
+					mshcontext->permissions_clear = false, EXIT_FAILURE);
+		}
+		fd = open(lredir->data.redirection.filename, O_RDONLY, 0755);
+		if (fd < 0)
+			return (EXIT_FATAL);
+		if (closest_word)
+			closest_word->data.command.thereisin = true;
 	}
-	fd = open(lredir->data.redirection.filename, O_RDONLY, 0755);
-	if (fd < 0)
-		return (EXIT_FATAL);
-	if (closest_word)
-		closest_word->data.command.thereisin = true;
 	return (EXIT_SUCCESS);
 }
 
@@ -62,7 +66,8 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
 	close(STDOUT_FILENO);
-	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | O_TRUNC | mode, 0755);
+	mode = O_TRUNC * (mode != O_APPEND) | mode;
+	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | mode, 0755);
 	if (fd < 0)
 		return (EXIT_FATAL);
 	if (closest_word)
@@ -79,16 +84,15 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	char	*temp;
 	int		pipedes[2];
 
-	if (heredoc->type != TK_LAPPEND /* || mshcontext->terminate*/)
-		return (EXIT_NEEDED);
 	input = NULL;
-	buffer = NULL;
+	buffer = (char*)1;
 	while (buffer)
 	{
 		buffer = readline("> ");
 		if (!buffer)
 			return (/*free stuff, */ EXIT_FATAL);
-		if (!ft_strncmp(buffer, heredoc->data.heredoc.eof, -1)
+		if ((!ft_strncmp(buffer, heredoc->data.redirection.filename, ft_strlen(heredoc->data.redirection.filename) + 1)
+			|| *buffer == EOF)
 			&& (free(buffer), 1))
 			break ;
 		temp = buffer;
@@ -101,13 +105,14 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 		if (!input)
 			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
 		(free(temp), free(buffer));
-		rl_on_new_line();
+		// rl_on_new_line();
 	}
 	if (pipe(pipedes) < 0)
 		return (free(input), mshcontext->terminate = true, EXIT_FATAL);
 	ft_putstr_fd(input, pipedes[WRITE_END]);
 	close(pipedes[WRITE_END]);
-	dup2(pipedes[READ_END], STDIN_FILENO);
+	if (mshcontext->permissions_clear)
+		dup2(pipedes[READ_END], STDIN_FILENO);
 	close(pipedes[READ_END]);
 	free(input);
 	return (EXIT_SUCCESS);
