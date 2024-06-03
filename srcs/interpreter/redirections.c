@@ -32,7 +32,7 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 		return (perror(lredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
-	fd = open(lredir->data.redirection.filename, O_CREAT | O_RDONLY, 0755);
+	fd = open(lredir->data.redirection.filename, O_RDONLY, 0755);
 	if (fd < 0)
 		return (EXIT_FATAL);
 	if (closest_word)
@@ -43,10 +43,12 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 {
 	int			fd;
+	int			mode;
 	t_astnode	*closest_word;
 
-	if (rredir->type != TK_RREDIR || !mshcontext->permissions_clear)
+	if (rredir->type != TK_RREDIR)
 		return (EXIT_NEEDED);
+	mode = rredir->data.redirection.mode;
 	closest_word = rredir->parent;
 	if (closest_word)
 		while (closest_word->parent && closest_word->type != TK_WORD)
@@ -60,7 +62,7 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
 	close(STDOUT_FILENO);
-	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | O_TRUNC /* | append*/, 0755);
+	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | O_TRUNC | mode, 0755);
 	if (fd < 0)
 		return (EXIT_FATAL);
 	if (closest_word)
