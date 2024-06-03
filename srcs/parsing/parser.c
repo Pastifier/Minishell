@@ -15,9 +15,11 @@ int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
         ret = parse_env(tokens_iter, node, envl);
     else if ((*tokens_iter)->token_type == TK_PIPE)
         ret = parse_pipe(tokens_iter, node);
-    else if ((*tokens_iter)->token_type == TK_LREDIR)
+    else if ((*tokens_iter)->token_type == TK_LREDIR 
+        || (*tokens_iter)->token_type == TK_LAPPEND)
         ret = parse_lredir(tokens_iter, node);
-    else if ((*tokens_iter)->token_type == TK_RREDIR)
+    else if ((*tokens_iter)->token_type == TK_RREDIR
+        || (*tokens_iter)->token_type == TK_RAPPEND)
         ret = parse_rredir(tokens_iter, node);
     if (ret)
         return (ret);
