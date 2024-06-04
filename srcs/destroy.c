@@ -32,22 +32,20 @@ void destroy_tokens(t_token **tokens)
 
 void destroy_ast(t_astnode *node)
 {
-    if (!node)
-        return ;
-    // if (node->type == TK_BUILTIN)
-    //     destroy_str_arr(node->data.command.args);
+	if (!node)
+		return ;
 	destroy_ast(node->left);
 	destroy_ast(node->right);
-    if (node->type == TK_WORD)
+	if (node->type == TK_WORD)
 	{
-        list_destroy(&node->data.command.args);
+		list_destroy(&node->data.command.args);
 		free(node);
 	}
 	else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
-    {
-        free(node->data.redirection.filename);
+	{
+		free(node->data.redirection.filename);
 		free(node);
-    }
+	}
 }
 
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
