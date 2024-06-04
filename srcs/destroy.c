@@ -36,17 +36,17 @@ void destroy_ast(t_astnode *node)
         return ;
     // if (node->type == TK_BUILTIN)
     //     destroy_str_arr(node->data.command.args);
+	destroy_ast(node->left);
+	destroy_ast(node->right);
     if (node->type == TK_WORD)
+	{
         list_destroy(&node->data.command.args);
-    else if (node->type == TK_PIPE)
-    {
-        destroy_ast(node->left);
-        destroy_ast(node->right);
-    }
-    else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
+		free(node);
+	}
+	else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
     {
         free(node->data.redirection.filename);
-        destroy_ast(node->left);
+		free(node);
     }
 }
 
