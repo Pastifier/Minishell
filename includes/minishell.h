@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/02 20:14:39 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/04 05:27:27 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct s_astnode
 			bool	thereisout;
 			bool	thereisin;
 			bool	execute;
+			bool	builtin;
 			int		outfd;
 			int		*prevfd;
 			int		fd[2];
@@ -122,11 +123,6 @@ typedef struct s_astnode
 			int		mode;
 			int		fd;
 		}	redirection;
-		struct s_builtin
-		{
-			t_cid	id;
-			char	**args;
-		}	builtin;
 		struct s_pipe
 		{
 			bool	thereisinput;
@@ -144,6 +140,7 @@ t_node *find_variable(t_node **envp, const char *variable);
 int env(t_node **envp);
 int bltin_export(t_node **envp, const char *variable, const char *value);
 int unset(t_node **envp, const char *variable);
+int	pwd(void);
 
 /*--- WRAPPER FUNCTIONS ---*/
 char **list_cpy_to_str_arr(t_node *lst);
