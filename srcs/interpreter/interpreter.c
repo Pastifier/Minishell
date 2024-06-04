@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/03 19:19:10 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/04 05:35:40 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,6 @@ int	interpret(t_astnode *root, t_node *envl)
 	if (!root)
 		return (EXIT_FAILURE);
 	mshcontext = init_context(root, envl);
-	// mshcontext.stds[0] = dup(STDIN_FILENO);
-	// mshcontext.stds[1] = dup(STDOUT_FILENO);
-	// mshcontext.envl = envl;
-	// mshcontext.permissions_clear = true;
 	find_rightmost_word(root, &mshcontext.rightmost_word);
 	visit(root, envl, &mshcontext);
 	fetch = 1;
@@ -60,7 +56,6 @@ static void	visit(t_astnode *node, t_node *envl, t_shcontext *mshcontext)
 	prepare_pipenode(node, mshcontext);
 	handle_lredir(node, mshcontext);
 	handle_rredir(node, mshcontext);
-	handle_heredoc(node, mshcontext);
 
 	// Traversal
 	visit(node->left, envl, mshcontext);
@@ -68,7 +63,7 @@ static void	visit(t_astnode *node, t_node *envl, t_shcontext *mshcontext)
 	visit(node->right, envl, mshcontext);
 
 	// Post-order stuff
-	handle_word(node, envl);
+	handle_word(node, envl, mshcontext);
 }
 
 void find_rightmost_word(t_astnode *root, t_astnode **to_set)
