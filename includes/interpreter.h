@@ -53,7 +53,7 @@ int	handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext);
 // @brief Executes word depending on its metadata provided by the `prepare_*()` functions.
 // @return Exit code of the word should it have executed. EXIT_FATAL if
 // execution needs to stop. EXIT_SUCCESS otherwise.
-int	handle_word(t_astnode *word, t_node *envl);
+int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 // @brief	...
