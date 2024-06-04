@@ -1,4 +1,3 @@
-#include "minishell.h"
 #include "parser.h"
 #include "interpreter.h"
 #include <readline/readline.h>
@@ -6,10 +5,6 @@
 
 int	g_signal = 0;
 
-// minishell entry point
-/*
-main function calls readline and call the tokenizer and the  parser to execute commands
-*/
 int	main(int argc, char **argv, char **envp)
 {
 	char 		*prompt = "$> ";
@@ -25,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		line = readline(prompt);
 		if (line == NULL)
-			break;
+			break ;
 		ast = NULL;
 		token_list = NULL;
 		if (line[0] != '\0')
@@ -40,7 +35,7 @@ int	main(int argc, char **argv, char **envp)
 			{
 			// 	// print_ast(ast);
 				interpret(ast, envl);
-				// destroy_ast(ast);
+				destroy_ast(ast);
 				add_history(line);
 			}
 		}
@@ -51,4 +46,3 @@ int	main(int argc, char **argv, char **envp)
 	clear_history();
 	destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
-

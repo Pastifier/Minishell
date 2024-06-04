@@ -7,6 +7,8 @@
 		- Finish the heredoc.
 */
 
+extern int	g_signal;
+
 int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 {
 	int			fd;
@@ -95,9 +97,8 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	{
 		buffer = readline("> ");
 		if (!buffer)
-			return (/*free stuff, */ EXIT_FATAL);
-		if ((!ft_strncmp(buffer, heredoc->data.redirection.filename, ft_strlen(heredoc->data.redirection.filename) + 1)
-			|| *buffer == EOF)
+			break ;
+		if (!ft_strncmp(buffer, heredoc->data.redirection.filename, -1)
 			&& (free(buffer), 1))
 			break ;
 		temp = buffer;
@@ -110,7 +111,7 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 		if (!input)
 			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
 		(free(temp), free(buffer));
-		// rl_on_new_line();
+		rl_on_new_line();
 	}
 	if (pipe(pipedes) < 0)
 		return (free(input), mshcontext->terminate = true, EXIT_FATAL);
