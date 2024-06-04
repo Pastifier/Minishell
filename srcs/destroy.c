@@ -34,8 +34,8 @@ void destroy_ast(t_astnode *node)
 {
     if (!node)
         return ;
-    if (node->type == TK_BUILTIN)
-        destroy_str_arr(node->data.builtin.args);
+    // if (node->type == TK_BUILTIN)
+    //     destroy_str_arr(node->data.command.args);
     if (node->type == TK_WORD)
         list_destroy(&node->data.command.args);
     else if (node->type == TK_PIPE)
