@@ -22,13 +22,14 @@ static int cd(char *path, t_node **envp)
     // long arg_limit;
 
 	if (!path)
-		return ((void)write(STDERR_FILENO, "Read the subject, habibi.\n", 26), EXIT_NEEDED);
+		return (ft_putendl_fd("msh: invalid use of `cd`. Read the subject, habibi.", STDERR_FILENO), EXIT_NEEDED);
     oldpwd = getcwd(NULL, 0);    
     if (chdir(path) == -1)
     {
-        perror("cd");
-        ft_putstr_fd(": ", 2);
-        ft_putendl_fd(path, 2);
+		ft_putstr_fd("cd: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		perror(NULL);
         free(oldpwd);
         return (EXIT_FAILURE);
     }
