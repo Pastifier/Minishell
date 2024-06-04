@@ -13,11 +13,11 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 	int			pipedes[2];
 	t_astnode	*closest_word;
 
-	if (lredir->type != TK_LREDIR || !mshcontext->permissions_clear)
+	if (lredir->type != TK_LREDIR)
 		return (EXIT_NEEDED);
 	if (lredir->data.redirection.mode == O_APPEND)
 		return (handle_heredoc(lredir, mshcontext));
-	else
+	else if (mshcontext->permissions_clear)
 	{
 		closest_word = lredir->parent;
 		if (closest_word)
@@ -79,13 +79,18 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 //			, and then slaps the result into a pipe. It then dups that pipe into stdin.
 int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 {
-	char	*buffer;
-	char	*input;
-	char	*temp;
-	int		pipedes[2];
+	t_astnode	*closest_word;
+	char		*buffer;
+	char		*input;
+	char		*temp;
+	int			pipedes[2];
 
 	input = NULL;
-	buffer = (char*)1;
+	buffer = (char *)1;
+	closest_word = heredoc->parent;
+	if (closest_word)
+		while (closest_word->parent && closest_word->type != TK_WORD)
+			closest_word = closest_word->parent;
 	while (buffer)
 	{
 		buffer = readline("> ");
@@ -112,7 +117,9 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	ft_putstr_fd(input, pipedes[WRITE_END]);
 	close(pipedes[WRITE_END]);
 	if (mshcontext->permissions_clear)
-		dup2(pipedes[READ_END], STDIN_FILENO);
+		(dup2(pipedes[READ_END], STDIN_FILENO));
+	if (closest_word)
+		closest_word->data.command.thereisin = true;
 	close(pipedes[READ_END]);
 	free(input);
 	return (EXIT_SUCCESS);
