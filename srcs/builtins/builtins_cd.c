@@ -26,7 +26,7 @@ static int cd(char *path, t_node **envp)
     oldpwd = getcwd(NULL, 0);    
     if (chdir(path) == -1)
     {
-		ft_putstr_fd("cd: ", STDERR_FILENO);
+		ft_putstr_fd("msh: cd: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		perror(NULL);
