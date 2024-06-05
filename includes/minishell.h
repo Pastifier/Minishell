@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/05 04:45:43 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/05 05:21:42 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ typedef struct s_astnode
 /*--- BUILTINS ---*/
 t_node *find_variable(t_node **envp, const char *variable);
 int env(t_node **envp, bool declare_flag);
+int	echo(t_astnode *word, t_node *first_arg);
 int bltin_export(t_node **envp, const char *variable, const char *value);
 int unset(t_node **envp, const char *variable);
 int	pwd(void);

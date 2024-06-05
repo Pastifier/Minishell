@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/05 04:59:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/05 05:23:16 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,13 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	char		*first_arg;
 	char		*temp;
 	char		*variable;
-	char		*value;
+	int			fetch;
 	char		*cmd;
 
 	cmd = word->data.command.args->content;
 	first_arg = NULL;
 	temp = NULL;
 	variable = NULL;
-	value = NULL;
 	if (word->data.command.args->next)
 		first_arg = word->data.command.args->next->content;
 	if (!ft_strncmp(cmd, "cd", -1))
@@ -125,6 +124,8 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 		return (pwd());
 	if (!ft_strncmp(cmd, "unset", -1))
 		return (unset(&mshcontext->envl, first_arg));
+	if (!ft_strncmp(cmd, "echo", -1))
+		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))
 	{
 		if (!first_arg)
@@ -135,8 +136,8 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 			variable = ft_substr(first_arg, 0, temp - first_arg + 1);
 			if (!variable)
 				return (EXIT_FATAL);
-			value = temp + 1;
-			return (bltin_export(&mshcontext->envl, variable, value));
+			fetch = bltin_export(&mshcontext->envl, variable, temp + 1);
+			return (free(variable), fetch);
 		}
 		return (bltin_export(&mshcontext->envl, first_arg, ""));
 	}
