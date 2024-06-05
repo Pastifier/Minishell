@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/12 18:47:17 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/05 04:59:34 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,41 @@
 
 t_node	*find_variable(t_node **envp, const char *variable);
 
-int	env(t_node **envp)
+int	env(t_node **envp, bool declare_flag)
 {
 	t_node	*iter;
+	char	*variable;
 
 	if (!envp)
 		return (EXIT_SUCCESS);
 	iter = *envp;
-	while (iter)
+	if (declare_flag)
 	{
-		ft_putendl_fd(iter->content, STDOUT_FILENO);
-		iter = iter->next;
+		while (iter)
+		{
+			if (iter->content)
+			{
+				variable = ft_substr(iter->content, 0, ft_strchr(iter->content, '=') - (char *)iter->content + 1);
+				if (!variable)
+					return (EXIT_FATAL);
+				ft_putstr_fd("declare -x ", STDOUT_FILENO);
+				ft_putstr_fd(variable, STDOUT_FILENO);
+				free(variable);
+				ft_putstr_fd("\"", STDOUT_FILENO);
+				ft_putstr_fd(ft_strchr(iter->content, '=') + 1, STDOUT_FILENO);
+				ft_putendl_fd("\"", STDOUT_FILENO);
+			}
+			iter = iter->next;
+		}
+	}
+	else
+	{
+		while (iter)
+		{
+			if (iter->content)
+				ft_putendl_fd(iter->content, STDOUT_FILENO);
+			iter = iter->next;
+		}
 	}
 	return (EXIT_SUCCESS);
 }
@@ -59,6 +83,8 @@ int	unset(t_node **envp, const char *variable)
 {
 	t_node	*varp;
 
+	if (!variable)
+		return (EXIT_NEEDED);
 	varp = find_variable(envp, variable);
 	node_destroy(varp);
 	return (EXIT_SUCCESS);

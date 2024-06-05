@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/04 05:33:14 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/05 04:59:50 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 {
 	pid_t		pid;
+	int			fetch;
 	char		**envp;
 
 	envp = list_cpy_to_str_arr(envl);
@@ -61,10 +62,10 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 		if (word->data.command.builtin)
 			exit(execute_builtin(word, mshcontext));
 		else if (word->data.command.execute)
-			wexecve(word, envl, envp);
+			fetch = wexecve(word, envl, envp);
 		(str_arr_destroy(envp), list_destroy(&envl));
 		// destroy stuff.
-		exit(EXIT_FAILURE);
+		exit(fetch * (fetch == 126) + 1 * (fetch != 126));
 	}
 	else
 	{
@@ -103,14 +104,41 @@ static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext)
 
 static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 {
-	char	*cmd;
+	char		*first_arg;
+	char		*temp;
+	char		*variable;
+	char		*value;
+	char		*cmd;
 
 	cmd = word->data.command.args->content;
+	first_arg = NULL;
+	temp = NULL;
+	variable = NULL;
+	value = NULL;
+	if (word->data.command.args->next)
+		first_arg = word->data.command.args->next->content;
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
-		return (env(&mshcontext->envl));
+		return (env(&mshcontext->envl, false));
 	if (!ft_strncmp(cmd, "pwd", -1))
 		return (pwd());
+	if (!ft_strncmp(cmd, "unset", -1))
+		return (unset(&mshcontext->envl, first_arg));
+	if (!ft_strncmp(cmd, "export", -1))
+	{
+		if (!first_arg)
+			return (env(&mshcontext->envl, true));
+		temp = ft_strchr(first_arg, '=');
+		if (temp)
+		{
+			variable = ft_substr(first_arg, 0, temp - first_arg + 1);
+			if (!variable)
+				return (EXIT_FATAL);
+			value = temp + 1;
+			return (bltin_export(&mshcontext->envl, variable, value));
+		}
+		return (bltin_export(&mshcontext->envl, first_arg, ""));
+	}
 	return (EXIT_FATAL);
 }
