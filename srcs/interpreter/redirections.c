@@ -61,15 +61,15 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 			closest_word = closest_word->parent;
 	if (!access(rredir->data.redirection.filename, F_OK)
 		&& access(rredir->data.redirection.filename, W_OK))
-	{ // stop nearest word from executing.
+	{
 		if (closest_word)
 			closest_word->data.command.execute = false;
 		return (perror(rredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
 	close(STDOUT_FILENO);
-	mode = O_TRUNC * (mode != O_APPEND) | mode;
-	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | mode, 0755);
+	mode = O_TRUNC * (mode != O_APPEND) | mode | O_WRONLY | O_CREAT;
+	fd = open(rredir->data.redirection.filename, mode, 0755);
 	if (fd < 0)
 		return (EXIT_FATAL);
 	if (closest_word)
