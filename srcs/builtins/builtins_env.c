@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/05 04:59:34 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:35:33 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	env(t_node **envp, bool declare_flag)
 {
 	t_node	*iter;
 	char	*variable;
+	char	*eql_address;
 
 	if (!envp)
 		return (EXIT_SUCCESS);
@@ -26,17 +27,25 @@ int	env(t_node **envp, bool declare_flag)
 	{
 		while (iter)
 		{
+			eql_address = ft_strchr(iter->content, '=');
 			if (iter->content)
 			{
-				variable = ft_substr(iter->content, 0, ft_strchr(iter->content, '=') - (char *)iter->content + 1);
+				if (eql_address)
+					variable = ft_substr(iter->content, 0, eql_address - (char *)iter->content + 1);
+				else
+					variable = ft_strdup(iter->content);
 				if (!variable)
 					return (EXIT_FATAL);
 				ft_putstr_fd("declare -x ", STDOUT_FILENO);
 				ft_putstr_fd(variable, STDOUT_FILENO);
 				free(variable);
-				ft_putstr_fd("\"", STDOUT_FILENO);
-				ft_putstr_fd(ft_strchr(iter->content, '=') + 1, STDOUT_FILENO);
-				ft_putendl_fd("\"", STDOUT_FILENO);
+				if (eql_address)
+				{
+					ft_putstr_fd("\"", STDOUT_FILENO);
+					ft_putstr_fd(eql_address + 1, STDOUT_FILENO);
+					ft_putstr_fd("\"", STDOUT_FILENO);
+				}
+				ft_putstr_fd("\n", STDOUT_FILENO);
 			}
 			iter = iter->next;
 		}
