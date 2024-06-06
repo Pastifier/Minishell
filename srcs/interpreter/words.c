@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/06 17:38:12 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/07 00:40:10 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 	if (word->type != TK_WORD)
 		return (EXIT_NEEDED);
 	if (is_builtin(word, mshcontext) && !word->parent)
-		execute_builtin(word, mshcontext);
+		*(int*)mshcontext->envl->content = execute_builtin(word, mshcontext);
 	else
 		execute_word_leaf_node(word, envl, mshcontext);
 	return (WEXITSTATUS(word->data.command.exit));
@@ -65,7 +65,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 			fetch = wexecve(word, envl, envp);
 		(str_arr_destroy(envp), list_destroy(&envl));
 		// destroy stuff.
-		exit(fetch * (fetch == 126) + 1 * (fetch != 126));
+		exit(fetch);
 	}
 	else
 	{
