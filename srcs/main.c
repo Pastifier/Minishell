@@ -43,8 +43,8 @@ int	main(int argc, char **argv, char **envp)
 				add_history(line);
 			}
 		}
-		ft_putnbr_fd(*(int*)(envl->content), 1);
-		ft_putendl_fd("", 1);
+		// ft_putnbr_fd(*(int*)(envl->content), 1);
+		// ft_putendl_fd("", 1);
 		free(line);
 		rl_on_new_line();
 	}

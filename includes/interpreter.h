@@ -13,7 +13,7 @@ typedef struct s_tree
 	t_astnode	*rightmost_word;
 	int			wstatus;
 	int			exit_status;
-	int			stds[2];
+	int			stds[3];
 }	t_shcontext;
 
 // @author Emran BinJamaan
