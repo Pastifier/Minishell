@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/06 17:35:33 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/06 22:30:39 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	env(t_node **envp, bool declare_flag)
 		while (iter)
 		{
 			eql_address = ft_strchr(iter->content, '=');
-			if (iter->content)
+			if (iter->content && iter->visible)
 			{
 				if (eql_address)
 					variable = ft_substr(iter->content, 0, eql_address - (char *)iter->content + 1);
@@ -54,7 +54,7 @@ int	env(t_node **envp, bool declare_flag)
 	{
 		while (iter)
 		{
-			if (iter->content)
+			if (iter->content && iter->visible)
 				ft_putendl_fd(iter->content, STDOUT_FILENO);
 			iter = iter->next;
 		}
