@@ -19,7 +19,6 @@ static int cd(char *path, t_node **envp)
 {
     char *oldpwd;
     char *pwd;
-    // long arg_limit;
 
 	if (!path)
 		return (ft_putendl_fd("msh: invalid use of `cd`. Read the subject, habibi.", STDERR_FILENO), EXIT_NEEDED);

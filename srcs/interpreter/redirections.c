@@ -7,6 +7,8 @@
 		- Finish the heredoc.
 */
 
+extern int	g_signal;
+
 int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 {
 	int			fd;
@@ -59,15 +61,15 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 			closest_word = closest_word->parent;
 	if (!access(rredir->data.redirection.filename, F_OK)
 		&& access(rredir->data.redirection.filename, W_OK))
-	{ // stop nearest word from executing.
+	{
 		if (closest_word)
 			closest_word->data.command.execute = false;
 		return (perror(rredir->data.redirection.filename),
 			mshcontext->permissions_clear = false, EXIT_FAILURE);
 	}
 	close(STDOUT_FILENO);
-	mode = O_TRUNC * (mode != O_APPEND) | mode;
-	fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY | mode, 0755);
+	mode = O_TRUNC * (mode != O_APPEND) | mode | O_WRONLY | O_CREAT;
+	fd = open(rredir->data.redirection.filename, mode, 0755);
 	if (fd < 0)
 		return (EXIT_FATAL);
 	if (closest_word)
@@ -95,9 +97,8 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	{
 		buffer = readline("> ");
 		if (!buffer)
-			return (/*free stuff, */ EXIT_FATAL);
-		if ((!ft_strncmp(buffer, heredoc->data.redirection.filename, ft_strlen(heredoc->data.redirection.filename) + 1)
-			|| *buffer == EOF)
+			break ;
+		if (!ft_strncmp(buffer, heredoc->data.redirection.filename, -1)
 			&& (free(buffer), 1))
 			break ;
 		temp = buffer;
@@ -110,7 +111,7 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 		if (!input)
 			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
 		(free(temp), free(buffer));
-		// rl_on_new_line();
+		rl_on_new_line();
 	}
 	if (pipe(pipedes) < 0)
 		return (free(input), mshcontext->terminate = true, EXIT_FATAL);

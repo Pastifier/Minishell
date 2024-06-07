@@ -6,12 +6,13 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/30 11:44:15 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/07 00:19:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
+#include <dirent.h>
 
 static char	**clean_up_paths(char **paths);
 
@@ -27,7 +28,35 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	if (!args)
 		return (EXIT_FATAL);
 	slash = ft_strchr(args[0], '/');
+	if (opendir(args[0]))
+	{
+		write(STDERR_FILENO, "msh: ", 6);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		write(STDERR_FILENO, ": is a directory\n", 18);
+		(str_arr_destroy(args));
+		return (126);
+	}
+	else if (!opendir(args[0]) && slash)
+	{
+		if (access(args[0], F_OK))
+		{
+			write(STDERR_FILENO, "msh: ", 6);
+			ft_putstr_fd(args[0], STDERR_FILENO);
+			write(STDERR_FILENO, ": No such file or directory\n", 29);
+			(str_arr_destroy(args));
+			return (127);
+		}
+	}
 	pathnode = find_variable(&envl, "PATH=");
+	if (!pathnode)
+	{
+		execve(args[0], args, envp);
+		write(STDERR_FILENO, "msh: ", 6);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		write(STDERR_FILENO, ": command not found\n", 20);
+		(str_arr_destroy(args));
+		return (127);
+	}
 	temp = NULL;
 	if (pathnode)
 		temp = pathnode->content;
@@ -41,12 +70,11 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		(free(temp), paths.array++);
 	}
 	execve(args[0], args, envp);
-	// write(STDERR_FILENO, "msh: ", 6);
 	ft_putstr_fd(args[0], STDERR_FILENO);
 	write(STDERR_FILENO, ": command not found\n", 20);
 	(str_arr_destroy(paths.array - paths.wordcount));
 	(str_arr_destroy(args));
-	return (EXIT_FAILURE);
+	return (127);
 }
 
 static char	**clean_up_paths(char **paths)

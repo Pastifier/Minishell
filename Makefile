@@ -19,6 +19,7 @@ SRC :=  main.c list_utils.c \
 		) \
 		$(addprefix builtins/, \
 				builtins_cd.c builtins_pwd.c builtins_env.c \
+				builtins_echo.c \
 		) \
 		destroy.c print.c
 

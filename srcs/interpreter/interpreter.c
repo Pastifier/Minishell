@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/04 13:58:01 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/07 00:28:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@ int	interpret(t_astnode *root, t_node *envl)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
 	restore_iodes(&mshcontext);
-	// if (WIFSIGNALED(mshcontext.exit_status))
-	// {
-	// 	ft_putnbr_fd(WTERMSIG(mshcontext.exit_status), STDERR_FILENO);
-	// }
+	if (mshcontext.rightmost_word && mshcontext.rightmost_word->data.command.builtin)
+		return (*(int*)(envl->content));
 	if (mshcontext.rightmost_word && mshcontext.rightmost_word->data.command.execute)
-		return (WEXITSTATUS(mshcontext.exit_status));
-	// ft_putnbr_fd(EXIT_FAILURE, STDOUT_FILENO);
+		return (*(int*)(envl->content) = WEXITSTATUS(mshcontext.exit_status), WEXITSTATUS(mshcontext.exit_status));
+	else if (mshcontext.terminate)
+		return (EXIT_FAILURE);
 	return (EXIT_FAILURE);
 }
 
