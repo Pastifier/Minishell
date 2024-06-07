@@ -97,7 +97,6 @@ int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 	close(mshcontext->stds[0]);
 	mshcontext->stds[0] = dup(STDIN_FILENO);
 	mshcontext->stds[2] = dup(STDOUT_FILENO);
-	close(STDOUT_FILENO);
 	dup2(mshcontext->stds[1], STDOUT_FILENO);
 	close(mshcontext->stds[1]);
 	mshcontext->stds[1] = dup(STDOUT_FILENO);
