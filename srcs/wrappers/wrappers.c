@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 19:27:49 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/08 17:16:49 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
+#include <dirent.h>
 
 static char	**clean_up_paths(char **paths);
 
 int		wexecve(t_astnode *word, t_node *envl, char **envp)
 {
 	t_split	paths;
+	DIR		*dir;
 	void	*temp;
 	char	*slash;
 	t_node	*pathnode;
@@ -27,13 +29,42 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	if (!args)
 		return (EXIT_FATAL);
 	slash = ft_strchr(args[0], '/');
+	dir = opendir(args[0]);
+	if (dir)
+	{
+		write(STDERR_FILENO, "msh: ", 6);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		write(STDERR_FILENO, ": is a directory\n", 18);
+		(str_arr_destroy(args), free(dir));
+		return (126);
+	}
+	else if (!dir && slash)
+	{
+		if (access(args[0], F_OK))
+		{
+			write(STDERR_FILENO, "msh: ", 6);
+			ft_putstr_fd(args[0], STDERR_FILENO);
+			write(STDERR_FILENO, ": No such file or directory\n", 29);
+			(str_arr_destroy(args), free(dir));
+			return (127);
+		}
+	}
 	pathnode = find_variable(&envl, "PATH=");
+	if (!pathnode)
+	{
+		execve(args[0], args, envp);
+		write(STDERR_FILENO, "msh: ", 6);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		write(STDERR_FILENO, ": command not found\n", 20);
+		(str_arr_destroy(args), free(dir));
+		return (127);
+	}
 	temp = NULL;
 	if (pathnode)
 		temp = pathnode->content;
 	paths = ft_split(temp, ":");
 	if (!clean_up_paths(paths.array))
-		return (str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
+		return (free(dir), str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, args[0]);
@@ -41,10 +72,11 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		(free(temp), paths.array++);
 	}
 	execve(args[0], args, envp);
-	write(STDERR_FILENO, "bash: ", 6);
-	(perror(args[0]), str_arr_destroy(paths.array - paths.wordcount));
-	(str_arr_destroy(args));
-	return (EXIT_FAILURE);
+	ft_putstr_fd(args[0], STDERR_FILENO);
+	write(STDERR_FILENO, ": command not found\n", 20);
+	(str_arr_destroy(paths.array - paths.wordcount));
+	(str_arr_destroy(args), free(dir));
+	return (127);
 }
 
 static char	**clean_up_paths(char **paths)

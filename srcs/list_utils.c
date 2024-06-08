@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 15:25:28 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/06 22:20:45 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_node	*node_create(void *content)
 		return (NULL);
 	self->prev = NULL;
 	self->next = NULL;
+	self->visible = true;
 	self->content = content;
 	return (self);
 }

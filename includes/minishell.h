@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 01:05:42 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:33:52 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_node
 	struct s_node	*next;
 	struct s_node	*prev;
 	void			*content;
+	bool			visible;
 	bool 			is_env;
 }	t_node;
 
@@ -81,6 +82,7 @@ typedef enum e_token
 	TK_DBLQT,
 	TK_SGLQT,
 	TK_SPACE,
+	TK_DUMMY
 }	t_token_type;
 
 typedef struct s_token
@@ -109,7 +111,9 @@ typedef struct s_astnode
 			bool	thereisprev;
 			bool	thereispipe;
 			bool	thereisout;
+			bool	thereisin;
 			bool	execute;
+			bool	builtin;
 			int		outfd;
 			int		*prevfd;
 			int		fd[2];
@@ -118,34 +122,26 @@ typedef struct s_astnode
 		{
 			char	*filename;
 			int		mode;
-			int		fd;
+			int		fd[2];
 		}	redirection;
-		struct s_builtin
-		{
-			t_cid	id;
-			char	**args;
-		}	builtin;
 		struct s_pipe
 		{
 			bool	thereisinput;
 			int		tempfd;
 		} pipe;
-		struct s_heredoc
-		{
-			char	*eof;
-		}	heredoc;
 	}	data;
 }	t_astnode;
 
 /*--- BUILTINS ---*/
 t_node *find_variable(t_node **envp, const char *variable);
-int env(t_node **envp);
+int env(t_node **envp, bool declare_flag);
+int	echo(t_astnode *word, t_node *first_arg);
 int bltin_export(t_node **envp, const char *variable, const char *value);
 int unset(t_node **envp, const char *variable);
+int	pwd(void);
 
 /*--- WRAPPER FUNCTIONS ---*/
 char **list_cpy_to_str_arr(t_node *lst);
-void str_arr_destroy(char **strarr);
 int wexecve(t_astnode *word, t_node *envl, char **envp);
 
 /*--- TEMPERORY DEBUGGING FUNCTIONS*/
@@ -157,10 +153,11 @@ void print_list(t_node **head);
 
 /*--- DESTROY FUNCTIONS ---*/
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void str_arr_destroy(char **strarr);
 void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
-void show_error(int exit_status);
 
+void show_error(int exit_status);
 #endif // !MINISHELL_H

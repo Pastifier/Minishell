@@ -2,24 +2,7 @@
 #include "parser.h"
 #include <stdio.h>
 
-/* 
-recursive decent parser:
-    - parse the input string
-    - check for syntax errors
-    - build a parse tree
-    - generate code
-    - execute the code
-
-the parser function will be called after the tokenization
-is done, 
-it will take the tokenized string as input
-and it should return a pointer to the parse tree
-which can then be used by other functions in this
-program to generate code and execute it.
-*/
-
-int   parse(t_token **tokens_iter, t_astnode **node)
-
+int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
 {
     int ret;
 
@@ -29,12 +12,14 @@ int   parse(t_token **tokens_iter, t_astnode **node)
     if ((*tokens_iter)->token_type == TK_WORD)
         ret = parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_DOLLAR)
-        ret = parse_word(tokens_iter, node);
+        ret = parse_env(tokens_iter, node, envl);
     else if ((*tokens_iter)->token_type == TK_PIPE)
         ret = parse_pipe(tokens_iter, node);
-    else if ((*tokens_iter)->token_type == TK_LREDIR)
+    else if ((*tokens_iter)->token_type == TK_LREDIR 
+        || (*tokens_iter)->token_type == TK_LAPPEND)
         ret = parse_lredir(tokens_iter, node);
-    else if ((*tokens_iter)->token_type == TK_RREDIR)
+    else if ((*tokens_iter)->token_type == TK_RREDIR
+        || (*tokens_iter)->token_type == TK_RAPPEND)
         ret = parse_rredir(tokens_iter, node);
     if (ret)
         return (ret);
@@ -43,14 +28,10 @@ int   parse(t_token **tokens_iter, t_astnode **node)
         *tokens_iter = (*tokens_iter)->next;
         // printf("token type: %d - token value: %s\n", (*tokens_iter)->token_type, (*tokens_iter)->value);
         // printf("node type: %d\n", (*node)->type);
-        return (parse(tokens_iter, node));
+        return (parse(tokens_iter, node, envl));
     }
     return (0);
 }
-
-// parse_command will be called when the token type is command
-// it will take the token as input and it should return a pointer 
-// to the parse tree for the command
 
 int parse_word(t_token **token_list, t_astnode **node)
 {
@@ -66,9 +47,6 @@ int parse_word(t_token **token_list, t_astnode **node)
         return (set_word_in_lredir(token_list, node));
     return (0);
 }
-
-// parse_pipe will be called when the token type is pipe it will take the token as input
-// and check for the tree head must be a command node or a pipe node and the next node must be a command node
 
 int parse_pipe(t_token **token_list, t_astnode **node)
 {
@@ -88,24 +66,21 @@ int parse_pipe(t_token **token_list, t_astnode **node)
     new_node->right = NULL;
     return (0);
 }
-/*
-parse_rredir will be called when the token type is rredir
-the next node must be a word node
-creat a new node and set the type to rredir
-set the left child to the tree head
-set the filename to the next node
-*/
- //done but need to handle the case when the tree is empty
-int parse_rredir(t_token **token_list, t_astnode **node)
+
+int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as parse_lredir
 {
     t_astnode *new_node;
     t_astnode *iter;
 
     if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD) || !(*token_list)->next)    
-        return (2); // destory need fixes & gards
+        return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
+    if ((*token_list)->token_type == TK_RAPPEND)
+        new_node->data.redirection.mode = O_APPEND;
+    else
+        new_node->data.redirection.mode = 0;
     new_node->type = TK_RREDIR;
     new_node->right = NULL;
     new_node->left = NULL;
@@ -118,7 +93,6 @@ int parse_rredir(t_token **token_list, t_astnode **node)
     else
     {    
         iter = *node;
-        if (iter)
         while (iter && iter->right)
             iter = iter->right;
         new_node->parent = iter;
@@ -128,14 +102,6 @@ int parse_rredir(t_token **token_list, t_astnode **node)
     return (0);
 }
 
-/*
-parse_lredir will be called when the token type is lredir
-it will take the token as input and it should return a pointer to ast
-the next node must be a word node
-creat a new node and set the type to rredir
-reach the end of the tree and set the left child to the new node
-*/
- //done but need to handle the case when the tree is empty
 int parse_lredir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
@@ -145,7 +111,11 @@ int parse_lredir(t_token **token_list, t_astnode **node)
         return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
-        return (0);
+        return (1);
+    if ((*token_list)->token_type == TK_LAPPEND)
+        new_node->data.redirection.mode = O_APPEND;
+    else
+        new_node->data.redirection.mode = 0;
     new_node->type = TK_LREDIR;
     if (!(*node))
     {
@@ -155,18 +125,50 @@ int parse_lredir(t_token **token_list, t_astnode **node)
     else
     {
         iter = *node;
-        if (iter->type == TK_PIPE)
+        while (iter && iter->right)
             iter = iter->right;
-        while (iter && iter->left)
-            iter = iter->left;
-        new_node->parent = iter->parent;    
-        iter->left= new_node;
+        new_node->parent = iter;
+        iter->right = new_node;
     }
     new_node->left = NULL;
     new_node->right = NULL;
     new_node->data.redirection.filename = (*token_list)->next->value;
     *token_list = (*token_list)->next;
     return (0);
+}
+
+int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
+{
+    t_node *iter;
+	char *eql_addr;
+    char *env_value;
+
+    iter = *envl;
+    env_value = &(*token_list)->value[1];
+	if ((*token_list)->value[1] == '?') // Emran
+	{
+		(*token_list)->value = ft_itoa(*(int *)iter->content);
+		// make guard for it
+		return (parse_word(token_list, node));
+	}
+	while (iter && iter->next)
+    {
+		eql_addr = ft_strchr(iter->content, '=');
+        if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
+        {
+            free((*token_list)->value);
+			if (eql_addr)
+				(*token_list)->value = ft_strdup(eql_addr + 1); // Emran
+				// make guard for it
+			else
+				(*token_list)->value = ft_strdup(""); // Emran
+				// make guard for it
+            return (parse_word(token_list, node));
+        }
+        iter = iter->next;
+    }
+    (*token_list)->value = ft_strdup(""); // Emran
+    return (parse_word(token_list, node));
 }
 
 

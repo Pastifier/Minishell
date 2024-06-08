@@ -5,7 +5,7 @@
 
 /*--- MAIN - SCOPE - FUNCTIONS ---*/
 
-int init_tokenizer(char *line, t_astnode **ast, t_token **token_list);
+int init_tokenizer(char *line, t_astnode **ast, t_token **token_list, t_node **envl);
 
 /*---Tokenization---*/
 t_token	*token_create(char *value, t_token_type type);
@@ -30,8 +30,9 @@ void escape_special_char(char *temp, unsigned int *i);
 char **get_command_args(t_token **token);
 char *ft_str_toupper(char *str);
 t_cid get_builtin_id(t_token **token);
-int   parse(t_token **tokens_iter, t_astnode **node);
+int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl);
 int parse_word(t_token **token_list, t_astnode **node);
+int parse_env(t_token **token_list, t_astnode **node, t_node **envl);
 int parse_pipe(t_token **token_list, t_astnode **node);
 int parse_rredir(t_token **token_list, t_astnode **node);
 int parse_lredir(t_token **token_list, t_astnode **node);

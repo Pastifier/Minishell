@@ -13,21 +13,22 @@ typedef struct s_tree
 	t_astnode	*rightmost_word;
 	int			wstatus;
 	int			exit_status;
-	int			stds[2];
+	int			stds[3];
 }	t_shcontext;
 
 // @author Emran BinJamaan
 int	interpret(t_astnode *root, t_node *envl);
 
+// @author Emran BinJamaan
+void	visit_prematurely(t_astnode *node, t_shcontext *mshcontext);
+
 /*--- PREORDER FUNCTIONS ---*/
 
 // @author Emran BinJamaan
-// @brief Opens `filename` and stores its fd in the concerned word, so that
-// the word can redirect its output to that fd.
-int	prepare_rredir(t_astnode *rredir);
+int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext);
+int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext);
 
 /*--- POSTORDER FUNCTIONS ---*/
 
@@ -52,7 +53,7 @@ int	handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext);
 // @brief Executes word depending on its metadata provided by the `prepare_*()` functions.
 // @return Exit code of the word should it have executed. EXIT_FATAL if
 // execution needs to stop. EXIT_SUCCESS otherwise.
-int	handle_word(t_astnode *word, t_node *envl);
+int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 // @brief	...
@@ -62,5 +63,11 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
+
+// @author Emran BinJamaan
+int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
+
+
+int wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
 #endif // !INTERPRETER_H

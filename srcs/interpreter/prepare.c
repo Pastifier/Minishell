@@ -6,13 +6,14 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/05/29 12:28:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:35:15 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "interpreter.h"
 #include <stdio.h>
+#include <readline/readline.h>
 
 int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 {
@@ -22,7 +23,7 @@ int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 	if (pipenode->type != TK_PIPE/* || mshcontext->terminate*/)
 		return (EXIT_NEEDED);
 	left_child = pipenode->left;
-	if (left_child->type == TK_WORD)
+	if (left_child && left_child->type == TK_WORD)
 	{
 		if (pipe(left_child->data.command.fd) < 0)
 			return (perror("pipe()"), mshcontext->terminate = true, EXIT_FATAL);
@@ -34,7 +35,7 @@ int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 			pipenode->data.pipe.thereisinput = true;
 		}
 	}
-	else if (left_child->type == TK_PIPE)
+	else if (left_child && left_child->type == TK_PIPE)
 	{
 		closest_left = left_child->right;
 		if (pipe(closest_left->data.command.fd) < 0)
@@ -50,25 +51,55 @@ int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 	return (EXIT_SUCCESS);
 }
 
-int	prepare_rredir(t_astnode *rredir)
+int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 {
-	t_astnode	*concerned_node;
-	int			*fd;
+	char	*buffer;
+	char	*input;
+	char	*temp;
+	int		*pipedes;
 
-	if (rredir->type != TK_RREDIR)
-		return (EXIT_NEEDED);
-	fd = &rredir->data.redirection.fd;
-	unlink(rredir->data.redirection.filename);
-	*fd = open(rredir->data.redirection.filename, O_CREAT | O_WRONLY, 0755);
-	if (*fd < 0)
-		return (EXIT_FATAL);
-	// it executes the word normally if this doesn't exist. (it's a fatal error. It should stop).
-	concerned_node = rredir->left;
-	if (concerned_node->type == TK_PIPE)
-		concerned_node = concerned_node->right;
-	concerned_node->data.command.thereisout = true;
-	concerned_node->data.command.outfd = *fd;
+	input = NULL;
+	buffer = (char*)1;
+	while (buffer)
+	{
+		buffer = readline("> ");
+		if (!buffer)
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			break ;
+		}
+		if (!ft_strncmp(buffer, lredir->data.redirection.filename, -1)
+			&& (free(buffer), 1))
+			break ;
+		temp = buffer;
+		buffer = ft_strjoin(buffer, "\n");
+		if (!buffer)
+			return (free(temp), mshcontext->terminate = true, EXIT_FATAL);
+		free(temp);
+		temp = input;
+		input = ft_strjoin(input, buffer);
+		if (!input)
+			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
+		(free(temp), free(buffer));
+		rl_on_new_line();
+	}
+	if (pipe(lredir->data.redirection.fd) < 0)
+		return (mshcontext->terminate = true, EXIT_FATAL);
+	pipedes = lredir->data.redirection.fd;
+	ft_putstr_fd(input, pipedes[WRITE_END]);
+	close(pipedes[WRITE_END]);
+	free(input);
 	return (EXIT_SUCCESS);
+}
+
+void	visit_prematurely(t_astnode *node, t_shcontext *mshcontext)
+{
+	if (!node)
+		return ;
+	if (node->type == TK_LREDIR && node->data.redirection.mode == O_APPEND)
+		prepare_heredoc(node, mshcontext);
+	visit_prematurely(node->left, mshcontext);
+	visit_prematurely(node->right, mshcontext);
 }
 
 /*

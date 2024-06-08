@@ -18,36 +18,37 @@ void destroy_str_arr(char **str_arr)
 void destroy_tokens(t_token **tokens)
 {
     t_token *temp;
+	t_token **original; // Emran
 
     if (!tokens || !*tokens)
         return ;
-    while (tokens && (*tokens)->next)
+	original = &(*tokens); // Emran
+    while (*tokens && (*tokens)->next)
     {
         temp = *tokens;
         *tokens = (*tokens)->next;
         free(temp->value);
         free(temp);
     }
+	*original = NULL; // Emran
 }
 
 void destroy_ast(t_astnode *node)
 {
-    if (!node)
-        return ;
-    if (node->type == TK_BUILTIN)
-        destroy_str_arr(node->data.builtin.args);
-    if (node->type == TK_WORD)
-        list_destroy(&node->data.command.args);
-    else if (node->type == TK_PIPE)
-    {
-        destroy_ast(node->left);
-        destroy_ast(node->right);
-    }
-    else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
-    {
-        free(node->data.redirection.filename);
-        destroy_ast(node->left);
-    }
+	if (!node)
+		return ;
+	destroy_ast(node->left);
+	destroy_ast(node->right);
+	if (node->type == TK_WORD)
+	{
+		list_destroy(&node->data.command.args);
+		free(node);
+	}
+	else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
+	{
+		free(node->data.redirection.filename);
+		free(node);
+	}
 }
 
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)

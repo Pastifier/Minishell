@@ -61,9 +61,9 @@ t_token_type get_token_type(char *str, int len)
         else if (ft_strncmp(str, "&&", 2) == 0)
             return (TK_AND);
         else if (ft_strncmp(str, ">>", 2) == 0)
-            return (TK_RREDIR);
+            return (TK_RAPPEND);
         else if (ft_strncmp(str, "<<", 2) == 0)
-            return (TK_LREDIR);
+            return (TK_LAPPEND);
         else if (ft_strncmp(str, "  ", 2) == 0)
             return (TK_SPACE);
     }

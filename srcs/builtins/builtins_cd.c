@@ -1,21 +1,34 @@
-#include "minishell.h"
+#include "interpreter.h"
 #include <stdio.h>
 
-static int set_env(char *name, char *value, t_node **envp);
-static int add_env(char *name, char *value, t_node **envp);
+static int	set_env(char *name, char *value, t_node **envp);
+static int	add_env(char *name, char *value, t_node **envp);
+static int	cd(char *path, t_node **envp);
 
-int cd(char *path, t_node **envp)
+int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
+{
+	t_node	*cdarg;
+
+	cdarg = cdnode->data.command.args->next;
+	if (cdarg)
+		return (cd(cdarg->content, &(mshcontext->envl)));
+	return (cd(NULL, &(mshcontext->envl)));
+}
+
+static int cd(char *path, t_node **envp)
 {
     char *oldpwd;
     char *pwd;
-    // long arg_limit;
 
+	if (!path)
+		return (ft_putendl_fd("msh: invalid use of `cd`. Read the subject, habibi.", STDERR_FILENO), EXIT_NEEDED);
     oldpwd = getcwd(NULL, 0);    
     if (chdir(path) == -1)
     {
-        perror("cd");
-        ft_putstr_fd(": ", 2);
-        ft_putendl_fd(path, 2);
+		ft_putstr_fd("msh: cd: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		perror(NULL);
         free(oldpwd);
         return (EXIT_FAILURE);
     }
