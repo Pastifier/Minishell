@@ -59,6 +59,14 @@ void escape_special_char(char *temp, unsigned int *i)
 
     c = temp[*i];
     (*i)++;
+    if (temp[*i] == c)
+    {
+        ret = get_token(&temp[0], *i + 1, token_list, TK_WORD);
+        if (ret)
+            return (ret);
+        (*i)++;
+        return (0);
+    }
     while (temp[*i] && temp[*i] != c)
         (*i)++;
     if (temp[*i] == '\0')

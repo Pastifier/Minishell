@@ -42,7 +42,7 @@ void print_ast(t_astnode *ast)
 		printf("file name: %s\n", ast->data.redirection.filename);
 		printf("left of RREDIR: ");
 		print_ast(ast->left);
-		printf("right RREDIR: ");
+		printf("right of RREDIR: ");
 		print_ast(ast->right);
 		printf("parent of RREDIR: %d\n", ast->parent->type);
 	}

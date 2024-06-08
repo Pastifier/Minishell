@@ -27,6 +27,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline(prompt);
 		if (line == NULL)
 			break ;
+		// printf("line: %s\n", line);
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
@@ -37,8 +38,8 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-			// 	// print_ast(ast);
-				interpret(ast, envl);
+				print_ast(ast);
+				// interpret(ast, envl);
 				destroy_ast(ast);
 				add_history(line);
 			}
