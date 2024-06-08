@@ -39,8 +39,8 @@ int	main(int argc, char **argv, char **envp)
 			{
 			// 	// print_ast(ast);
 				interpret(ast, envl);
-				destroy_ast(ast);
-				destroy_tokens(&token_list);
+				// destroy_ast(ast);
+				// destroy_tokens(&token_list);
 				add_history(line);
 			}
 		}
@@ -50,9 +50,9 @@ int	main(int argc, char **argv, char **envp)
 		rl_on_new_line();
 	}
 	write(1, "exit\n", 5);
-	list_destroy(&envl);
+	// list_destroy(&envl);
 	clear_history();
-	destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
+	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 
 static bool init_envl(t_node **envl)
