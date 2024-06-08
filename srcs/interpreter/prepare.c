@@ -64,7 +64,10 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 	{
 		buffer = readline("> ");
 		if (!buffer)
+		{
+			write(STDOUT_FILENO, "\n", 1);
 			break ;
+		}
 		if (!ft_strncmp(buffer, lredir->data.redirection.filename, -1)
 			&& (free(buffer), 1))
 			break ;
@@ -78,6 +81,7 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 		if (!input)
 			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
 		(free(temp), free(buffer));
+		rl_on_new_line();
 	}
 	if (pipe(lredir->data.redirection.fd) < 0)
 		return (mshcontext->terminate = true, EXIT_FATAL);

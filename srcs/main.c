@@ -26,7 +26,10 @@ int	main(int argc, char **argv, char **envp)
 		token_list = NULL;
 		line = readline(prompt);
 		if (line == NULL)
+		{
+			write(STDOUT_FILENO, "\n", 1);
 			break ;
+		}
 		// printf("line: %s\n", line);
 		if (line[0] != '\0')
 		{
@@ -38,10 +41,10 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				print_ast(ast);
-				// interpret(ast, envl);
-				destroy_ast(ast);
-				destroy_tokens(&token_list);
+				// print_ast(ast);
+				interpret(ast, envl);
+				// destroy_ast(ast);
+				// destroy_tokens(&token_list);
 				add_history(line);
 			}
 		}
@@ -53,7 +56,7 @@ int	main(int argc, char **argv, char **envp)
 	write(1, "exit\n", 5);
 	list_destroy(&envl);
 	clear_history();
-	destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
+	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 
 static bool init_envl(t_node **envl)
