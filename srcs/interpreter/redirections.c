@@ -25,7 +25,6 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 		if (closest_word)
 			while (closest_word->parent && closest_word->type != TK_WORD)
 				closest_word = closest_word->parent;
-		close(STDIN_FILENO);
 		if (access(lredir->data.redirection.filename, F_OK) || access(lredir->data.redirection.filename, R_OK))
 		{
 			if (pipe(pipedes) < 0)
@@ -37,6 +36,7 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 			return (perror(lredir->data.redirection.filename),
 					mshcontext->permissions_clear = false, EXIT_FAILURE);
 		}
+		close(STDIN_FILENO);
 		fd = open(lredir->data.redirection.filename, O_RDONLY, 0755);
 		if (fd < 0)
 			return (EXIT_FATAL);
@@ -81,47 +81,17 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 //			, and then slaps the result into a pipe. It then dups that pipe into stdin.
 int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext)
 {
-	t_astnode	*closest_word;
-	char		*buffer;
-	char		*input;
-	char		*temp;
-	int			pipedes[2];
+	t_astnode *closest_word;
 
-	input = NULL;
-	buffer = (char *)1;
+	(void)mshcontext;
 	closest_word = heredoc->parent;
 	if (closest_word)
 		while (closest_word->parent && closest_word->type != TK_WORD)
 			closest_word = closest_word->parent;
-	while (buffer)
-	{
-		buffer = readline("> ");
-		if (!buffer)
-			break ;
-		if (!ft_strncmp(buffer, heredoc->data.redirection.filename, -1)
-			&& (free(buffer), 1))
-			break ;
-		temp = buffer;
-		buffer = ft_strjoin(buffer, "\n");
-		if (!buffer)
-			return (free(temp), mshcontext->terminate = true, EXIT_FATAL);
-		free(temp);
-		temp = input;
-		input = ft_strjoin(input, buffer);
-		if (!input)
-			return (free(temp), free(buffer), mshcontext->terminate = true, EXIT_FATAL);
-		(free(temp), free(buffer));
-		rl_on_new_line();
-	}
-	if (pipe(pipedes) < 0)
-		return (free(input), mshcontext->terminate = true, EXIT_FATAL);
-	ft_putstr_fd(input, pipedes[WRITE_END]);
-	close(pipedes[WRITE_END]);
-	if (mshcontext->permissions_clear)
-		(dup2(pipedes[READ_END], STDIN_FILENO));
+	close(STDIN_FILENO);
+	dup2(heredoc->data.redirection.fd[READ_END], STDIN_FILENO);
+	close(heredoc->data.redirection.fd[READ_END]);
 	if (closest_word)
 		closest_word->data.command.thereisin = true;
-	close(pipedes[READ_END]);
-	free(input);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/07 00:40:10 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/08 20:26:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext);
 
 int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 {
-
 	if (word->type != TK_WORD)
 		return (EXIT_NEEDED);
 	if (is_builtin(word, mshcontext) && !word->parent)
@@ -42,6 +41,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	if (!envp)
 		return (EXIT_FATAL);
 	pid = fork();
+	fetch = EXIT_FAILURE;
 	if (pid < 0)
 		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
@@ -59,12 +59,17 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
 			close(word->data.command.fd[WRITE_END]);
 		}
-		if (word->data.command.builtin)
-			exit(execute_builtin(word, mshcontext));
-		else if (word->data.command.execute)
+		if (word->data.command.builtin && word->data.command.execute)
+		{
+			fetch = execute_builtin(word, mshcontext);
+			destroy_ast(mshcontext->root);
+			exit(fetch);
+		}
+		if (word->data.command.execute)
 			fetch = wexecve(word, envl, envp);
 		(str_arr_destroy(envp), list_destroy(&envl));
 		// destroy stuff.
+		destroy_ast(mshcontext->root);
 		exit(fetch);
 	}
 	else
