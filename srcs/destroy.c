@@ -17,19 +17,19 @@ void destroy_str_arr(char **str_arr)
 
 void destroy_tokens(t_token **tokens)
 {
-    t_token *temp;
+	t_token *temp;
 	t_token **original; // Emran
 
-    if (!tokens || !*tokens)
-        return ;
+	if (!tokens || !*tokens)
+		return ;
 	original = &(*tokens); // Emran
-    while (*tokens && (*tokens)->next)
-    {
-        temp = *tokens;
-        *tokens = (*tokens)->next;
-        free(temp->value);
-        free(temp);
-    }
+	while (*tokens && (*tokens)->next)
+	{
+		temp = *tokens;
+		*tokens = (*tokens)->next;
+		free(temp->value);
+		free(temp);
+	}
 	*original = NULL; // Emran
 }
 
