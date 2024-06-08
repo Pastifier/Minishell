@@ -140,21 +140,34 @@ int parse_lredir(t_token **token_list, t_astnode **node)
 int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
 {
     t_node *iter;
+	char *eql_addr;
     char *env_value;
 
     iter = *envl;
     env_value = &(*token_list)->value[1];
-    while (iter && iter->next)
+	if ((*token_list)->value[1] == '?') // Emran
+	{
+		(*token_list)->value = ft_itoa(*(int *)iter->content);
+		// make guard for it
+		return (parse_word(token_list, node));
+	}
+	while (iter && iter->next)
     {
+		eql_addr = ft_strchr(iter->content, '=');
         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
         {
             free((*token_list)->value);
-            (*token_list)->value = iter->content;
+			if (eql_addr)
+				(*token_list)->value = ft_strdup(eql_addr + 1); // Emran
+				// make guard for it
+			else
+				(*token_list)->value = ft_strdup(""); // Emran
+				// make guard for it
             return (parse_word(token_list, node));
         }
         iter = iter->next;
     }
-    (*token_list)->value = "";
+    (*token_list)->value = ft_strdup(""); // Emran
     return (parse_word(token_list, node));
 }
 
