@@ -26,7 +26,11 @@ int	main(int argc, char **argv, char **envp)
 		token_list = NULL;
 		line = readline(prompt);
 		if (line == NULL)
+		{
+			write(STDOUT_FILENO, "\n", 1);
 			break ;
+		}
+		// printf("line: %s\n", line);
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
@@ -37,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-			// 	// print_ast(ast);
+				// print_ast(ast);
 				interpret(ast, envl);
 				// destroy_ast(ast);
 				// destroy_tokens(&token_list);
