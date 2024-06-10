@@ -84,7 +84,7 @@ int parse_rredir(t_token **token_list, t_astnode **node) // can be the same as p
     new_node->type = TK_RREDIR;
     new_node->right = NULL;
     new_node->left = NULL;
-    new_node->data.redirection.filename = (*token_list)->next->value;
+    new_node->data.redirection.filename = ft_strdup((*token_list)->next->value);
     if (!(*node))
     {
         (*node) = new_node;
@@ -132,7 +132,7 @@ int parse_lredir(t_token **token_list, t_astnode **node)
     }
     new_node->left = NULL;
     new_node->right = NULL;
-    new_node->data.redirection.filename = (*token_list)->next->value;
+    new_node->data.redirection.filename = ft_strdup((*token_list)->next->value);
     *token_list = (*token_list)->next;
     return (0);
 }
@@ -149,7 +149,7 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
         {
             free((*token_list)->value);
-            (*token_list)->value = iter->content;
+            (*token_list)->value = ft_strdup((char *)iter->content);
             return (parse_word(token_list, node));
         }
         iter = iter->next;

@@ -22,7 +22,7 @@ t_node	*node_create(void *content)
 	self->prev = NULL;
 	self->next = NULL;
 	self->visible = true;
-	self->content = content;
+	self->content = ft_strdup(content);
 	return (self);
 }
 
