@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 01:46:22 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 02:44:03 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,10 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	else
 	{
 		str_arr_destroy(envp);
-		// temp solution.
 		if (word->data.command.thereisprev)
 			close(word->data.command.prevfd[READ_END]);
 		if (word->data.command.thereispipe)
 			close(word->data.command.fd[WRITE_END]);
-		// if (word->data.command.thereisout)
-		// 	close(word->data.command.outfd);
 		word->data.command.pid = pid;
 	}
 	return (EXIT_SUCCESS);
@@ -125,7 +122,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
-		return (env(&mshcontext->envl, false));
+		return (env(&(mshcontext->envl->next), false));
 	if (!ft_strncmp(cmd, "pwd", -1))
 		return (pwd());
 	if (!ft_strncmp(cmd, "unset", -1))
@@ -135,7 +132,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	if (!ft_strncmp(cmd, "export", -1))
 	{
 		if (!first_arg)
-			return (env(&mshcontext->envl, true));
+			return (env(&(mshcontext->envl->next), true));
 		temp = ft_strchr(first_arg, '=');
 		if (temp)
 		{

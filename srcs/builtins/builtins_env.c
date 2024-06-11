@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/06 22:30:39 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 02:42:13 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	env(t_node **envp, bool declare_flag)
 		while (iter)
 		{
 			eql_address = ft_strchr(iter->content, '=');
-			if (iter->content && iter->visible)
+			if (iter->content)
 			{
 				if (eql_address)
 					variable = ft_substr(iter->content, 0, eql_address - (char *)iter->content + 1);
@@ -84,6 +84,8 @@ int	bltin_export(t_node **envp, const char *variable, const char *value)
 	to_append = node_create(content);
 	if (!to_append)
 		return (free(content), EXIT_FATAL);
+	if (val_length == 0)
+		to_append->visible = false;
 	list_append(envp, to_append);
 	return (EXIT_SUCCESS);
 }
