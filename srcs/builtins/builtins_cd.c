@@ -49,6 +49,7 @@ static int set_env(char *name, char *value, t_node **envp)
     char *tmp;
 
     node = *envp;
+	node = node->next;
     while (node)
     {
         env = (char *)node->content;
@@ -61,6 +62,7 @@ static int set_env(char *name, char *value, t_node **envp)
             node->content = ft_strjoin(tmp, value);
             if (!node->content)
                 return (free(tmp), EXIT_FAILURE);
+			free(tmp);
             return (EXIT_SUCCESS);
         }
         node = node->next;
