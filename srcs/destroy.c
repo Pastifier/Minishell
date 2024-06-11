@@ -23,7 +23,7 @@ void destroy_tokens(t_token **tokens)
 	if (!tokens || !*tokens)
 		return ;
 	original = &(*tokens); // Emran
-	while (*tokens && (*tokens)->next)
+	while (*tokens)
 	{
 		temp = *tokens;
 		*tokens = (*tokens)->next;
