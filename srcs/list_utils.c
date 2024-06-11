@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/11 18:29:59 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/11 23:46:02 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ t_node	*node_create(void *content)
 	self->next = NULL;
 	self->visible = true;
 	self->content = ft_strdup(content);
+	if (!self->content)
+	{
+		free(self);
+		return (NULL);
+	}
 	return (self);
 }
 

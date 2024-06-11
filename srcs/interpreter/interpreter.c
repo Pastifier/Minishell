@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/08 00:49:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 00:33:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_shcontext	init_context(t_astnode *root, t_node *envl);
 static void			visit(t_astnode *node, t_node *envl,
 	t_shcontext *mshcontext);
 static void			find_rightmost_word(t_astnode *root, t_astnode **to_set);
-static void			restore_iodes(t_shcontext *mshcontext, bool clear);
+void			restore_iodes(t_shcontext *mshcontext, bool clear);
 
 int	interpret(t_astnode *root, t_node *envl)
 {
@@ -92,11 +92,11 @@ static t_shcontext	init_context(t_astnode *root, t_node *envl)
 	});
 }
 
-static void	restore_iodes(t_shcontext *mshcontext, bool clear)
+void	restore_iodes(t_shcontext *mshcontext, bool clear)
 {
 	dup2(mshcontext->stds[0], STDIN_FILENO);
-	dup2(mshcontext->stds[1], STDOUT_FILENO);
 	close(mshcontext->stds[0]);
+	dup2(mshcontext->stds[1], STDOUT_FILENO);
 	close(mshcontext->stds[1]);
 	if (!clear)
 	{

@@ -17,7 +17,9 @@ typedef struct s_tree
 }	t_shcontext;
 
 // @author Emran BinJamaan
-int	interpret(t_astnode *root, t_node *envl);
+int		interpret(t_astnode *root, t_node *envl);
+
+void	restore_iodes(t_shcontext *mshcontext, bool clear);
 
 // @author Emran BinJamaan
 void	visit_prematurely(t_astnode *node, t_shcontext *mshcontext);
@@ -25,10 +27,10 @@ void	visit_prematurely(t_astnode *node, t_shcontext *mshcontext);
 /*--- PREORDER FUNCTIONS ---*/
 
 // @author Emran BinJamaan
-int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext);
+int		prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext);
+int		prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext);
 
 /*--- POSTORDER FUNCTIONS ---*/
 
@@ -47,27 +49,27 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext);
 // @author Emran BinJamaan
 // @brief	Resets the standard file-descriptors in order to emulate bash behaviour
 //			more accurately.
-int	handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext);
+int		handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 // @brief Executes word depending on its metadata provided by the `prepare_*()` functions.
 // @return Exit code of the word should it have executed. EXIT_FATAL if
 // execution needs to stop. EXIT_SUCCESS otherwise.
-int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
+int		handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 // @brief	...
 // @warning	This function assumes that the AST is structured perfectly,
 //			i.e, input redirections are to the left of words.
-int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext);
+int 	handle_lredir(t_astnode *lredir, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
+int 	handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-int handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
+int		handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
 
 
-int wcd(t_astnode *cdnode, t_shcontext *mshcontext);
+int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
 #endif // !INTERPRETER_H

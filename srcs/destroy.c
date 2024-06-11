@@ -50,6 +50,8 @@ void destroy_ast(t_astnode *node)
 		free(node->data.redirection.filename);
 		free(node);
 	}
+	else
+		free(node);
 }
 
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
