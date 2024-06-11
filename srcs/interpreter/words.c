@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 00:29:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 01:46:22 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	int			fetch;
 	char		**envp;
 
-	envp = list_cpy_to_str_arr(envl);
+	envp = list_cpy_to_str_arr(envl->next);
 	if (!envp)
 		return (EXIT_FATAL);
 	pid = fork();
@@ -63,12 +63,12 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 		{
 			fetch = execute_builtin(word, mshcontext);
 			destroy_ast(mshcontext->root);
-			// restore_iodes(mshcontext, true);
+			restore_iodes(mshcontext, true);
 			exit(fetch);
 		}
 		if (word->data.command.execute)
 			fetch = wexecve(word, envl, envp);
-		// restore_iodes(mshcontext, true);
+		restore_iodes(mshcontext, true);
 		(str_arr_destroy(envp), list_destroy(&envl));
 		destroy_ast(mshcontext->root);
 		exit(fetch);
