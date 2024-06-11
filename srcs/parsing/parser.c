@@ -134,18 +134,23 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
 	}
 	while (iter && iter->next)
     {
-		eql_addr = ft_strchr(iter->content, '=');
         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
         {
             free((*token_list)->value);
-            (*token_list)->value = ft_strdup((char *)iter->content);
+            eql_addr = ft_strchr(iter->content, '=');
+            (*token_list)->value = ft_strdup(eql_addr + 1);
+            if (!(*token_list)->value)
+                return (1);
             return (parse_word(token_list, node));
         }
         iter = iter->next;
     }
     (*token_list)->value = ft_strdup(""); // Emran
+    if (!(*token_list)->value)
+        return (1);
     return (parse_word(token_list, node));
 }
+
 
 
 
