@@ -76,10 +76,14 @@ void	list_destroy(t_node **head)
 	iter = *head;
 	while (iter)
 	{
-		free(iter->content);
-		temp = iter->next;
-		free(iter);
-		iter = temp;
+		temp = iter;
+		iter = iter->next;
+		free(temp->content);
+		free(temp);
+		// free(iter->content);
+		// temp = iter->next;
+		// free(iter);
+		// iter = temp;
 	}
 	*head = NULL;
 }
@@ -97,6 +101,7 @@ bool	str_arr_dup_to_list(char **strarr, t_node **head)
 		to_append = node_create(content);
 		if (!to_append)
 			return (free(content), list_destroy(head), false);
+		free(content);
 		list_append(head, to_append);
 		++strarr;
 	}

@@ -20,6 +20,8 @@ int	main(int argc, char **argv, char **envp)
 	if (!init_envl(&envl))
 		return (EXIT_FATAL);
 	str_arr_dup_to_list(envp, &envl);
+	if (!envl)
+		return (EXIT_FATAL);
 	while (true)
 	{
 		ast = NULL;
@@ -55,7 +57,7 @@ int	main(int argc, char **argv, char **envp)
 	write(1, "exit\n", 5);
 	list_destroy(&envl);
 	clear_history();
-	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
+	destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 
 static bool init_envl(t_node **envl)

@@ -9,7 +9,7 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
 
     ret = tokenize(line, token_list);
     if (ret)
-        return (ret);
+        return (destroy_tokens(token_list), ret);
     remove_spaces(token_list);
     iter = *token_list;
 	ret = parse(&iter, ast, envl);
