@@ -34,18 +34,6 @@ int		prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext);
 
 /*--- POSTORDER FUNCTIONS ---*/
 
-// [ DEPRECATED ]
-// @author Emran BinJamaan
-// @brief Creates processes for left child and right child using `fork(2)`,
-// executes, and pipes them.
-// @return Exit code of the right child. EXIT_FATAL if execution needs to stop.
-// @warning this function assumes that the AST is structured perfectly, a pipe node
-// requires a left and right child; it also assumes that the pipes were already
-// created when `pipenode`'s children were handled. It doesn't close the
-// READ_END of the pipe in `pipenode`'s right (if it exists), because that will
-// be used in the pipe after it.
-// [ DEPRECATED ]
-
 // @author Emran BinJamaan
 // @brief	Resets the standard file-descriptors in order to emulate bash behaviour
 //			more accurately.
@@ -58,9 +46,9 @@ int		handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext);
 int		handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-// @brief	...
+// @brief	Handles left redirections.
 // @warning	This function assumes that the AST is structured perfectly,
-//			i.e, input redirections are to the left of words.
+//			i.e, input redirections are children to words.
 int 	handle_lredir(t_astnode *lredir, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
@@ -69,7 +57,8 @@ int 	handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
 // @author Emran BinJamaan
 int		handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
 
-
+// @author Emran BinJamaan
+// @brief  wrapper for the `cd` built-in.
 int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
 #endif // !INTERPRETER_H

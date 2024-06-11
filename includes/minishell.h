@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/07 20:33:52 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 03:11:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,56 @@ typedef struct s_node
 	bool 			is_env;
 }	t_node;
 
+// @author	Emran BinJamaan
+//
+// @brief	Creates a new node with the given content.
+// @param	content		Content to be stored in the node.
+// @return	Pointer to the newly created node. Upon failure,
+//			`NULL` is returned.
+// @warning	The function internally calls ft_strdup() on the content.
+//			Make sure to free the content after calling this function. If
+//			it were dynamically allocated.
 t_node	*node_create(void *content);
+
+// @author Emran BinJamaan
+//
+// @param	node	Pointer to the node to be destroyed.
+// @brief	Destroys the given node, including its content.
+//			If the node is part of a list, it is removed from the list, and
+//			its previous and next nodes are linked together.
 void	node_destroy(t_node *node);
+
+// @author	Emran BinJamaan
+//
+// @param	head	 	Pointer to the head of the list.
+// @param	to_append 	Pointer to the node to be appended.
+// @brief	Appends the given node to the end of the list.
+//			It is not required to guard against appending `NULL` nodes, because
+//			the function will simply return without doing anything.
+// @warning	It is up to the caller to dynamically allocate the node to append.
 void	list_append(t_node **head, t_node *to_append);
+
+// @author	Emran BinJamaan
+//
+// @param	head 	Pointer to the head of the list.
+// @brief	Destroys the entire list, including all nodes and their content.
 void	list_destroy(t_node **head);
+
+// @author Emran BinJamaan
+//
+// @param	head 	Pointer to the head of the list.
+// @param	strarr 		Array of strings to be duplicated to the list.
+// @brief	Duplicates the given array of strings to the list.
+// @return	`true` if the operation was successful, `false` otherwise.
+// @warning This function assumes the list is empty, and will use list_append()
+//			to add the nodes. If the list is not empty, the function will simply
+//			append to it with no regard for the existing nodes. This can lead to
+//			the destruction of the entire list if the operation fails. It is
+//			recommended, therefore, to use this function only on an empty list;
+//			and then appending that to the original one if needed.
+//			Otherwise, provide a pointer to the end of the list instead
+//			of the head if you don't mind potentially losing the last
+//			node of the original list.
 bool	str_arr_dup_to_list(char **strarr, t_node **head);
 
 /*--- COMMAND - STRUCT ---*/
@@ -133,12 +179,12 @@ typedef struct s_astnode
 }	t_astnode;
 
 /*--- BUILTINS ---*/
-t_node *find_variable(t_node **envp, const char *variable);
-int env(t_node **envp, bool declare_flag);
-int	echo(t_astnode *word, t_node *first_arg);
-int bltin_export(t_node **envp, const char *variable, const char *value);
-int unset(t_node **envp, const char *variable);
-int	pwd(void);
+t_node	*find_variable(t_node **envp, const char *variable);
+int		env(t_node **envp, bool declare_flag);
+int		echo(t_astnode *word, t_node *first_arg);
+int		bltin_export(t_node **envp, const char *variable, const char *value);
+int		unset(t_node **envp, const char *variable);
+int		pwd(void);
 
 /*--- WRAPPER FUNCTIONS ---*/
 char **list_cpy_to_str_arr(t_node *lst);

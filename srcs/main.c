@@ -32,7 +32,6 @@ int	main(int argc, char **argv, char **envp)
 			write(STDOUT_FILENO, "\n", 1);
 			break ;
 		}
-		// printf("line: %s\n", line);
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
@@ -48,17 +47,26 @@ int	main(int argc, char **argv, char **envp)
 				add_history(line);
 			}
 		}
-		// ft_putnbr_fd(*(int*)(envl->content), 1);
-		// ft_putendl_fd("", 1);
 		free(line);
 		rl_on_new_line();
 	}
 	write(1, "exit\n", 5);
 	list_destroy(&envl);
 	clear_history();
-	destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
+	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 
+// @author Emran BinJamaan
+//
+// @brief 	Initialize the environment list with the first node being
+//			invisible and containing the exit-code; which will be used
+//			later to determine the exit status of the last-executed command.
+//
+// @param	envl The environment list to initialize.
+//
+// @warning The environment list must be freed by the caller. If the allocation fails,
+//			the function will free the allocated memory and set the
+//			pointer to `NULL`.
 static bool init_envl(t_node **envl)
 {
 	*envl = malloc(sizeof(t_node));
