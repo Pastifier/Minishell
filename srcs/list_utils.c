@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/06 22:20:45 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:29:59 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ void	list_destroy(t_node **head)
 	iter = *head;
 	while (iter)
 	{
-		temp = iter->next;
 		free(iter->content);
+		temp = iter->next;
 		free(iter);
 		iter = temp;
 	}
