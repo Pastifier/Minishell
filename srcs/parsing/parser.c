@@ -103,32 +103,14 @@ int parse_pipe(t_token **token_list, t_astnode **node)
 int parse_redir(t_token **token_list, t_astnode **node)
 {
     t_astnode *new_node;
-    t_astnode *iter;
 
     if (!(*token_list)->next || (*token_list)->next->token_type != TK_WORD)
         return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
-    if ((*token_list)->token_type == TK_LAPPEND 
-        || (*token_list)->token_type == TK_RAPPEND)
-        new_node->data.redirection.mode = O_APPEND;
-    else
-        new_node->data.redirection.mode = 0;
-    new_node->type = (*token_list)->token_type;
-    if (!(*node))
-    {
-        (*node) = new_node;
-        new_node->parent = NULL;
-    }
-    else
-    {
-        iter = *node;
-        while (iter && iter->right)
-            iter = iter->right;
-        new_node->parent = iter;
-        iter->right = new_node;
-    }
+    set_redir_type(new_node, (*token_list)->token_type);
+    add_redir_node(node, new_node);
     new_node->left = NULL;
     new_node->right = NULL;
     new_node->data.redirection.filename = ft_strdup((*token_list)->next->value);
@@ -164,6 +146,7 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
     (*token_list)->value = ft_strdup(""); // Emran
     return (parse_word(token_list, node));
 }
+
 
 
 

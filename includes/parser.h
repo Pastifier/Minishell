@@ -38,6 +38,8 @@ int parse_pipe(t_token **token_list, t_astnode **node);
 int parse_redir(t_token **token_list, t_astnode **node);
 int parse_lappend(t_token **token_list, t_astnode **node);
 int parse_rappend(t_token **token_list, t_astnode **node);
+void add_redir_node(t_astnode **node, t_astnode *new_node);
+void set_redir_type(t_astnode *new_node, t_token_type type);
 
 /*--- PARSING - UTILS - WORD ---*/
 int initializ_new_ast_node(t_token **token_list, t_astnode **parent);
