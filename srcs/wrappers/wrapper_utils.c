@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/23 19:19:05 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/12 01:44:43 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ char	**list_cpy_to_str_arr(t_node *lst)
 	while (i < elem_count)
 	{
 		self[i] = ft_strdup(lst->content);
-		// guard ft_strdup somehow
-		// if (!self[i])
-		// 		return (str_arr_destroy(self), NULL);
+		if (!self[i])
+				return (str_arr_destroy(self), NULL);
 		lst = lst->next;
 		i++;
 	}
