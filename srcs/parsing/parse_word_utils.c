@@ -25,6 +25,7 @@ int initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     new_node->data.command.execute = true;
     new_node->data.command.builtin = false;
     new_node->data.command.args = NULL;
+	new_node->data.command.pid = -1;
     if (set_word_in_word(token_list, &new_node))
         return (1);
     return (0);
