@@ -44,7 +44,6 @@ int	main(int argc, char **argv, char **envp)
 				// print_ast(ast);
 				interpret(ast, envl);
 				// destroy_ast(ast);
-				// destroy_tokens(&token_list);
 				add_history(line);
 			}
 		}

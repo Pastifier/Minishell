@@ -53,7 +53,8 @@ void destroy_ast(t_astnode *node)
 
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 {
-    destroy_tokens(token);
+    (void)token;
+    // destroy_tokens(token);
     destroy_ast(*node);
     show_error(exit_status);
 }
