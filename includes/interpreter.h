@@ -2,22 +2,25 @@
 # define INTERPRETER_H
 
 # include "minishell.h"
+# include <signal.h>
 
+typedef struct sigaction	t_sigaction;
 typedef struct s_tree
 {
-	t_node		*envl;
-	bool		terminate;
-	bool		permissions_clear;
-	t_astnode	*root;
-	t_astnode	*last_command;
-	t_astnode	*rightmost_word;
-	int			wstatus;
-	int			exit_status;
-	int			stds[3];
+	t_node				*envl;
+	bool				terminate;
+	bool				permissions_clear;
+	t_astnode			*root;
+	t_astnode			*last_command;
+	t_astnode			*rightmost_word;
+	int					wstatus;
+	int					exit_status;
+	t_sigaction			*sa;
+	int					stds[3];
 }	t_shcontext;
 
 // @author Emran BinJamaan
-int		interpret(t_astnode *root, t_node *envl);
+int		interpret(t_astnode *root, t_node *envl, t_sigaction *act);
 
 void	restore_iodes(t_shcontext *mshcontext, bool clear);
 

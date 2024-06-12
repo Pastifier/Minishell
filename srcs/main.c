@@ -2,15 +2,18 @@
 #include "interpreter.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 
 int	g_signal = 0;
 
 static bool init_envl(t_node **envl);
+static void	signal_handler(int signum); 
 
 int	main(int argc, char **argv, char **envp)
 {
 	char 		*prompt = "$> ";
 	char  		*line;
+	t_sigaction	act;
 	t_astnode	*ast;
 	t_token		*token_list;
 	t_node		*envl;
@@ -24,13 +27,16 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FATAL);
 	while (true)
 	{
+		act.sa_handler = signal_handler;
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGQUIT, &act, NULL);
 		ast = NULL;
 		token_list = NULL;
 		line = readline(prompt);
 		if (line == NULL)
 		{
 			write(STDOUT_FILENO, "\n", 1);
-			break ;
+			break;
 		}
 		if (line[0] != '\0')
 		{
@@ -42,7 +48,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				interpret(ast, envl);
+				interpret(ast, envl, &act);
 				destroy_ast(ast);
 				add_history(line);
 			}
@@ -81,4 +87,11 @@ static bool init_envl(t_node **envl)
 	(*envl)->visible = false;
 	(*envl)->is_env = false;
 	return (true);
+}
+
+static void	signal_handler(int signum)
+{
+	g_signal = signum;
+	if (signum == SIGINT)
+		write(1, "\n$> ", 4);
 }

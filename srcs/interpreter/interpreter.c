@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 00:33:21 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 05:18:07 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void			visit(t_astnode *node, t_node *envl,
 static void			find_rightmost_word(t_astnode *root, t_astnode **to_set);
 void			restore_iodes(t_shcontext *mshcontext, bool clear);
 
-int	interpret(t_astnode *root, t_node *envl)
+int	interpret(t_astnode *root, t_node *envl, t_sigaction *act)
 {
 	int			fetch;
 	t_shcontext	mshcontext;
@@ -28,6 +28,7 @@ int	interpret(t_astnode *root, t_node *envl)
 	if (!root)
 		return (EXIT_FAILURE);
 	mshcontext = init_context(root, envl);
+	mshcontext.sa = act;
 	find_rightmost_word(root, &mshcontext.rightmost_word);
 	visit_prematurely(root, &mshcontext);
 	visit(root, envl, &mshcontext);

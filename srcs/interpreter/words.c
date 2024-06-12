@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 02:44:03 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 05:20:35 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	envp = list_cpy_to_str_arr(envl->next);
 	if (!envp)
 		return (EXIT_FATAL);
+	sigaddset(&mshcontext->sa->sa_mask, SIGINT);
 	pid = fork();
 	fetch = EXIT_FAILURE;
 	if (pid < 0)
