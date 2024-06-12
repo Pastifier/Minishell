@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 05:20:35 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 06:07:45 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,23 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	pid_t		pid;
 	int			fetch;
 	char		**envp;
+	t_sigaction	newact;
 
 	envp = list_cpy_to_str_arr(envl->next);
 	if (!envp)
 		return (EXIT_FATAL);
-	sigaddset(&mshcontext->sa->sa_mask, SIGINT);
+	sigaddset(&newact.sa_mask, SIGINT);
+	sigaddset(&newact.sa_mask, SIGQUIT);
+	newact.sa_flags = 0;
+	sigaction(SIGINT, &newact, mshcontext->sa);
 	pid = fork();
 	fetch = EXIT_FAILURE;
 	if (pid < 0)
 		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
+		sigemptyset(&mshcontext->oldact->sa_mask);
+		sigaction(SIGINT, mshcontext->oldact, NULL);
 		if (word->data.command.thereisprev)
 		{
 			if (!word->data.command.thereisin && word->data.command.execute)

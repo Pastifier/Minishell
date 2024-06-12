@@ -13,7 +13,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char 		*prompt = "$> ";
 	char  		*line;
-	t_sigaction	act;
+	t_sigaction	act[2];
 	t_astnode	*ast;
 	t_token		*token_list;
 	t_node		*envl;
@@ -27,9 +27,12 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FATAL);
 	while (true)
 	{
-		act.sa_handler = signal_handler;
-		sigaction(SIGINT, &act, NULL);
-		sigaction(SIGQUIT, &act, NULL);
+		sigemptyset(&act[0].sa_mask);
+		act[0].sa_handler = signal_handler;
+		act[0].sa_flags = SA_RESTART;
+		sigaddset(&act[0].sa_mask, SIGQUIT);
+		sigaction(SIGINT, &act[0], &act[1]);
+		sigaction(SIGQUIT, &act[0], &act[1]);
 		ast = NULL;
 		token_list = NULL;
 		line = readline(prompt);
@@ -38,6 +41,8 @@ int	main(int argc, char **argv, char **envp)
 			write(STDOUT_FILENO, "\n", 1);
 			break;
 		}
+		if (g_signal == 130)
+			*(int*)envl->content = 130;
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
@@ -48,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				interpret(ast, envl, &act);
+				interpret(ast, envl, act);
 				destroy_ast(ast);
 				add_history(line);
 			}
@@ -93,5 +98,8 @@ static void	signal_handler(int signum)
 {
 	g_signal = signum;
 	if (signum == SIGINT)
+	{
+		g_signal = 130;
 		write(1, "\n$> ", 4);
+	}
 }

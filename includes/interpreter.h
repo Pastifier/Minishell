@@ -16,6 +16,7 @@ typedef struct s_tree
 	int					wstatus;
 	int					exit_status;
 	t_sigaction			*sa;
+	t_sigaction			*oldact;
 	int					stds[3];
 }	t_shcontext;
 
