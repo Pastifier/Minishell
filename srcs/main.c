@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
+	act = (t_sigaction){0};
 	if (!init_envl(&envl))
 		return (EXIT_FATAL);
 	str_arr_dup_to_list(envp, &envl);
