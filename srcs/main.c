@@ -7,34 +7,26 @@
 int	g_signal = 0;
 
 static bool init_envl(t_node **envl);
-static void	signal_handler(int signum); 
+static bool	init_shlvl(t_node *envl);
 
 int	main(int argc, char **argv, char **envp)
 {
 	char 		*prompt = "$> ";
 	char  		*line;
-	t_sigaction	act[2];
 	t_astnode	*ast;
 	t_token		*token_list;
 	t_node		*envl;
 	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
-	act[0] = (t_sigaction){0};
-	act[1] = (t_sigaction){0};
 	if (!init_envl(&envl))
 		return (EXIT_FATAL);
-	str_arr_dup_to_list(envp, &envl);
-	if (!envl)
+	if (!str_arr_dup_to_list(envp, &envl))
 		return (EXIT_FATAL);
+	if (!init_shlvl(envl))
+		return (list_destroy(&envl), EXIT_FATAL);
 	while (true)
 	{
-		sigemptyset(&act[0].sa_mask);
-		act[0].sa_handler = signal_handler;
-		act[0].sa_flags = SA_RESTART;
-		sigaddset(&act[0].sa_mask, SIGQUIT);
-		sigaction(SIGINT, &act[0], &act[1]);
-		sigaction(SIGQUIT, &act[0], &act[1]);
 		ast = NULL;
 		token_list = NULL;
 		line = readline(prompt);
@@ -55,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				interpret(ast, envl, act);
+				interpret(ast, envl);
 				destroy_ast(ast);
 				add_history(line);
 			}
@@ -96,15 +88,24 @@ static bool init_envl(t_node **envl)
 	return (true);
 }
 
-static void	signal_handler(int signum)
+static bool init_shlvl(t_node *envl)
 {
-	if (signum == SIGINT)
+	t_node	*shlvl;
+	char	*eql_addr;
+	char	*shlvl_value_str;
+
+	shlvl = find_variable(&envl, "SHLVL=");
+	if (!shlvl)
 	{
-		g_signal = 130;
-		write(1, "\n$> ", 4);
+		if (bltin_export(&envl, "SHLVL=", "1"))
+			return (false);
+		return (true);
 	}
-	if (signum == SIGQUIT)
-	{
-		g_signal = 131;
-	}
+	eql_addr = ft_strchr(shlvl->content, '=');
+	shlvl_value_str = ft_itoa(ft_atoi(eql_addr + 1).value + 1);
+	if (!shlvl_value_str)
+		return (false);
+	if (bltin_export(&envl, "SHLVL=", shlvl_value_str))
+		return (free(shlvl_value_str), false);
+	return (true);
 }

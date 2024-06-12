@@ -22,7 +22,7 @@ typedef struct s_tree
 }	t_shcontext;
 
 // @author Emran BinJamaan
-int		interpret(t_astnode *root, t_node *envl, t_sigaction *act);
+int		interpret(t_astnode *root, t_node *envl);
 
 void	restore_iodes(t_shcontext *mshcontext, bool clear);
 
