@@ -20,7 +20,8 @@ int	main(int argc, char **argv, char **envp)
 	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
-	act = (t_sigaction){0};
+	act[0] = (t_sigaction){0};
+	act[1] = (t_sigaction){0};
 	if (!init_envl(&envl))
 		return (EXIT_FATAL);
 	str_arr_dup_to_list(envp, &envl);
@@ -97,10 +98,13 @@ static bool init_envl(t_node **envl)
 
 static void	signal_handler(int signum)
 {
-	g_signal = signum;
 	if (signum == SIGINT)
 	{
 		g_signal = 130;
 		write(1, "\n$> ", 4);
+	}
+	if (signum == SIGQUIT)
+	{
+		g_signal = 131;
 	}
 }
