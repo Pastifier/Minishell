@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 17:55:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 20:35:25 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 		list_destroy(&mshcontext->envl);
 		str_arr_destroy(mshcontext->allocated_envp);
 		destroy_ast(mshcontext->root);
-		return (EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	}
 	return (EXIT_FATAL);
 }
