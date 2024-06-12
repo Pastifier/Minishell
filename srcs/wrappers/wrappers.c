@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/08 17:16:49 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/13 01:01:48 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		write(STDERR_FILENO, "msh: ", 6);
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		write(STDERR_FILENO, ": is a directory\n", 18);
-		(str_arr_destroy(args), free(dir));
+		(str_arr_destroy(args), closedir(dir));
 		return (126);
 	}
 	else if (!dir && slash)
@@ -45,7 +45,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 			write(STDERR_FILENO, "msh: ", 6);
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			write(STDERR_FILENO, ": No such file or directory\n", 29);
-			(str_arr_destroy(args), free(dir));
+			(str_arr_destroy(args), closedir(dir));
 			return (127);
 		}
 	}
@@ -56,7 +56,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		write(STDERR_FILENO, "msh: ", 6);
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		write(STDERR_FILENO, ": command not found\n", 20);
-		(str_arr_destroy(args), free(dir));
+		(str_arr_destroy(args), closedir(dir));
 		return (127);
 	}
 	temp = NULL;
@@ -64,7 +64,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		temp = pathnode->content;
 	paths = ft_split(temp, ":");
 	if (!clean_up_paths(paths.array))
-		return (free(dir), str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
+		return (closedir(dir), str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, args[0]);
@@ -75,7 +75,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	ft_putstr_fd(args[0], STDERR_FILENO);
 	write(STDERR_FILENO, ": command not found\n", 20);
 	(str_arr_destroy(paths.array - paths.wordcount));
-	(str_arr_destroy(args), free(dir));
+	(str_arr_destroy(args), closedir(dir));
 	return (127);
 }
 

@@ -107,5 +107,6 @@ static bool init_shlvl(t_node *envl)
 		return (false);
 	if (bltin_export(&envl, "SHLVL=", shlvl_value_str))
 		return (free(shlvl_value_str), false);
+	free(shlvl_value_str);
 	return (true);
 }
