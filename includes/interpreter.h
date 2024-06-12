@@ -18,6 +18,7 @@ typedef struct s_tree
 	t_sigaction			*sa;
 	t_sigaction			*oldact;
 	int					stds[3];
+	char				**allocated_envp;
 }	t_shcontext;
 
 // @author Emran BinJamaan

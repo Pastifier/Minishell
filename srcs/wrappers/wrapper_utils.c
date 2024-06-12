@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 01:44:43 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:53:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	str_arr_destroy(char **strarr)
 	dummy = strarr;
 	while (*dummy)
 	{
-		free(*dummy);
+		if (*dummy)
+			free(*dummy);
 		dummy++;
 	}
 	free(strarr);

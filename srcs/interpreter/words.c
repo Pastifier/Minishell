@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 10:35:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:55:58 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,11 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 		}
 		if (word->data.command.builtin && word->data.command.execute)
 		{
+			mshcontext->allocated_envp = envp;
 			fetch = execute_builtin(word, mshcontext);
+			str_arr_destroy(envp);
 			destroy_ast(mshcontext->root);
+			list_destroy(&envl);
 			restore_iodes(mshcontext, true);
 			exit(fetch);
 		}
@@ -151,6 +154,13 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 			return (free(variable), fetch);
 		}
 		return (bltin_export(&mshcontext->envl, first_arg, ""));
+	}
+	if (!ft_strncmp(cmd, "exit", -1))
+	{
+		list_destroy(&mshcontext->envl);
+		str_arr_destroy(mshcontext->allocated_envp);
+		destroy_ast(mshcontext->root);
+		return (EXIT_SUCCESS);
 	}
 	return (EXIT_FATAL);
 }

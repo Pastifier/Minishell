@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 06:07:05 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:50:54 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	interpret(t_astnode *root, t_node *envl, t_sigaction *act)
 
 	if (!root)
 		return (EXIT_FAILURE);
+	mshcontext = (t_shcontext){0};
 	mshcontext = init_context(root, envl);
 	mshcontext.sa = &act[0];
 	mshcontext.oldact = &act[1];
