@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/13 07:07:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/14 02:46:34:53ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	variable = NULL;
 	if (word->data.command.args->next)
 		first_arg = word->data.command.args->next->content;
+	//if (ft_atoi(first_arg).error)
+	//	mshcontext->exit_status = 255;
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
@@ -137,6 +139,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 		// first of all. It leaks memory, I think. Also, the function assumes correct
 		// export syntax, which is not guaranteed. It should be fixed.
 		// For instance, export "a b"="c d" will work but it should not.
+		// Also, it takes more than one argument, AND it also edits empty exports and doesn't add new onces in declare -x
 		if (!first_arg)
 			return (env(&(mshcontext->envl->next), true));
 		temp = ft_strchr(first_arg, '=');
@@ -152,10 +155,26 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	}
 	if (!ft_strncmp(cmd, "exit", -1))
 	{
+		if (first_arg && ft_atoi(first_arg).error)
+		{
+			ft_putstr_fd("exit\nmsh: exit: ", STDERR_FILENO);
+			ft_putstr_fd(first_arg, STDERR_FILENO);
+			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+			list_destroy(&mshcontext->envl);
+			str_arr_destroy(mshcontext->allocated_envp);
+			destroy_ast(mshcontext->root);
+			exit(255);
+		}
+		if (first_arg && word->data.command.args->next->next)
+		{
+			ft_putendl_fd("exit\nmsh: exit: too many arguments", STDERR_FILENO);
+			return (EXIT_FAILURE);
+		}
+		mshcontext->exit_status = ft_atoi(first_arg).value;
 		list_destroy(&mshcontext->envl);
 		str_arr_destroy(mshcontext->allocated_envp);
 		destroy_ast(mshcontext->root);
-		exit(EXIT_SUCCESS);
+		exit(mshcontext->exit_status);
 	}
 	return (EXIT_FATAL);
 }
