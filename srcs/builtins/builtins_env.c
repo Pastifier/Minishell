@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 02:42:13 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/13 01:35:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	bltin_export(t_node **envp, const char *variable, const char *value)
 	to_append = node_create(content);
 	if (!to_append)
 		return (free(content), EXIT_FATAL);
+	free(content);
 	if (val_length == 0)
 		to_append->visible = false;
 	list_append(envp, to_append);

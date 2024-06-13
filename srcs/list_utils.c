@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/11 23:46:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/13 01:35:17 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,6 @@ void	list_destroy(t_node **head)
 		iter = iter->next;
 		free(temp->content);
 		free(temp);
-		// free(iter->content);
-		// temp = iter->next;
-		// free(iter);
-		// iter = temp;
 	}
 	*head = NULL;
 }
@@ -96,17 +92,12 @@ void	list_destroy(t_node **head)
 bool	str_arr_dup_to_list(char **strarr, t_node **head)
 {
 	t_node	*to_append;
-	void	*content;
 
 	while (*strarr)
 	{
-		content = ft_strdup(*strarr);
-		if (!content)
-			return (list_destroy(head), false);
-		to_append = node_create(content);
+		to_append = node_create(*strarr);
 		if (!to_append)
-			return (free(content), list_destroy(head), false);
-		free(content);
+			return (list_destroy(head), false);
 		list_append(head, to_append);
 		++strarr;
 	}

@@ -49,7 +49,7 @@ int tokenize(char *line, t_token **token_list)
 
 void escape_special_char(char *temp, unsigned int *i)
 {
-    while (temp && temp[*i] && !char_in_str(temp[*i], " $|><&()\"'"))
+    while (temp && temp[*i] && !char_in_str(temp[*i], " $|><\"'")) // removed "&()" for testing
         (*i)++;
 }
 
