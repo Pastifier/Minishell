@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/13 01:01:48 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:38:39 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		write(STDERR_FILENO, "msh: ", 6);
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		write(STDERR_FILENO, ": command not found\n", 20);
-		(str_arr_destroy(args), closedir(dir));
+		(str_arr_destroy(args));
 		return (127);
 	}
 	temp = NULL;
@@ -75,7 +75,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	ft_putstr_fd(args[0], STDERR_FILENO);
 	write(STDERR_FILENO, ": command not found\n", 20);
 	(str_arr_destroy(paths.array - paths.wordcount));
-	(str_arr_destroy(args), closedir(dir));
+	(str_arr_destroy(args));
 	return (127);
 }
 
