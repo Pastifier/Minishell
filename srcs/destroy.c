@@ -1,4 +1,5 @@
 # include "minishell.h"
+#include <stdio.h>
 
 void destroy_str_arr(char **str_arr)
 {

@@ -14,6 +14,8 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
 	if (!iter)
 		return (0);
 	remove_spaces(token_list);
+	if (!*token_list)
+		return (0);
 	ret = parse(&iter, ast, envl);
 	destroy_tokens(token_list);
 	if (ret)

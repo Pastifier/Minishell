@@ -123,6 +123,8 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
     char *env_value;
 
     iter = *envl;
+    if (!(*token_list)->value[1])
+        return (parse_word(token_list, node));
     env_value = &(*token_list)->value[1];
 	if ((*token_list)->value[1] == '?') // Emran
 	{
@@ -132,7 +134,7 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
             return (free(env_value), 1);
 		return (free(env_value), parse_word(token_list, node));
 	}
-	while (iter && iter->next)
+	while (iter)
     {
         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
         {
@@ -145,6 +147,7 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
         }
         iter = iter->next;
     }
+    free((*token_list)->value);
     (*token_list)->value = ft_strdup(""); // Emran
     if (!(*token_list)->value)
         return (1);
