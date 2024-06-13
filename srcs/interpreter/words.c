@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 23:43:17 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/13 07:07:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,9 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))
 	{
+		// first of all. It leaks memory, I think. Also, the function assumes correct
+		// export syntax, which is not guaranteed. It should be fixed.
+		// For instance, export "a b"="c d" will work but it should not.
 		if (!first_arg)
 			return (env(&(mshcontext->envl->next), true));
 		temp = ft_strchr(first_arg, '=');
