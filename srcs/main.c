@@ -49,8 +49,8 @@ int	main(int argc, char **argv, char **envp)
 			{
 				interpret(ast, envl);
 				destroy_ast(ast);
-				add_history(line);
 			}
+			add_history(line);
 		}
 		free(line);
 		rl_on_new_line();

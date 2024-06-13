@@ -17,6 +17,7 @@ void	token_list_append(t_token **head, t_token *to_append)
             iter = iter->next;
         }
         iter->next = to_append;
+        to_append->prev = iter;
         to_append->next = NULL;
     }
     else

@@ -7,8 +7,6 @@ int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
     int ret;
 
     ret = 0;
-    if ((*tokens_iter)->token_type == TK_SPACE)
-        (*tokens_iter) = (*tokens_iter)->next;
     if ((*tokens_iter)->token_type == TK_WORD)
         ret = parse_word(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_DOLLAR)
@@ -128,9 +126,11 @@ int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
     env_value = &(*token_list)->value[1];
 	if ((*token_list)->value[1] == '?') // Emran
 	{
-		(*token_list)->value = ft_itoa(*(int *)iter->content);
-		// make guard for it
-		return (parse_word(token_list, node));
+		env_value = (*token_list)->value;
+        (*token_list)->value = ft_itoa(*(int *)iter->content);
+        if (!(*token_list)->value)
+            return (free(env_value), 1);
+		return (free(env_value), parse_word(token_list, node));
 	}
 	while (iter && iter->next)
     {
