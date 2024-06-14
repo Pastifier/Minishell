@@ -56,8 +56,10 @@ int	main(int argc, char **argv, char **envp)
 		rl_on_new_line();
 	}
 	write(1, "exit\n", 5);
+	int temp = *(int*)envl->content;
 	list_destroy(&envl);
 	clear_history();
+	exit(temp);
 	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 

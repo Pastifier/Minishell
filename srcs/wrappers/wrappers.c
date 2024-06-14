@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/13 19:41:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/14 07:08:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, args[0]);
-		execve(temp, args, NULL);
+		execve(temp, args, envp);
 		(free(temp), paths.array++);
 	}
 	execve(args[0], args, envp);
