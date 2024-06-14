@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 23:41:05 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/15 00:13:48 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	interpret(t_astnode *root, t_node *envl)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
 	restore_iodes(&mshcontext, true);
+	// redefine signal handlers back to interactive-mode behaviour over here.
 	if (mshcontext.rightmost_word && mshcontext.rightmost_word->data.command.builtin)
 		return (*(int*)(envl->content));
 	if (mshcontext.rightmost_word && mshcontext.rightmost_word->data.command.execute)

@@ -40,6 +40,10 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	envp = list_cpy_to_str_arr(envl->next);
 	if (!envp)
 		return (EXIT_FATAL);
+	/*
+		signal(SIGINT, signal_handler_that_does_nothing);
+		signal(SIGQUIT, signal_handler_that_does_nothing);
+	*/
 	pid = fork();
 	fetch = EXIT_FAILURE;
 	if (pid < 0)
@@ -70,6 +74,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 			exit(fetch);
 		}
 		if (word->data.command.execute)
+			// signal_handler goes back to default behaviour for child process.
 			fetch = wexecve(word, envl, envp);
 		restore_iodes(mshcontext, true);
 		(str_arr_destroy(envp), list_destroy(&envl));
