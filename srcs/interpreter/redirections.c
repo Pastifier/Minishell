@@ -12,7 +12,7 @@ extern int	g_signal;
 int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 {
 	int			fd;
-	int			pipedes[2];
+	// int			pipedes[2];
 	t_astnode	*closest_word;
 
 	if (lredir->type != TK_LREDIR)
@@ -27,10 +27,12 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 				closest_word = closest_word->parent;
 		if (access(lredir->data.redirection.filename, F_OK) || access(lredir->data.redirection.filename, R_OK))
 		{
-			if (pipe(pipedes) < 0)
-				return (EXIT_FATAL);
-			close(pipedes[WRITE_END]);
-			dup2(pipedes[READ_END], STDIN_FILENO);
+			// if (pipe(pipedes) < 0)
+			// 	return (EXIT_FATAL);
+			// close(pipedes[WRITE_END]);
+			// close(STDIN_FILENO);
+			// dup2(pipedes[READ_END], STDIN_FILENO);
+			// close(pipedes[READ_END]);
 			if (closest_word)
 				closest_word->data.command.execute = false;
 			return (perror(lredir->data.redirection.filename),

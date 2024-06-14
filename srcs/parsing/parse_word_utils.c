@@ -11,7 +11,8 @@ int initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     if (new_node == NULL)
         return (1); // need to change this to destroy the tree and exit
     new_node->type = TK_WORD;
-    new_node->data.command.cmd = (*token_list)->value;
+    new_node->data.command.cmd = ft_strdup((*token_list)->value);
+	// needs guard.
     new_node->parent = (*parent);
     new_node->left = NULL;
     new_node->right = NULL;
@@ -24,6 +25,7 @@ int initializ_new_ast_node(t_token **token_list, t_astnode **parent)
     new_node->data.command.execute = true;
     new_node->data.command.builtin = false;
     new_node->data.command.args = NULL;
+	new_node->data.command.pid = -1;
     if (set_word_in_word(token_list, &new_node))
         return (1);
     return (0);

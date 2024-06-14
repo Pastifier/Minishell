@@ -1,4 +1,5 @@
 # include "minishell.h"
+#include <stdio.h>
 
 void destroy_str_arr(char **str_arr)
 {
@@ -23,7 +24,7 @@ void destroy_tokens(t_token **tokens)
 	if (!tokens || !*tokens)
 		return ;
 	original = &(*tokens); // Emran
-	while (*tokens && (*tokens)->next)
+	while (*tokens)
 	{
 		temp = *tokens;
 		*tokens = (*tokens)->next;
@@ -41,6 +42,7 @@ void destroy_ast(t_astnode *node)
 	destroy_ast(node->right);
 	if (node->type == TK_WORD)
 	{
+		free(node->data.command.cmd);
 		list_destroy(&node->data.command.args);
 		free(node);
 	}
@@ -49,13 +51,16 @@ void destroy_ast(t_astnode *node)
 		free(node->data.redirection.filename);
 		free(node);
 	}
+	else
+		free(node);
 }
 
 void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 {
-    destroy_tokens(token);
+    (void)token;
     destroy_ast(*node);
     show_error(exit_status);
+	*node = NULL;
 }
 
 void show_error(int exit_status)

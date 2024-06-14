@@ -44,68 +44,37 @@ char *ft_str_toupper(char *str)
     }
     return (str);
 }
-
-t_cid get_builtin_id(t_token **token)
+    
+void add_redir_node(t_astnode **node, t_astnode *new_node)
 {
-    char *command;
+    t_astnode *iter;
 
-    command = (*token)->value;
-    if (ft_strncmp(command, "cd", 2) == 0) // need to check for ft_strncmp
-        return (CD);
-    else if (ft_strncmp(command, "echo", 4) == 0)
-        return (ECHO);
-    else if (ft_strncmp(command, "pwd", 3) == 0)
-        return (PWD);
-    else if (ft_strncmp(command, "env", 3) == 0)
-        return (ENV);
-    else if (ft_strncmp(command, "export", 6) == 0)
-        return (EXPORT);
-    else if (ft_strncmp(command, "unset", 5) == 0)
-        return (UNSET);
-    else if (ft_strncmp(command, "exit", 4) == 0)
-        return (EXIT);
+    if (!(*node))
+    {
+        (*node) = new_node;
+        new_node->parent = NULL;
+    }
     else
-        return (0);
+    {
+        iter = *node;
+        while (iter && iter->right)
+            iter = iter->right;
+        new_node->parent = iter;
+        iter->right = new_node;
+    }
 }
 
-// void remove_char(char *str, char c)
-// {
-//     int i;
-//     int j;
-//     char c;
-
-//     i = 0;
-//     j = 0;
-//     while (str[i])
-//     {
-//         if (str[i] == '"' || str[i] == '\'')
-//         {
-//             c = str[i];
-//             i++;
-//             while (str[i] != c)
-//             {
-//                 str[j] = str[i];
-//                 j++;
-//                 i++;
-//             }
-//         }
-//         i++;
-//     }
-//     str[j] = '\0';
-// }
-
-// int expansion_check(t_token **token_list)
-// {
-//     char *temp;
-
-//     temp = (*token_list)->value;
-//     while (temp)
-//     {
-//         if (*temp == '$' && ft_isalnum(*(temp + 1)))
-//             return (1);
-//         temp++;
-//     }
-//     return (0);
-// }
-    
+void set_redir_type(t_astnode *new_node, t_token_type type)
+{
+    if (type == TK_LAPPEND 
+        || type == TK_RAPPEND)
+        new_node->data.redirection.mode = O_APPEND;
+    else
+        new_node->data.redirection.mode = 0;
+    if (type == TK_LREDIR 
+        || type == TK_LAPPEND)
+        new_node->type = TK_LREDIR;
+    else
+        new_node->type = TK_RREDIR;
+}
 

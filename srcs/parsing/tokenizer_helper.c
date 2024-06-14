@@ -1,8 +1,10 @@
 # include "parser.h"
+# include <stdio.h>
 
 int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type)
 {
     char *new;
+    char *last_value;
     t_token *new_token;
     t_token *last_token;
 
@@ -15,15 +17,16 @@ int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type typ
         if ((type == TK_WORD && last_token->token_type == TK_WORD)
                 || (type == TK_SPACE && last_token->token_type == TK_SPACE))
         {
-            last_token->value = ft_strjoin(token_list_last(token_list)->value, new);
+            last_value = last_token->value;
+            last_token->value = ft_strjoin(last_value, new);
             if (!last_token->value)
-                return (free (new), 1);
-            return (free(new), 0);
+                return (free (new), free(last_value), 1);
+            return (free(new), free(last_value), 0);
         }
     }
     new_token = token_create(new, type);
     if (new_token == NULL)
-        return (1);
+        return (free(new), 1);
     token_list_append(token_list, new_token);
     return (0);
 }
@@ -75,7 +78,6 @@ if it is in a double quote, and there is no argment after it, it should be consi
     }
     return (0);
 }
-
 void remove_spaces(t_token **token_list)
 {
     t_token *iter;
@@ -84,14 +86,27 @@ void remove_spaces(t_token **token_list)
     iter = *token_list;
     while (iter)
     {
-        if (iter->next && iter->next->token_type == TK_SPACE)
+        if (iter->token_type == TK_SPACE)
         {
-            temp = iter->next;
-            iter->next = iter->next->next;
+            temp = iter;
+            if (!iter->prev)
+            {
+                if (iter->next)
+                    *token_list = iter->next;
+                else
+                    *token_list = NULL;
+            }
+            else
+                iter->prev->next = iter->next;
+            if (iter->next)
+                iter->next->prev = iter->prev;
+            iter = iter->next;
             free(temp->value);
             free(temp);
+            temp = NULL;
         }
-        iter = iter->next;
+        else
+            iter = iter->next;
     }
 }
 
