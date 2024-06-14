@@ -25,6 +25,8 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FATAL);
 	if (!init_shlvl(envl))
 		return (list_destroy(&envl), EXIT_FATAL);
+	// signal(SIGINT, signal_handler);
+	// signal(SIGQUIT, signal_handler);
 	while (true)
 	{
 		ast = NULL;
