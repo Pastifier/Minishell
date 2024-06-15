@@ -7,7 +7,7 @@
 		- Finish the heredoc.
 */
 
-extern int	g_signal;
+extern volatile __sig_atomic_t sig;
 
 int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 {
