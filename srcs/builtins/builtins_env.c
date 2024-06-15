@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/13 01:35:08 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/15 11:59:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,9 @@ int	unset(t_node **envp, const char *variable)
 	t_node	*varp;
 
 	if (!variable)
-		return (EXIT_NEEDED);
+		return (EXIT_SUCCESS);
+	if (ft_strchr(variable, '='))
+		return (EXIT_SUCCESS);
 	varp = find_variable(envp, variable);
 	node_destroy(varp);
 	return (EXIT_SUCCESS);
