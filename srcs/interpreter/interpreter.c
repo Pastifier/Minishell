@@ -12,7 +12,7 @@
 
 #include "interpreter.h"
 
-extern int	g_signal;
+extern volatile __sig_atomic_t sig = 0;
 
 static t_shcontext	init_context(t_astnode *root, t_node *envl);
 static void			visit(t_astnode *node, t_node *envl,
