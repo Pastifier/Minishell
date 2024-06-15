@@ -10,6 +10,11 @@ int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
 	t_node	*cdarg;
 
 	cdarg = cdnode->data.command.args->next;
+	if (cdarg->next)
+	{
+		ft_putendl_fd("msh: cd: too many arguments", STDERR_FILENO);
+		return (EXIT_FAILURE);
+	}
 	if (cdarg)
 		return (cd(cdarg->content, &(mshcontext->envl)));
 	return (cd(NULL, &(mshcontext->envl)));
