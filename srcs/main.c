@@ -4,7 +4,7 @@
 #include <readline/history.h>
 #include <signal.h>
 
-int	g_signal = 0;
+volatile __sig_atomic_t	sig = 0;
 
 static bool init_envl(t_node **envl);
 static bool	init_shlvl(t_node *envl);
