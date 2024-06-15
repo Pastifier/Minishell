@@ -14,7 +14,7 @@
 #include "interpreter.h"
 #include <stdio.h>
 
-extern int	g_signal;
+extern volatile __sig_atomic_t	sig;
 
 static int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
 static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext);
