@@ -14,8 +14,6 @@
 #include "interpreter.h"
 #include <stdio.h>
 
-extern int	g_signal;
-
 int	handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext)
 {
 	if (pipenode->type == TK_PIPE)
