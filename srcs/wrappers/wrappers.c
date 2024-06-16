@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/16 20:17:37 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/17 00:32:26 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,17 +91,24 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	{
 		if (!access(args[0], F_OK) && keep_checking)
 		{
-			if (!access(args[0], X_OK))
+			if (!slash)
 			{
 				execve(args[0], args, envp);
-				keep_checking = false;
+				ft_putstr_fd(args[0], STDERR_FILENO);
+				ft_putendl_fd(": command not found", STDERR_FILENO);
 			}
-			else
+			else if (access(args[0], X_OK))
 			{
 				ft_putstr_fd("msh: ", STDERR_FILENO);
 				ft_putstr_fd(args[0], STDERR_FILENO);
 				ft_putendl_fd(": Permission denied", STDERR_FILENO);
 				keep_checking = false;
+			}
+			else
+			{
+				execve(args[0], args, envp);
+				ft_putstr_fd(args[0], STDERR_FILENO);
+				ft_putendl_fd(": command not found", STDERR_FILENO);
 			}
 		}
 		else
