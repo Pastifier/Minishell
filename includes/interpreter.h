@@ -4,6 +4,14 @@
 # include "minishell.h"
 # include <signal.h>
 
+#ifdef __linux__
+# define EXIT_INVAL_ARG		2
+#endif // !__LINUX__
+
+#ifdef __MACH__
+# define EXIT_INVAL_ARG		255
+#endif // !__MACH__
+
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
 {
