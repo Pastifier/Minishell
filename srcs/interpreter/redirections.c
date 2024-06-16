@@ -44,8 +44,9 @@ int handle_lredir(t_astnode *lredir, t_shcontext *mshcontext)
 			return (EXIT_FATAL);
 		if (closest_word)
 			closest_word->data.command.thereisin = true;
+		return (EXIT_SUCCESS);
 	}
-	return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
@@ -61,22 +62,26 @@ int handle_rredir(t_astnode *rredir, t_shcontext *mshcontext/*, int append*/)
 	if (closest_word)
 		while (closest_word->parent && closest_word->type != TK_WORD)
 			closest_word = closest_word->parent;
-	if (!access(rredir->data.redirection.filename, F_OK)
-		&& access(rredir->data.redirection.filename, W_OK))
+	if (mshcontext->permissions_clear)
 	{
+		if (!access(rredir->data.redirection.filename, F_OK)
+			&& access(rredir->data.redirection.filename, W_OK))
+		{
+			if (closest_word)
+				closest_word->data.command.execute = false;
+			return (perror(rredir->data.redirection.filename),
+					mshcontext->permissions_clear = false, EXIT_FAILURE);
+		}
+		close(STDOUT_FILENO);
+		mode = O_TRUNC * (mode != O_APPEND) | mode | O_WRONLY | O_CREAT;
+		fd = open(rredir->data.redirection.filename, mode, 0755);
+		if (fd < 0)
+			return (EXIT_FATAL);
 		if (closest_word)
-			closest_word->data.command.execute = false;
-		return (perror(rredir->data.redirection.filename),
-			mshcontext->permissions_clear = false, EXIT_FAILURE);
+			closest_word->data.command.thereisout = true;
+		return (EXIT_SUCCESS);
 	}
-	close(STDOUT_FILENO);
-	mode = O_TRUNC * (mode != O_APPEND) | mode | O_WRONLY | O_CREAT;
-	fd = open(rredir->data.redirection.filename, mode, 0755);
-	if (fd < 0)
-		return (EXIT_FATAL);
-	if (closest_word)
-		closest_word->data.command.thereisout = true;
-	return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 // @brief	This function will keep reading from standard input (you'll need to re-dup stdin back, probably)
