@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/15 11:59:21 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/16 09:16:14 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	unset(t_node **envp, const char *variable)
 	if (ft_strchr(variable, '='))
 		return (EXIT_SUCCESS);
 	varp = find_variable(envp, variable);
+
 	node_destroy(varp);
 	return (EXIT_SUCCESS);
 }
@@ -108,6 +109,7 @@ t_node	*find_variable(t_node **envp, const char *variable)
 {
 	size_t	var_length;
 	size_t	con_length;
+	char	*eql_address;
 	t_node	*iter;
 
 	if (!envp && !*envp)
@@ -116,9 +118,11 @@ t_node	*find_variable(t_node **envp, const char *variable)
 	iter = *envp;
 	while (iter)
 	{
+		eql_address = ft_strchr(iter->content, '=');
 		con_length = ft_strlen(iter->content);
 		if (con_length >= var_length
-			&& !ft_strncmp(iter->content, variable, var_length))
+			&& !ft_strncmp(iter->content, variable, 
+				ft_strlen(iter->content) - ft_strlen(eql_address)))
 			return (iter);
 		iter = iter->next;
 	}
