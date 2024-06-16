@@ -163,7 +163,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 			list_destroy(&mshcontext->envl);
 			str_arr_destroy(mshcontext->allocated_envp);
 			destroy_ast(mshcontext->root);
-			exit(255);
+			exit(EXIT_INVAL_ARG);
 		}
 		if (first_arg && word->data.command.args->next->next)
 		{
