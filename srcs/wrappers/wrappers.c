@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/14 15:22:38 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/16 20:17:37 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	DIR		*dir;
 	void	*temp;
 	char	*slash;
+	bool	keep_checking;
 	t_node	*pathnode;
 	char	**args;
 
@@ -65,17 +66,57 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	paths = ft_split(temp, ":");
 	if (!clean_up_paths(paths.array))
 		return (str_arr_destroy(paths.array), str_arr_destroy(envp), str_arr_destroy(args), EXIT_FATAL);
+	keep_checking = true;
 	while (!slash && paths.array && *paths.array)
 	{
 		temp = ft_strjoin(*paths.array, args[0]);
-		execve(temp, args, envp);
+		if (!access(temp, F_OK) && keep_checking)
+		{
+			if (!access(temp, X_OK))
+			{
+				execve(temp, args, envp);
+				keep_checking = false;
+			}
+			else
+			{
+				ft_putstr_fd("msh: ", STDERR_FILENO);
+				ft_putstr_fd(args[0], STDERR_FILENO);
+				ft_putendl_fd(": Permission denied", STDERR_FILENO);
+				keep_checking = false;
+			}
+		}
 		(free(temp), paths.array++);
 	}
-	execve(args[0], args, envp);
-	ft_putstr_fd(args[0], STDERR_FILENO);
-	write(STDERR_FILENO, ": command not found\n", 20);
-	(str_arr_destroy(paths.array - paths.wordcount));
-	(str_arr_destroy(args));
+	if (keep_checking)
+	{
+		if (!access(args[0], F_OK) && keep_checking)
+		{
+			if (!access(args[0], X_OK))
+			{
+				execve(args[0], args, envp);
+				keep_checking = false;
+			}
+			else
+			{
+				ft_putstr_fd("msh: ", STDERR_FILENO);
+				ft_putstr_fd(args[0], STDERR_FILENO);
+				ft_putendl_fd(": Permission denied", STDERR_FILENO);
+				keep_checking = false;
+			}
+		}
+		else
+		{
+			ft_putstr_fd(args[0], STDERR_FILENO);
+			write(STDERR_FILENO, ": command not found\n", 20);
+		}
+	}
+	if (!slash)
+		str_arr_destroy(paths.array - paths.wordcount);
+	else
+		str_arr_destroy(paths.array);
+	str_arr_destroy(args);
+	if (!keep_checking)
+		return (126);
 	return (127);
 }
 
