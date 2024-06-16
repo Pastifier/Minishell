@@ -78,10 +78,11 @@ if it is in a double quote, and there is no argment after it, it should be consi
     }
     return (0);
 }
-void remove_spaces(t_token **token_list)
+int     parse_spaces_dollars(t_token **token_list, t_node **envl)
 {
     t_token *iter;
     t_token *temp;
+    int     ret;
 
     iter = *token_list;
     while (iter)
@@ -105,9 +106,56 @@ void remove_spaces(t_token **token_list)
             free(temp);
             temp = NULL;
         }
+        else if (iter->token_type == TK_DOLLAR)
+        {
+            ret = parse_env(&iter, envl);
+            if (ret)
+                return (ret);
+            iter = iter->next;
+        }
         else
             iter = iter->next;
     }
+    return (0);
+}
+
+int parse_env(t_token **token_list, t_node **envl)
+{
+    t_node *iter;
+	char *eql_addr;
+    char *env_value;
+
+    iter = *envl;
+    (*token_list)->token_type = TK_WORD;
+    if (!(*token_list)->value[1])
+        return (0);
+    env_value = &(*token_list)->value[1];
+	if ((*token_list)->value[1] == '?') // Emran
+	{
+		env_value = (*token_list)->value;
+        (*token_list)->value = ft_itoa(*(int *)iter->content);
+        if (!(*token_list)->value)
+            return (free(env_value), 1);
+		return (free(env_value), 0);
+	}
+	while (iter)
+    {
+        if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
+        {
+            free((*token_list)->value);
+            eql_addr = ft_strchr(iter->content, '=');
+            (*token_list)->value = ft_strdup(eql_addr + 1);
+            if (!(*token_list)->value)
+                return (1);
+            return (0);
+        }
+        iter = iter->next;
+    }
+    free((*token_list)->value);
+    (*token_list)->value = ft_strdup(""); // Emran
+    if (!(*token_list)->value)
+        return (1);
+    return (0);
 }
 
 /*

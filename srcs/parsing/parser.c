@@ -9,8 +9,8 @@ int   parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
     ret = 0;
     if ((*tokens_iter)->token_type == TK_WORD)
         ret = parse_word(tokens_iter, node);
-    else if ((*tokens_iter)->token_type == TK_DOLLAR)
-        ret = parse_env(tokens_iter, node, envl);
+    // else if ((*tokens_iter)->token_type == TK_DOLLAR)
+    //     ret = parse_env(tokens_iter, node, envl);
     else if ((*tokens_iter)->token_type == TK_PIPE)
         ret = parse_pipe(tokens_iter, node);
     else if ((*tokens_iter)->token_type == TK_LREDIR 
@@ -116,43 +116,43 @@ int parse_redir(t_token **token_list, t_astnode **node)
     return (0);
 }
 
-int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
-{
-    t_node *iter;
-	char *eql_addr;
-    char *env_value;
+// int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
+// {
+//     t_node *iter;
+// 	char *eql_addr;
+//     char *env_value;
 
-    iter = *envl;
-    if (!(*token_list)->value[1])
-        return (parse_word(token_list, node));
-    env_value = &(*token_list)->value[1];
-	if ((*token_list)->value[1] == '?') // Emran
-	{
-		env_value = (*token_list)->value;
-        (*token_list)->value = ft_itoa(*(int *)iter->content);
-        if (!(*token_list)->value)
-            return (free(env_value), 1);
-		return (free(env_value), parse_word(token_list, node));
-	}
-	while (iter)
-    {
-        if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
-        {
-            free((*token_list)->value);
-            eql_addr = ft_strchr(iter->content, '=');
-            (*token_list)->value = ft_strdup(eql_addr + 1);
-            if (!(*token_list)->value)
-                return (1);
-            return (parse_word(token_list, node));
-        }
-        iter = iter->next;
-    }
-    free((*token_list)->value);
-    (*token_list)->value = ft_strdup(""); // Emran
-    if (!(*token_list)->value)
-        return (1);
-    return (parse_word(token_list, node));
-}
+//     iter = *envl;
+//     if (!(*token_list)->value[1])
+//         return (parse_word(token_list, node));
+//     env_value = &(*token_list)->value[1];
+// 	if ((*token_list)->value[1] == '?') // Emran
+// 	{
+// 		env_value = (*token_list)->value;
+//         (*token_list)->value = ft_itoa(*(int *)iter->content);
+//         if (!(*token_list)->value)
+//             return (free(env_value), 1);
+// 		return (free(env_value), parse_word(token_list, node));
+// 	}
+// 	while (iter)
+//     {
+//         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
+//         {
+//             free((*token_list)->value);
+//             eql_addr = ft_strchr(iter->content, '=');
+//             (*token_list)->value = ft_strdup(eql_addr + 1);
+//             if (!(*token_list)->value)
+//                 return (1);
+//             return (parse_word(token_list, node));
+//         }
+//         iter = iter->next;
+//     }
+//     free((*token_list)->value);
+//     (*token_list)->value = ft_strdup(""); // Emran
+//     if (!(*token_list)->value)
+//         return (1);
+//     return (parse_word(token_list, node));
+// }
 
 
 

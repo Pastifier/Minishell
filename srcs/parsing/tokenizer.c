@@ -10,7 +10,9 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
 	ret = tokenize(line, token_list);
 	if (ret)
 		return (destroy_tokens(token_list), ret);
-	remove_spaces(token_list);
+	ret = parse_spaces_dollars(token_list, envl);
+	if (ret)
+		return (destroy_tokens(token_list), ret);
 	if (!*token_list)
 		return (0);
 	iter = *token_list;
