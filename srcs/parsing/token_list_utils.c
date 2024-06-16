@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <stdio.h>
 
 
 // token_list append function
@@ -95,15 +96,41 @@ t_token *token_list_last(t_token **token_list)
     return (iter);
 }
 
-void token_list_remove(t_token **token)
+void remove_token(t_token **token_list)
 {
     t_token *iter;
+    t_token *temp;
 
-    iter = *token;
-    if (iter->prev)
+    printf("remove_token - token_list: %s\n", (*token_list)->value);
+    iter = *token_list;
+    temp = iter;
+    if (!iter->next && !iter->prev)
+    {
+        printf("token_list 1: %s\n", (*token_list)->value);
+        *token_list = NULL;
+    }
+    else if (!iter->prev)
+    {
+        printf("token_list 2: %s\n", (*token_list)->value);
+        *token_list = iter->next;
+        printf("token_list_next: %s\n", (*token_list)->value);
+        printf("iter_prev: %s\n", iter->prev->value);
+        (*token_list)->prev = iter->prev;
+    }
+    else if (!iter->next)
+    {
+        printf("token_list 3: %s\n", (*token_list)->value);
+        iter->prev->next = NULL;
+        (*token_list) = NULL;
+    }
+    else
+    {
+        printf("token_list 4: %s\n", (*token_list)->value);
         iter->prev->next = iter->next;
-    if (iter->next)
         iter->next->prev = iter->prev;
-    free(iter->value);
-    free(iter);
+        (*token_list) = iter->next;
+    }
+    free(temp->value);
+    free(temp);
+    temp = NULL;
 }

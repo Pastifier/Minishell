@@ -11,6 +11,13 @@ int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type typ
     new = ft_substr(temp, 0, i);
     if (new == NULL)
         return (1);
+    if (ft_strncmp(new, "\"\"", 2) == 0 || ft_strncmp(new, "''", 2) == 0)
+    {
+        free(new);
+        new = ft_strdup("");
+        if (new == NULL)
+            return (1);
+    }
     if (token_list && (*token_list))
     {
         last_token = token_list_last(token_list);
@@ -81,41 +88,32 @@ if it is in a double quote, and there is no argment after it, it should be consi
 int     parse_spaces_dollars(t_token **token_list, t_node **envl)
 {
     t_token *iter;
-    t_token *temp;
     int     ret;
 
     iter = *token_list;
     while (iter)
     {
-        if (iter->token_type == TK_SPACE)
+        if (iter->token_type == TK_DOLLAR)
         {
-            temp = iter;
-            if (!iter->prev)
-            {
-                if (iter->next)
-                    *token_list = iter->next;
-                else
-                    *token_list = NULL;
-            }
-            else
-                iter->prev->next = iter->next;
-            if (iter->next)
-                iter->next->prev = iter->prev;
-            iter = iter->next;
-            free(temp->value);
-            free(temp);
-            temp = NULL;
-        }
-        else if (iter->token_type == TK_DOLLAR)
-        {
-            ret = parse_env(&iter, envl);
+            ret = parse_env(&iter, envl); // I think this is the probelm related the 
+            // to remove_token function as i passing the address of iter which is locally
+            // declared in this function
             if (ret)
                 return (ret);
-            iter = iter->next;
         }
         else
             iter = iter->next;
     }
+    if (*token_list == NULL)
+        return (0);
+    iter = *token_list;
+    while (iter)
+    {
+        if (iter->token_type == TK_SPACE)
+            remove_token(&iter);
+        else
+            iter = iter->next;
+    }   
     return (0);
 }
 
@@ -136,7 +134,13 @@ int parse_env(t_token **token_list, t_node **envl)
         (*token_list)->value = ft_itoa(*(int *)iter->content);
         if (!(*token_list)->value)
             return (free(env_value), 1);
-		return (free(env_value), 0);
+        if (env_value[2])
+        {
+            (*token_list)->value = ft_strjoin((*token_list)->value, env_value + 2);
+            if (!(*token_list)->value)
+                return (free(env_value), 1);
+        }
+        return (free(env_value), join_env(token_list));
 	}
 	while (iter)
     {
@@ -147,20 +151,36 @@ int parse_env(t_token **token_list, t_node **envl)
             (*token_list)->value = ft_strdup(eql_addr + 1);
             if (!(*token_list)->value)
                 return (1);
-            return (0);
+            return (join_env(token_list));
         }
         iter = iter->next;
     }
-    free((*token_list)->value);
-    (*token_list)->value = ft_strdup(""); // Emran
-    if (!(*token_list)->value)
-        return (1);
+    remove_token(token_list);
+    // free((*token_list)->value);
+    // (*token_list)->value = ft_strdup(""); // Emran
+    // if (!(*token_list)->value)
+    //     return (1);
+    
     return (0);
 }
 
-/*
-    "     w      |     w    "
-    t1 -> t2 -> t3 -> t4 -> t5
+int join_env(t_token **token_list)
+{
+    char *content;
+    t_token *iter;
 
-*/
-
+    iter = *token_list;
+    if ((*token_list)->prev && (*token_list)->prev->token_type == TK_WORD)
+    {
+        content = iter->prev->value;
+        iter->prev->value = ft_strjoin(content, iter->value);
+        if (!iter->prev->value)
+            return (1);
+        remove_token(&iter);
+        (*token_list) = iter;
+        free(content);
+    }
+    else
+        (*token_list) = iter->next;
+    return (0);
+}

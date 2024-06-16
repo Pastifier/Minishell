@@ -14,9 +14,11 @@ void    token_list_remove(t_token **token);
 t_token *token_list_last(t_token **token_list);
 int parse_spaces_dollars(t_token **token_list, t_node **envl);
 int parse_env(t_token **token_list, t_node **envl);
+int join_env(t_token **token_list);
 //  void determine_token_type(t_token **token);
 int tokenize(char *line, t_token **token_list);
 void escape_special_char(char *temp, unsigned int *i);
+void remove_token(t_token **token);
 
  int get_token(char *temp, unsigned int i, t_token **token_list, t_token_type type);
 //  void get_quot_token(char *temp, unsigned int *i, t_token **token_list);
