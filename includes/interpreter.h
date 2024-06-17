@@ -66,4 +66,8 @@ int		handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
 // @brief  wrapper for the `cd` built-in.
 int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
+// @author Ahmed Alshafy
+// @brief  wrapper for the `export` built-in.
+int parse_export(char *var_name);
+
 #endif // !INTERPRETER_H

@@ -154,7 +154,22 @@ int parse_redir(t_token **token_list, t_astnode **node)
 //     return (parse_word(token_list, node));
 // }
 
+int parse_export(char *var_name)
+{
+    int i;
 
+    i = 0;
+    if (ft_isalpha(var_name[i]) || var_name[i] == '_')
+    {
+        i++;
+        while (var_name[i] && (ft_isalnum(var_name[i]) || var_name[i] == '_'))
+            i++;
+        if (!var_name[i])
+            return (0);
+    }
+    return (1);
+}
 
+// habibi. Tislam ya rayyes. Enta full 3ala full. Shukran binnoon
 
 

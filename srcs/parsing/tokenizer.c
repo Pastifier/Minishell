@@ -116,9 +116,3 @@ int dollar_check(char *str, t_token **token_list, unsigned int *i)
 		return (dollar_check(&str[j], token_list, i));
 	return (0);
 }
-
-//"$'ahmed'$|'samy'"
-	// $
-	// 'ahmed'
-	// $|'samy'
-	// |'samy'
