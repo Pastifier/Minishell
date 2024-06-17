@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/17 20:30:49 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 00:25:32 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int		wexport(t_astnode *word, t_node **envp, const char *variable,
 	t_node	*args;
 
 	args = word->data.command.args;
+	if (args)
+		args = args->next;
 	while (args)
 	{
 		if (*(char*)args->content == '=')
@@ -80,6 +82,25 @@ int		wexport(t_astnode *word, t_node **envp, const char *variable,
 		}
 		if (bltin_export(envp, variable, value))
 			return (EXIT_FAILURE);
+		args = args->next;
+	}
+	return (EXIT_SUCCESS);
+}
+
+int		wunset(t_astnode *word, t_node **envp)
+{
+	t_node	*args;
+
+	args = word->data.command.args;
+	if (args)
+		args = args->next;
+	while (args)
+	{
+		if (unset(envp, args->content))
+			return (EXIT_FAILURE);
+		if (find_variable(envp, args->content))
+			if (unset(envp, args->content))
+				return (EXIT_FAILURE);
 		args = args->next;
 	}
 	return (EXIT_SUCCESS);

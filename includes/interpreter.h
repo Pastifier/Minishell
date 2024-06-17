@@ -82,4 +82,7 @@ int		parse_export(const char *var_name); // I told you to make it const, bro :(
 int		wexport(t_astnode *word, t_node **envp, const char *variable,
 	const char *value);
 
+// @author Emran BinJamaan
+int		wunset(t_astnode *word, t_node **envp);
+
 #endif // !INTERPRETER_H

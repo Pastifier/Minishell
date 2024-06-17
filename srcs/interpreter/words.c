@@ -46,6 +46,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
 		if (word->data.command.thereisprev)
 		{
 			if (!word->data.command.thereisin && word->data.command.execute)
@@ -78,6 +79,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	}
 	else
 	{
+		signal(SIGINT, SIG_IGN);
 		str_arr_destroy(envp);
 		if (word->data.command.thereisprev)
 			close(word->data.command.prevfd[READ_END]);
@@ -122,8 +124,6 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	variable = NULL;
 	if (word->data.command.args->next)
 		first_arg = word->data.command.args->next->content;
-	//if (ft_atoi(first_arg).error)
-	//	mshcontext->exit_status = 255;
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
@@ -131,7 +131,7 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	if (!ft_strncmp(cmd, "pwd", -1))
 		return (pwd());
 	if (!ft_strncmp(cmd, "unset", -1))
-		return (unset(&mshcontext->envl, first_arg));
+		return (wunset(word, &mshcontext->envl));
 	if (!ft_strncmp(cmd, "echo", -1))
 		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))

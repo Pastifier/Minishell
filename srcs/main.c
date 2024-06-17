@@ -6,8 +6,9 @@
 
 int	g_signal = 0;
 
-static bool init_envl(t_node **envl);
+static bool	init_envl(t_node **envl);
 static bool	init_shlvl(t_node *envl);
+static void	signal_handler(int signum);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -19,6 +20,8 @@ int	main(int argc, char **argv, char **envp)
 	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, signal_handler);
 	if (!init_envl(&envl))
 		return (EXIT_FATAL);
 	if (!str_arr_dup_to_list(envp, &envl))
@@ -27,6 +30,7 @@ int	main(int argc, char **argv, char **envp)
 		return (list_destroy(&envl), EXIT_FATAL);
 	while (true)
 	{
+		signal(SIGINT, signal_handler);
 		ast = NULL;
 		token_list = NULL;
 		line = readline(prompt);
@@ -62,7 +66,6 @@ int	main(int argc, char **argv, char **envp)
 	list_destroy(&envl);
 	clear_history();
 	exit(temp);
-	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
 }
 
 // @author Emran BinJamaan
@@ -90,17 +93,6 @@ static bool init_envl(t_node **envl)
 		return (node_destroy(to_append), false);
 	*(int*)to_append->content = EXIT_SUCCESS;
 	list_append(envl, to_append);
-	// *envl = malloc(sizeof(t_node));
-	// if (!*envl)
-	// 	return (false);
-	// (*envl)->content = ft_calloc(1, sizeof(int));
-	// if (!(*envl)->content)
-	// 	return (free(*envl), *envl = NULL, false);
-	// *(int*)(*envl)->content = EXIT_SUCCESS;
-	// (*envl)->next = NULL;
-	// (*envl)->prev = NULL;
-	// (*envl)->visible = false;
-	// (*envl)->is_env = false;
 	return (true);
 }
 
@@ -146,3 +138,15 @@ static bool init_shlvl(t_node *envl)
 
 	
 // }
+
+void	signal_handler(int signum)
+{
+	g_signal = signum;
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
