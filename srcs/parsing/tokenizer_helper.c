@@ -157,7 +157,8 @@ int parse_env(t_token **token_list, t_node **envl)
         }
         iter = iter->next;
     }
-    remove_token(token_list);
+    (*token_list)->token_type = TK_DUMMY;
+    // remove_token(token_list);
     // free((*token_list)->value);
     // (*token_list)->value = ft_strdup(""); // Emran
     // if (!(*token_list)->value)
