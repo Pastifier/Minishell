@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/17 00:32:26 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/17 18:53:52 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 		return (EXIT_FATAL);
 	slash = ft_strchr(args[0], '/');
 	dir = opendir(args[0]);
-	if (dir)
+	if (dir && slash)
 	{
 		write(STDERR_FILENO, "msh: ", 6);
 		ft_putstr_fd(args[0], STDERR_FILENO);
@@ -127,6 +127,7 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 	{
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		write(STDERR_FILENO, ": command not found\n", 20);
+		keep_checking = true;
 	}
 	if (!slash)
 		str_arr_destroy(paths.array - paths.wordcount);
