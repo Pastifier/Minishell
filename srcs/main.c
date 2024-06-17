@@ -42,8 +42,8 @@ int	main(int argc, char **argv, char **envp)
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
 			if (parse_ret)
 			{
-				printf("error value: %d\n", parse_ret); // should be in stderr
 				destroy_mini_shell(&token_list, &ast, parse_ret);
+				*(int*)envl->content = EXIT_FATAL;
 			}
 			else
 			{

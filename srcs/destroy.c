@@ -72,7 +72,7 @@ void show_error(int exit_status)
     if (exit_status == 1)
         msg = "Error: malloc failed\n";
     else if (exit_status == 2)
-        msg = "Error: syntax error\n";
+        msg = "Error: syntax error near unexpected token `|'\n";
     else if (exit_status == 3)
         msg = "Error: unclosed quotes\n";
     else if (exit_status == 4)

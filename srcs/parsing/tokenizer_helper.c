@@ -136,7 +136,9 @@ int parse_env(t_token **token_list, t_node **envl)
             return (free(env_value), 1);
         if (env_value[2])
         {
+            eql_addr = (*token_list)->value;
             (*token_list)->value = ft_strjoin((*token_list)->value, env_value + 2);
+            free(eql_addr);
             if (!(*token_list)->value)
                 return (free(env_value), 1);
         }

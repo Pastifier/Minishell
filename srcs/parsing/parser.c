@@ -49,7 +49,8 @@ int parse_pipe(t_token **token_list, t_astnode **node)
     t_astnode *new_node;
 
     (void)token_list;
-    if (!(*node) || ((*node)->type == TK_AND || (*node)->type == TK_OR)) 
+    if (!(*node) || ((*node)->type == TK_AND || (*node)->type == TK_OR) ||
+        ((*token_list)->prev && (*token_list)->prev->token_type == TK_PIPE))
         return (2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
