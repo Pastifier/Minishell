@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 01:50:18 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 02:21:50 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int	interpret(t_astnode *root, t_node *envl)
 	while (fetch > 0 && mshcontext.rightmost_word)
 	{
 		fetch = wait(&mshcontext.wstatus);
+		if (WIFSIGNALED(mshcontext.wstatus) && fetch > 0)
+			if (WTERMSIG(mshcontext.wstatus) == SIGINT)
+				write(1, "\n", 1);
 		if (fetch == mshcontext.rightmost_word->data.command.pid)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
@@ -43,8 +46,6 @@ int	interpret(t_astnode *root, t_node *envl)
 	if (WIFSIGNALED(mshcontext.exit_status))
 	{
 		g_signal = WTERMSIG(mshcontext.exit_status);
-		if (g_signal == SIGINT)
-			write(1, "\n", 1);
 		return (*(int*)(envl->content) = g_signal + 128);
 	}
 	if (!mshcontext.permissions_clear)
