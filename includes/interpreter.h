@@ -76,6 +76,10 @@ int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
 // @author Ahmed Alshafy
 // @brief  wrapper for the `export` built-in.
-int parse_export(char *var_name);
+int		parse_export(const char *var_name); // I told you to make it const, bro :(
+
+// @author Emran BinJamaan
+int		wexport(t_astnode *word, t_node **envp, const char *variable,
+	const char *value);
 
 #endif // !INTERPRETER_H

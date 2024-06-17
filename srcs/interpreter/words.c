@@ -136,10 +136,6 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))
 	{
-		// first of all. It leaks memory, I think. Also, the function assumes correct
-		// export syntax, which is not guaranteed. It should be fixed.
-		// For instance, export "a b"="c d" will work but it should not.
-		// Also, it takes more than one argument, AND it also edits empty exports and doesn't add new onces in declare -x
 		if (!first_arg)
 			return (env(&(mshcontext->envl->next), true));
 		temp = ft_strchr(first_arg, '=');
@@ -148,10 +144,10 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 			variable = ft_substr(first_arg, 0, temp - first_arg + 1);
 			if (!variable)
 				return (EXIT_FATAL);
-			fetch = bltin_export(&mshcontext->envl, variable, temp + 1);
+			fetch = wexport(word, &mshcontext->envl, variable, temp + 1);
 			return (free(variable), fetch);
 		}
-		return (bltin_export(&mshcontext->envl, first_arg, ""));
+		return (wexport(word, &mshcontext->envl, first_arg, ""));
 	}
 	if (!ft_strncmp(cmd, "exit", -1))
 	{

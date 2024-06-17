@@ -6,11 +6,11 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/17 19:46:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/17 20:30:49 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "interpreter.h"
 
 char	**list_cpy_to_str_arr(t_node *lst)
 {
@@ -54,4 +54,33 @@ void	str_arr_destroy(char **strarr)
 		dummy++;
 	}
 	free(strarr);
+}
+
+int		wexport(t_astnode *word, t_node **envp, const char *variable,
+	const char *value)
+{
+	t_node	*args;
+
+	args = word->data.command.args;
+	while (args)
+	{
+		if (*(char*)args->content == '=')
+		{
+			ft_putstr_fd("msh: export: `", STDERR_FILENO);
+			ft_putstr_fd((char *)variable, STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			return (EXIT_FAILURE);
+		}
+		if (parse_export(variable) == 1)
+		{
+			ft_putstr_fd("msh: export: `", STDERR_FILENO);
+			ft_putstr_fd((char *)variable, STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			return (EXIT_FAILURE);
+		}
+		if (bltin_export(envp, variable, value))
+			return (EXIT_FAILURE);
+		args = args->next;
+	}
+	return (EXIT_SUCCESS);
 }

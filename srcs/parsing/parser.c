@@ -165,7 +165,7 @@ int parse_export(char *var_name)
         i++;
         while (var_name[i] && (ft_isalnum(var_name[i]) || var_name[i] == '_'))
             i++;
-        if (!var_name[i])
+        if (!var_name[i] || (var_name[i] == '='))
             return (0);
     }
     return (1);
