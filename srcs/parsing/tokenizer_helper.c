@@ -126,7 +126,7 @@ int parse_env(t_token **token_list, t_node **envl)
     iter = *envl;
     (*token_list)->token_type = TK_WORD;
     if (!(*token_list)->value[1])
-        return (0);
+        return (join_env(token_list));
     env_value = &(*token_list)->value[1];
 	if ((*token_list)->value[1] == '?') // Emran
 	{
@@ -176,11 +176,8 @@ int join_env(t_token **token_list)
         iter->prev->value = ft_strjoin(content, iter->value);
         if (!iter->prev->value)
             return (1);
-        remove_token(&iter);
-        (*token_list) = iter;
+        remove_token(token_list);
         free(content);
     }
-    else
-        (*token_list) = iter->next;
     return (0);
 }
