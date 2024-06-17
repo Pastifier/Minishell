@@ -104,6 +104,12 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 				ft_putendl_fd(": Permission denied", STDERR_FILENO);
 				keep_checking = false;
 			}
+			else if (slash)
+			{
+				execve(args[0], args, envp);
+				ft_putstr_fd(args[0], STDERR_FILENO);
+				ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+			}
 			else
 			{
 				execve(args[0], args, envp);
@@ -116,6 +122,11 @@ int		wexecve(t_astnode *word, t_node *envl, char **envp)
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			write(STDERR_FILENO, ": command not found\n", 20);
 		}
+	}
+	else
+	{
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		write(STDERR_FILENO, ": command not found\n", 20);
 	}
 	if (!slash)
 		str_arr_destroy(paths.array - paths.wordcount);
