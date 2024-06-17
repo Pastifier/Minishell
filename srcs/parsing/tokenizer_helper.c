@@ -87,32 +87,32 @@ if it is in a double quote, and there is no argment after it, it should be consi
 }
 int     parse_spaces_dollars(t_token **token_list, t_node **envl)
 {
-    t_token *iter;
+    t_token **iter;
     int     ret;
 
-    iter = *token_list;
-    while (iter)
+    iter = token_list;
+    while (*iter)
     {
-        if (iter->token_type == TK_DOLLAR)
+        if ((*iter)->token_type == TK_DOLLAR)
         {
-            ret = parse_env(&iter, envl); // I think this is the probelm related the 
+            ret = parse_env(&(*iter), envl); // I think this is the probelm related the 
             // to remove_token function as i passing the address of iter which is locally
             // declared in this function
             if (ret)
                 return (ret);
         }
         else
-            iter = iter->next;
+            iter = &(*iter)->next;
     }
     if (*token_list == NULL)
         return (0);
-    iter = *token_list;
-    while (iter)
+    iter = token_list;
+    while (*iter)
     {
-        if (iter->token_type == TK_SPACE)
-            remove_token(&iter);
+        if ((*iter)->token_type == TK_SPACE)
+            remove_token(&(*iter));
         else
-            iter = iter->next;
+            iter = &(*iter)->next;
     }   
     return (0);
 }
