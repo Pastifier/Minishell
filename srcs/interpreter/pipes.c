@@ -27,6 +27,8 @@ int	handle_pipe(t_astnode *pipenode, t_shcontext *mshcontext)
 		mshcontext->stds[0] = dup(STDIN_FILENO);
 		mshcontext->stds[1] = dup(STDOUT_FILENO);
 		mshcontext->permissions_clear = true;
+		if (pipenode->left && !pipenode->right)
+			close(pipenode->left->data.command.fd[READ_END]);
 	}
 	return (0);
 }
