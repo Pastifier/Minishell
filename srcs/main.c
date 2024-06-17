@@ -35,6 +35,8 @@ int	main(int argc, char **argv, char **envp)
 			write(STDOUT_FILENO, "\n", 1);
 			break;
 		}
+		// while (pipe_at_eol(&line))
+		// 	line = readline("> ");
 		if (g_signal == 130)
 			*(int*)envl->content = 130;
 		if (line[0] != '\0')
@@ -130,3 +132,17 @@ static bool init_shlvl(t_node *envl)
 	free(shlvl_value_str);
 	return (true);
 }
+
+// static bool pipe_at_eol(char **line)
+// {
+// 	char	*temp;
+// 	int		len;
+
+// 	len = ft_strlen(*line);
+// 	temp = *line;
+// 	while (temp [len] == ' ' || len > 0)
+// 		len--;
+// 	if (temp[len] == '|')
+
+	
+// }
