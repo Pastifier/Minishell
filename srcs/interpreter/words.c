@@ -47,6 +47,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (word->data.command.thereisprev)
 		{
 			if (!word->data.command.thereisin && word->data.command.execute)

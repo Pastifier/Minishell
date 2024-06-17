@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 02:21:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 03:04:31 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void			restore_iodes(t_shcontext *mshcontext, bool clear);
 int	interpret(t_astnode *root, t_node *envl)
 {
 	int			fetch;
+	bool		keep_printing;
 	t_shcontext	mshcontext;
 
 	if (!root)
@@ -32,12 +33,20 @@ int	interpret(t_astnode *root, t_node *envl)
 	visit_prematurely(root, &mshcontext);
 	visit(root, envl, &mshcontext);
 	fetch = 1;
+	keep_printing = true;
 	while (fetch > 0 && mshcontext.rightmost_word)
 	{
 		fetch = wait(&mshcontext.wstatus);
-		if (WIFSIGNALED(mshcontext.wstatus) && fetch > 0)
+		if (keep_printing && WIFSIGNALED(mshcontext.wstatus) && fetch > 0)
+		{
 			if (WTERMSIG(mshcontext.wstatus) == SIGINT)
 				write(1, "\n", 1);
+			else if	(WTERMSIG(mshcontext.wstatus) == SIGQUIT)
+				write(1, "No one appreciates a quitter.\n", 31);
+			else if (WTERMSIG(mshcontext.wstatus) == SIGSEGV)
+				write(1, "Segmentation fault, habibi! >:(\n", 32);
+			keep_printing = false;
+		}
 		if (fetch == mshcontext.rightmost_word->data.command.pid)
 			mshcontext.exit_status = mshcontext.wstatus;
 	}
