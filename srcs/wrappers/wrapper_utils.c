@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/12 17:53:06 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/17 19:46:51 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ char	**list_cpy_to_str_arr(t_node *lst)
 	dummy = lst;
 	elem_count = 0;
 	while (dummy)
-	{
-		elem_count++;
-		dummy = dummy->next;
-	}
+		(elem_count++, dummy = dummy->next);
 	if (elem_count == 0)
 		return (NULL);
 	self = ft_calloc((elem_count + 1), sizeof(char *));
