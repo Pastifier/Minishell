@@ -63,6 +63,14 @@ void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 	*node = NULL;
 }
 
+void syntax_error(t_token **token_list, t_astnode **ast, char *token)
+{
+	destroy_tokens(token_list);
+	destroy_ast(*ast);
+	show_syntax_error(token);
+	*ast = NULL;
+}
+
 void show_error(int exit_status)
 {
     char *msg;
@@ -72,7 +80,7 @@ void show_error(int exit_status)
     if (exit_status == 1)
         msg = "Error: malloc failed\n";
     else if (exit_status == 2)
-        msg = "Error: syntax error near unexpected token `|'\n";
+        return ;
     else if (exit_status == 3)
         msg = "Error: unclosed quotes\n";
     else if (exit_status == 4)
@@ -82,4 +90,23 @@ void show_error(int exit_status)
     else if (exit_status == 6)
         msg = "Error: execve failed\n";
     write(2, msg, ft_strlen(msg));
+}
+
+void	show_syntax_error(char *token)
+{
+	char *msg;
+
+	msg = ft_strjoin("minishell: syntax error near unexpected token `", token);
+	if (!msg)
+	{
+		show_error(1);
+		return ;
+	}
+	msg = ft_strjoin(msg, "'\n");
+	if (!msg)
+	{
+		show_error(1);
+		return ;
+	}
+	write(2, msg, ft_strlen(msg));
 }

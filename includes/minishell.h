@@ -204,6 +204,8 @@ void destroy_str_arr(char **str_arr);
 void destroy_tokens(t_token **token);
 void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
+void syntax_error(t_token **token_list, t_astnode **ast, char *token);
+void show_syntax_error(char *token);
 
 void show_error(int exit_status);
 #endif // !MINISHELL_H

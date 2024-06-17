@@ -50,7 +50,7 @@ int parse_pipe(t_token **token_list, t_astnode **node)
 
     if (!(*token_list)->prev || ((*node) && ((*node)->type == TK_AND || (*node)->type == TK_OR)) ||
        (*token_list)->prev->token_type == TK_PIPE)
-        return (2);
+        return (show_syntax_error((*token_list)->value), 2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
@@ -109,7 +109,7 @@ int parse_redir(t_token **token_list, t_astnode **node)
     t_astnode *new_node;
 
     if (!(*token_list)->next || (*token_list)->next->token_type != TK_WORD)
-        return (2);
+        return (show_syntax_error((*token_list)->value), 2);
     new_node = (t_astnode *)malloc(sizeof(t_astnode));
     if (new_node == NULL)
         return (1);
