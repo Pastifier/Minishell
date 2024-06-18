@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 10:14:03 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 18:30:58 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 /* --- LOG - MESSAGES ---*/
 
 # define CD_INVAL_USE "msh: invalid use of `cd`. Read the subject, habibi."
+# define HD "%s: %s: %s delimited by end-of-file (wanted `%s`)\n"
 
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
@@ -102,4 +103,10 @@ int		wexport(t_astnode *word, t_node **envp, const char *variable,
 // @author Emran BinJamaan
 int		wunset(t_astnode *word, t_node **envp);
 
+/*--- NORME - DUMP ---*/
+
+// @author Emran BinJamaan
+void	perform_wait_and_fetch_wstatus(t_shcontext *mshcontext);
+int		determine_exit_code(t_shcontext *mshcontext);
+int		store_heredoc_input(t_astnode *lredir, int *pipedes);
 #endif // !INTERPRETER_H

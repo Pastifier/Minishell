@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/14 02:46:34:53ebinjama         ###   ########.fr       */
+/*   Created: 2024/06/18 19:36:57 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/06/18 19:41:05 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include "interpreter.h"
 #include <stdio.h>
 
-extern int	g_signal;
+extern volatile sig_atomic_t	g_signal;
 
-static int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
+static int	execute_word_leaf_node(t_astnode *word, t_node *envl,
+				t_shcontext *mshcontext);
 static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext);
 
@@ -25,13 +26,14 @@ int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 	if (word->type != TK_WORD)
 		return (EXIT_NEEDED);
 	if (is_builtin(word, mshcontext) && !word->parent && !mshcontext->terminate)
-		*(int*)mshcontext->envl->content = execute_builtin(word, mshcontext);
+		*(int *)mshcontext->envl->content = execute_builtin(word, mshcontext);
 	else
 		execute_word_leaf_node(word, envl, mshcontext);
 	return (WEXITSTATUS(word->data.command.exit));
 }
 
-int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
+int	execute_word_leaf_node(t_astnode *word, t_node *envl,
+		t_shcontext *mshcontext)
 {
 	pid_t		pid;
 	int			fetch;
@@ -80,8 +82,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		str_arr_destroy(envp);
+		(signal(SIGINT, SIG_IGN), str_arr_destroy(envp));
 		if (word->data.command.thereisprev)
 			close(word->data.command.prevfd[READ_END]);
 		if (word->data.command.thereispipe)
