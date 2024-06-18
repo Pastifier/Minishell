@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:36:57 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 19:41:05 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 20:05:50 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ extern volatile sig_atomic_t	g_signal;
 
 static int	execute_word_leaf_node(t_astnode *word, t_node *envl,
 				t_shcontext *mshcontext);
-static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext);
+int			execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 
 int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 {
@@ -50,45 +50,15 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl,
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		if (word->data.command.thereisprev)
-		{
-			if (!word->data.command.thereisin && word->data.command.execute)
-				dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
-			close(word->data.command.prevfd[READ_END]);
-		}
-		if (word->data.command.thereispipe)
-		{
-			close(word->data.command.fd[READ_END]);
-			if (!word->data.command.thereisout && word->data.command.execute)
-				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
-			close(word->data.command.fd[WRITE_END]);
-		}
-		if (word->data.command.builtin && word->data.command.execute)
-		{
-			mshcontext->allocated_envp = envp;
-			fetch = execute_builtin(word, mshcontext);
-			str_arr_destroy(envp);
-			destroy_ast(mshcontext->root);
-			list_destroy(&envl);
-			restore_iodes(mshcontext, true);
-			exit(fetch);
-		}
+		perform_word_checks_and_close_pipes_if_needed(word, mshcontext,
+			envp, envl);
 		if (word->data.command.execute)
 			fetch = wexecve(word, envl, envp);
-		restore_iodes(mshcontext, true);
-		(str_arr_destroy(envp), list_destroy(&envl));
-		destroy_ast(mshcontext->root);
-		exit(fetch);
+		(destroy_ast(mshcontext->root), str_arr_destroy(envp));
+		(list_destroy(&envl), restore_iodes(mshcontext, true), exit(fetch));
 	}
 	else
-	{
-		(signal(SIGINT, SIG_IGN), str_arr_destroy(envp));
-		if (word->data.command.thereisprev)
-			close(word->data.command.prevfd[READ_END]);
-		if (word->data.command.thereispipe)
-			close(word->data.command.fd[WRITE_END]);
-		word->data.command.pid = pid;
-	}
+		ignore_signals_and_close_pipes_if_needed_then_set_pid(word, pid, envp);
 	return (EXIT_SUCCESS);
 }
 
@@ -112,7 +82,7 @@ static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext)
 	return (false);
 }
 
-static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
+int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 {
 	char		*first_arg;
 	char		*temp;

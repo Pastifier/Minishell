@@ -17,6 +17,7 @@ SRC :=  main.c list_utils.c \
 				$(addprefix processor_norme_dump/, \
 						interpret_dump.c \
 						heredoc_dump.c \
+						word_dump.c \
 				) \
 		) \
 		$(addprefix wrappers/, \

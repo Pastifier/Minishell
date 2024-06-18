@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:30:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 20:05:01 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,9 @@ int		handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
 int		handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
+int			execute_builtin(t_astnode *word, t_shcontext *mshcontext);
+
+// @author Emran BinJamaan
 // @brief  wrapper for the `cd` built-in.
 int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 
@@ -109,4 +112,8 @@ int		wunset(t_astnode *word, t_node **envp);
 void	perform_wait_and_fetch_wstatus(t_shcontext *mshcontext);
 int		determine_exit_code(t_shcontext *mshcontext);
 int		store_heredoc_input(t_astnode *lredir, int *pipedes);
+void	perform_word_checks_and_close_pipes_if_needed(t_astnode *word,
+			t_shcontext *mshcontext, char **envp, t_node *envl);
+void	ignore_signals_and_close_pipes_if_needed_then_set_pid(t_astnode *word,
+			pid_t pid, char **envp);
 #endif // !INTERPRETER_H
