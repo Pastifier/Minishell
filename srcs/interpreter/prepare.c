@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:42:21 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 18:44:32 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static int	store_pipe_in_left_child_if_needed(t_astnode *pipenode,
 				t_shcontext *mshcontext);
 static int	store_in_closest_left_if_needed(t_astnode *pipenode,
 				t_shcontext *mshcontext);
-static int	store_heredoc_input(t_astnode *lredir, int *pipedes);
 
 int	prepare_pipenode(t_astnode *pipenode, t_shcontext *mshcontext)
 {
