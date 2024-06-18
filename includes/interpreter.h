@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 09:56:12 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:14:03 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@
 # ifdef __MACH__
 #  define EXIT_INVAL_ARG		255
 # endif // !__MACH__
+
+/* --- LOG - MESSAGES ---*/
+
+# define CD_INVAL_USE "msh: invalid use of `cd`. Read the subject, habibi."
 
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
