@@ -13,6 +13,11 @@ SRC :=  main.c list_utils.c \
 		$(addprefix interpreter/, \
 				interpreter.c pipes.c words.c \
 				prepare.c redirections.c \
+				\
+				$(addprefix processor_norme_dump/, \
+						interpret_dump.c \
+						heredoc_dump.c \
+				) \
 		) \
 		$(addprefix wrappers/, \
 				wrapper_utils.c wrappers.c \
