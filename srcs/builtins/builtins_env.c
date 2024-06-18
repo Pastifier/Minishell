@@ -6,50 +6,25 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/16 09:16:14 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:08:25 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
-t_node	*find_variable(t_node **envp, const char *variable);
+t_node		*find_variable(t_node **envp, const char *variable);
+static int	perform_declare(t_node *iter);
 
 int	env(t_node **envp, bool declare_flag)
 {
 	t_node	*iter;
-	char	*variable;
-	char	*eql_address;
 
 	if (!envp)
 		return (EXIT_SUCCESS);
 	iter = *envp;
 	if (declare_flag)
-	{
-		while (iter)
-		{
-			eql_address = ft_strchr(iter->content, '=');
-			if (iter->content)
-			{
-				if (eql_address)
-					variable = ft_substr(iter->content, 0, eql_address - (char *)iter->content + 1);
-				else
-					variable = ft_strdup(iter->content);
-				if (!variable)
-					return (EXIT_FATAL);
-				ft_putstr_fd("declare -x ", STDOUT_FILENO);
-				ft_putstr_fd(variable, STDOUT_FILENO);
-				free(variable);
-				if (eql_address)
-				{
-					ft_putstr_fd("\"", STDOUT_FILENO);
-					ft_putstr_fd(eql_address + 1, STDOUT_FILENO);
-					ft_putstr_fd("\"", STDOUT_FILENO);
-				}
-				ft_putstr_fd("\n", STDOUT_FILENO);
-			}
-			iter = iter->next;
-		}
-	}
+		return (perform_declare(iter));
 	else
 	{
 		while (iter)
@@ -100,7 +75,6 @@ int	unset(t_node **envp, const char *variable)
 	if (ft_strchr(variable, '='))
 		return (EXIT_SUCCESS);
 	varp = find_variable(envp, variable);
-
 	node_destroy(varp);
 	return (EXIT_SUCCESS);
 }
@@ -121,10 +95,37 @@ t_node	*find_variable(t_node **envp, const char *variable)
 		eql_address = ft_strchr(iter->content, '=');
 		con_length = ft_strlen(iter->content);
 		if (con_length >= var_length
-			&& !ft_strncmp(iter->content, variable, 
+			&& !ft_strncmp(iter->content, variable,
 				ft_strlen(iter->content) - ft_strlen(eql_address)))
 			return (iter);
 		iter = iter->next;
 	}
 	return (NULL);
+}
+
+static int	perform_declare(t_node *iter)
+{
+	char	*variable;
+	char	*eql_address;
+
+	while (iter)
+	{
+		eql_address = ft_strchr(iter->content, '=');
+		if (iter->content)
+		{
+			if (eql_address)
+				variable = ft_substr(iter->content, 0,
+						eql_address - (char *)iter->content + 1);
+			else
+				variable = ft_strdup(iter->content);
+			if (!variable)
+				return (EXIT_FATAL);
+			printf("declare -x %s", variable);
+			free(variable);
+			if (eql_address)
+				printf("\"%s\"\n", eql_address + 1);
+		}
+		iter = iter->next;
+	}
+	return (EXIT_SUCCESS);
 }
