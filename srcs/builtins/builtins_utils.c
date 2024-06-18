@@ -6,12 +6,11 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 06:41:42 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/20 07:04:55 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:31:03 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 static bool	ft_iswhitespace(int c)
 {
@@ -26,6 +25,7 @@ char	*extract_variable(char *string)
 	size_t	count;
 	char	*self;
 	char	*no_var;
+
 	count = 0;
 	if (*(string + 1))
 		++string;
