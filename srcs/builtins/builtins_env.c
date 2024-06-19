@@ -6,11 +6,11 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 10:08:25 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 07:13:26 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "interpreter.h"
 #include <stdio.h>
 
 t_node		*find_variable(t_node **envp, const char *variable);
@@ -51,7 +51,7 @@ int	bltin_export(t_node **envp, const char *variable, const char *value)
 	if (varp && ft_strlen(varp->content) - var_length == val_length
 		&& !ft_strncmp((char *)varp->content + var_length, value, val_length))
 		return (EXIT_SUCCESS);
-	content = ft_strjoin(variable, value);
+	content = perform_joining_of_var_and_val(variable, value);
 	if (!content)
 		return (EXIT_FATAL);
 	if (varp)
