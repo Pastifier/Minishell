@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 18:29:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:45:29 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:18:04 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #include <readline/readline.h>
 #include <stdio.h>
 
-int	store_heredoc_input(t_astnode *lredir, int *pipedes)
+static void	get_rid_of_garbage(t_shcontext *mshcontext);
+
+int	store_heredoc_input(t_astnode *lredir, int *pipedes,
+		t_shcontext *mshcontext)
 {
 	char	*buffer;
 
@@ -39,5 +42,15 @@ int	store_heredoc_input(t_astnode *lredir, int *pipedes)
 		free(buffer);
 	}
 	close(pipedes[WRITE_END]);
+	get_rid_of_garbage(mshcontext);
 	exit(EXIT_SUCCESS);
+}
+
+static void	get_rid_of_garbage(t_shcontext *mshcontext)
+{
+	destroy_ast(mshcontext->root);
+	if (mshcontext->allocated_envp)
+		str_arr_destroy(mshcontext->allocated_envp);
+	list_destroy(&mshcontext->envl);
+	restore_iodes(mshcontext, true);
 }
