@@ -2,10 +2,10 @@
 #include <stdio.h>
 
 int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
-					t_node **envl)
+		t_node **envl)
 {
-	int ret;
-	t_token     *iter;
+	int		ret;
+	t_token	*iter;
 
 	ret = tokenize(line, token_list);
 	if (ret)
@@ -23,15 +23,15 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
 	return (0);
 }
 
-int tokenize(char *line, t_token **token_list)
+int	tokenize(char *line, t_token **token_list)
 {
-	char *temp;
-	unsigned int i;
-	int ret;
+	char			*temp;
+	unsigned int	i;
+	int				ret;
 
 	temp = line;
 	i = 0;
-	if (!temp || !*temp) 
+	if (!temp || !*temp)
 		return (0);
 	escape_special_char(temp, &i);
 	if (i != 0)
@@ -51,16 +51,21 @@ int tokenize(char *line, t_token **token_list)
 	return (0);
 }
 
-void escape_special_char(char *temp, unsigned int *i)
+void	escape_special_char(char *temp, unsigned int *i)
 {
-	while (temp && temp[*i] && !char_in_str(temp[*i], " $|><\"'")) // removed "&()" for testing
+	char	*special_char;
+
+	special_char = " $|><\"'";
+	if (*temp == '$')
+		special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.;";
+	while (temp && temp[*i] && !char_in_str(temp[*i], special_char))
 		(*i)++;
 }
 
- int escape_quots(char *temp, unsigned int *i, t_token **token_list)
+int	escape_quots(char *temp, unsigned int *i, t_token **token_list)
 {
-	char c;
-	int ret;
+	char	c;
+	int		ret;
 
 	c = temp[*i];
 	(*i)++;
@@ -88,11 +93,11 @@ void escape_special_char(char *temp, unsigned int *i)
 	return (0);
 }
 
-int dollar_check(char *str, t_token **token_list, unsigned int *i)
+int	dollar_check(char *str, t_token **token_list, unsigned int *i)
 {
-	unsigned int j;
-	unsigned int k;
-	int ret;
+	unsigned int	j;
+	unsigned int	k;
+	int				ret;
 
 	j = 0;
 	while (str[j] && str[j] != '$' && str[j] != '"')

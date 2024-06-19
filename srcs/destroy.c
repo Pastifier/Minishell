@@ -95,6 +95,7 @@ void show_error(int exit_status)
 void	show_syntax_error(char *token)
 {
 	char *msg;
+	char *temp;
 
 	msg = ft_strjoin("minishell: syntax error near unexpected token `", token);
 	if (!msg)
@@ -102,11 +103,14 @@ void	show_syntax_error(char *token)
 		show_error(1);
 		return ;
 	}
+	temp = msg;
 	msg = ft_strjoin(msg, "'\n");
+	free(temp);
 	if (!msg)
 	{
 		show_error(1);
 		return ;
 	}
 	write(2, msg, ft_strlen(msg));
+	free(msg);
 }
