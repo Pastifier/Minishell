@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 20:05:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 06:59:46 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,4 +116,8 @@ void	perform_word_checks_and_close_pipes_if_needed(t_astnode *word,
 			t_shcontext *mshcontext, char **envp, t_node *envl);
 void	ignore_signals_and_close_pipes_if_needed_then_set_pid(t_astnode *word,
 			pid_t pid, char **envp);
+int		wexit(t_astnode *word, t_shcontext *mshcontext, char *first_arg);
+void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
+			char **first_arg);
+int		w_wexport(t_astnode *word, t_node **envp);
 #endif // !INTERPRETER_H

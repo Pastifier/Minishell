@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:36:57 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 20:05:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 06:59:33 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,10 @@ int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	char		*first_arg;
 	char		*temp;
 	char		*variable;
-	int			fetch;
 	char		*cmd;
 
 	cmd = word->data.command.args->content;
-	first_arg = NULL;
-	temp = NULL;
-	variable = NULL;
-	if (word->data.command.args->next)
-		first_arg = word->data.command.args->next->content;
+	init_builtin_necessities(word, &variable, &temp, &first_arg);
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
@@ -107,42 +102,8 @@ int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	if (!ft_strncmp(cmd, "echo", -1))
 		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))
-	{
-		if (!first_arg)
-			return (env(&(mshcontext->envl->next), true));
-		temp = ft_strchr(first_arg, '=');
-		if (temp)
-		{
-			variable = ft_substr(first_arg, 0, temp - first_arg + 1);
-			if (!variable)
-				return (EXIT_FATAL);
-			fetch = wexport(word, &mshcontext->envl, variable, temp + 1);
-			return (free(variable), fetch);
-		}
-		return (wexport(word, &mshcontext->envl, first_arg, ""));
-	}
+		return (w_wexport(word, &mshcontext->envl));
 	if (!ft_strncmp(cmd, "exit", -1))
-	{
-		if (first_arg && ft_atoi(first_arg).error)
-		{
-			ft_putstr_fd("exit\nmsh: exit: ", STDERR_FILENO);
-			ft_putstr_fd(first_arg, STDERR_FILENO);
-			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			list_destroy(&mshcontext->envl);
-			str_arr_destroy(mshcontext->allocated_envp);
-			destroy_ast(mshcontext->root);
-			exit(EXIT_INVAL_ARG);
-		}
-		if (first_arg && word->data.command.args->next->next)
-		{
-			ft_putendl_fd("exit\nmsh: exit: too many arguments", STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
-		mshcontext->exit_status = ft_atoi(first_arg).value;
-		list_destroy(&mshcontext->envl);
-		str_arr_destroy(mshcontext->allocated_envp);
-		destroy_ast(mshcontext->root);
-		exit(mshcontext->exit_status);
-	}
+		return (wexit(word, mshcontext, first_arg));
 	return (EXIT_FATAL);
 }

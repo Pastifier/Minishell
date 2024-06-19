@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:39:27 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 06:27:17 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	interpret(t_astnode *root, t_node *envl)
 	if (!root)
 		return (EXIT_FAILURE);
 	mshcontext = init_context(root, envl);
+	mshcontext.exit_status = *(int *)envl->content;
 	signal(SIGINT, SIG_IGN);
 	find_rightmost_word(root, &mshcontext.rightmost_word);
 	visit_prematurely(root, &mshcontext);
