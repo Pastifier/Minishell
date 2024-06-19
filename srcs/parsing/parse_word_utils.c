@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_word_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 15:26:38 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/19 16:58:48 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 #include <stdio.h>
@@ -6,13 +18,13 @@ int	initializ_new_ast_node(t_token **token_list, t_astnode **parent)
 {
 	t_astnode	*new_node;
 
-	(void)token_list;
 	new_node = (t_astnode *)malloc(sizeof(t_astnode));
 	if (new_node == NULL)
-		return (1); // need to change this to destroy the tree and exit
+		return (1);
 	new_node->type = TK_WORD;
 	new_node->data.command.cmd = ft_strdup((*token_list)->value);
-	// needs guard.
+	if (new_node->data.command.cmd == NULL)
+		return (1);
 	new_node->parent = (*parent);
 	new_node->left = NULL;
 	new_node->right = NULL;
@@ -44,7 +56,7 @@ int	set_word_in_pipe(t_token **token_list, t_astnode **node)
 		(*node)->right->parent = (*node);
 	}
 	else if ((*node) && ((*node)->right->type == TK_RREDIR
-				|| (*node)->right->type == TK_LREDIR))
+			|| (*node)->right->type == TK_LREDIR))
 	{
 		temp = (*node)->right;
 		ret = initializ_new_ast_node(token_list, &(*node)->right);

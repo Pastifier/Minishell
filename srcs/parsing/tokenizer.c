@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 15:28:11 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/19 17:13:32 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 #include <stdio.h>
 
@@ -74,8 +86,7 @@ int	escape_quots(char *temp, unsigned int *i, t_token **token_list)
 		ret = get_token(&temp[0], *i + 1, token_list, TK_WORD);
 		if (ret)
 			return (ret);
-		(*i)++;
-		return (0);
+		return ((*i)++, 0);
 	}
 	while (temp[*i] && temp[*i] != c)
 		(*i)++;
@@ -89,8 +100,7 @@ int	escape_quots(char *temp, unsigned int *i, t_token **token_list)
 		if (ret)
 			return (ret);
 	}
-	(*i)++;
-	return (0);
+	return ((*i)++, 0);
 }
 
 int	dollar_check(char *str, t_token **token_list, unsigned int *i)

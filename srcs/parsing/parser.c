@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 16:59:25 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/19 17:02:40 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 #include <stdio.h>
@@ -9,15 +21,13 @@ int	parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
 	ret = 0;
 	if ((*tokens_iter)->token_type == TK_WORD)
 		ret = parse_word(tokens_iter, node);
-	// else if ((*tokens_iter)->token_type == TK_DOLLAR)
-	//     ret = parse_env(tokens_iter, node, envl);
 	else if ((*tokens_iter)->token_type == TK_PIPE)
 		ret = parse_pipe(tokens_iter, node);
 	else if ((*tokens_iter)->token_type == TK_LREDIR
-			|| (*tokens_iter)->token_type == TK_LAPPEND)
+		|| (*tokens_iter)->token_type == TK_LAPPEND)
 		ret = parse_redir(tokens_iter, node);
 	else if ((*tokens_iter)->token_type == TK_RREDIR
-			|| (*tokens_iter)->token_type == TK_RAPPEND)
+		|| (*tokens_iter)->token_type == TK_RAPPEND)
 		ret = parse_redir(tokens_iter, node);
 	if (ret)
 		return (ret);
@@ -49,8 +59,9 @@ int	parse_pipe(t_token **token_list, t_astnode **node)
 	t_astnode	*new_node;
 
 	if (!(*token_list)->prev || ((*node) && ((*node)->type == TK_AND
-    || (*node)->type == TK_OR)) || (*token_list)->prev->token_type == TK_PIPE)
-        return (show_syntax_error((*token_list)->value), 2);
+				|| (*node)->type == TK_OR))
+		|| (*token_list)->prev->token_type == TK_PIPE)
+		return (show_syntax_error((*token_list)->value), 2);
 	new_node = (t_astnode *)malloc(sizeof(t_astnode));
 	if (new_node == NULL)
 		return (1);
@@ -68,6 +79,7 @@ int	parse_pipe(t_token **token_list, t_astnode **node)
 	new_node->right = NULL;
 	return (0);
 }
+
 int	parse_redir(t_token **token_list, t_astnode **node)
 {
 	t_astnode	*new_node;
@@ -101,5 +113,3 @@ int	parse_export(char *var_name)
 	}
 	return (1);
 }
-
-// habibi. Tislam ya rayyes. Enta full 3ala full. Shukran binnoon

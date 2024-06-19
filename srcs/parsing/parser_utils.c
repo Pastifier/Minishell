@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 17:01:01 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/19 17:07:32 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 
@@ -27,22 +39,7 @@ char	**get_command_args(t_token **token)
 		i++;
 		temp = temp->next;
 	}
-	args[i] = NULL;
-	(*token)->next = temp;
-	return (args);
-}
-
-char	*ft_str_toupper(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		str[i] = ft_toupper(str[i]);
-		i++;
-	}
-	return (str);
+	return (args[i] = NULL, (*token)->next = temp, args);
 }
 
 void	add_redir_node(t_astnode **node, t_astnode *new_node)
@@ -74,4 +71,32 @@ void	set_redir_type(t_astnode *new_node, t_token_type type)
 		new_node->type = TK_LREDIR;
 	else
 		new_node->type = TK_RREDIR;
+}
+
+void	remove_token(t_token **token_list)
+{
+	t_token	*iter;
+
+	iter = *token_list;
+	if (!iter->next && !iter->prev)
+		*token_list = NULL;
+	else if (!iter->prev)
+	{
+		*token_list = iter->next;
+		(*token_list)->prev = iter->prev;
+	}
+	else if (!iter->next)
+	{
+		iter->prev->next = NULL;
+		(*token_list) = NULL;
+	}
+	else
+	{
+		iter->prev->next = iter->next;
+		iter->next->prev = iter->prev;
+		(*token_list) = iter->next;
+	}
+	free(iter->value);
+	free(iter);
+	iter = NULL;
 }

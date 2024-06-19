@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_list_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 17:03:28 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/19 17:07:39 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 #include <stdio.h>
 
-// token_list append function
 void	token_list_append(t_token **head, t_token *to_append)
 {
 	t_token	*iter;
@@ -24,11 +35,9 @@ void	token_list_append(t_token **head, t_token *to_append)
 		*head = to_append;
 }
 
-// token_create function
 t_token	*token_create(char *value, t_token_type type)
-
 {
-	t_token *self;
+	t_token		*self;
 
 	self = malloc(sizeof(t_token));
 	if (!self)
@@ -39,8 +48,6 @@ t_token	*token_create(char *value, t_token_type type)
 	self->token_type = type;
 	return (self);
 }
-
-// // determine the token type for each token in the list
 
 t_token_type	get_token_type(char *str, int len)
 {
@@ -93,34 +100,4 @@ t_token	*token_list_last(t_token **token_list)
 	while (iter && iter->next)
 		iter = iter->next;
 	return (iter);
-}
-
-void	remove_token(t_token **token_list)
-{
-	t_token	*iter;
-	t_token	*temp;
-
-	iter = *token_list;
-	temp = iter;
-	if (!iter->next && !iter->prev)
-		*token_list = NULL;
-	else if (!iter->prev)
-	{
-		*token_list = iter->next;
-		(*token_list)->prev = iter->prev;
-	}
-	else if (!iter->next)
-	{
-		iter->prev->next = NULL;
-		(*token_list) = NULL;
-	}
-	else
-	{
-		iter->prev->next = iter->next;
-		iter->next->prev = iter->prev;
-		(*token_list) = iter->next;
-	}
-	free(temp->value);
-	free(temp);
-	temp = NULL;
 }
