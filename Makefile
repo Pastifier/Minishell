@@ -35,9 +35,6 @@ SRC :=  main.c list_utils.c \
 		) \
 		$(addprefix wrappers/, \
 				wrapper_utils.c wrappers.c \
-				$(addprefix wrappers_norme_dump/, \
-						wrapper_dump.c \
-				) \
 		) \
 		$(addprefix builtins/, \
 				builtins_cd.c builtins_pwd.c builtins_env.c \
@@ -45,6 +42,9 @@ SRC :=  main.c list_utils.c \
 		) \
 		destroy.c print.c
 
+#$(addprefix wrappers_norme_dump/,
+#		wrapper_dump.c
+#)
 SRCS := $(addprefix srcs/, $(SRC))
 
 INC := minishell.h parser.h interpreter.h

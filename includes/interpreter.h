@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 07:13:51 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 19:42:56 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,15 @@
 # include "minishell.h"
 # include <signal.h>
 
+# define OS_IS_MAC false
+
 # ifdef __linux__
 #  define EXIT_INVAL_ARG		2
 # endif // !__LINUX__
 
 # ifdef __MACH__
+#  undef OS_IS_MAC
+#  define OS_IS_MAC true
 #  define EXIT_INVAL_ARG		255
 # endif // !__MACH__
 
@@ -98,10 +102,6 @@ int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
 // @author Ahmed Alshafy
 // @brief  wrapper for the `export` built-in.
 int		parse_export(const char *var_name);
-
-// @author Emran BinJamaan
-int		wexport(t_astnode *word, t_node **envp, const char *variable,
-			const char *value);
 
 // @author Emran BinJamaan
 int		wunset(t_astnode *word, t_node **envp);

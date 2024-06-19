@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 10:41:27 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:34:53 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,7 @@ int	wunset(t_astnode *word, t_node **envp)
 {
 	t_node	*args;
 
-	args = word->data.command.args;
-	if (args)
-		args = args->next;
+	args = word->data.command.args->next;
 	while (args)
 	{
 		if (unset(envp, args->content))
