@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:03:28 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 21:42:16 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:56:34 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_token	*token_create(char *value, t_token_type type)
 	self->prev = NULL;
 	self->next = NULL;
 	self->value = ft_strdup(value);
+	if (!self->value)
+		return (free(self), NULL);
 	self->token_type = type;
 	return (self);
 }
