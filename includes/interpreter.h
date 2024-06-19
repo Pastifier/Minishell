@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 06:59:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 07:03:10 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		handle_rredir(t_astnode *rredir, t_shcontext *mshcontext);
 int		handle_heredoc(t_astnode *heredoc, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
-int			execute_builtin(t_astnode *word, t_shcontext *mshcontext);
+int		execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 
 // @author Emran BinJamaan
 // @brief  wrapper for the `cd` built-in.
