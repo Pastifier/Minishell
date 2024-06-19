@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:28:11 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 17:13:32 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:35:10 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,12 @@ void	escape_special_char(char *temp, unsigned int *i)
 	char	*special_char;
 
 	special_char = " $|><\"'";
-	if (*temp == '$')
+	if (*i != 0)
 	{
 		special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.;";
 		if (temp[1] == '?')
 			(*i)++;
 	}
-	(*i)++;
 	while (temp && temp[*i] && !char_in_str(temp[*i], special_char))
 		(*i)++;
 }

@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:41:09 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 18:09:03 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:36:15 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static	int	check_env(t_token **token_list, t_node **envl)
 	iter = token_list;
 	while (*iter)
 	{
-		printf("value: %s\n", (*iter)->value);
 		if ((*iter)->token_type == TK_DOLLAR)
 		{
 			ret = parse_env(&(*iter), envl);
@@ -68,11 +67,9 @@ static	int	parse_env(t_token **token_list, t_node **envl)
 
 	iter = *envl;
 	(*token_list)->token_type = TK_WORD;
-	printf("value: %s\n", (*token_list)->value);
 	if (!(*token_list)->value[1])
 		return (join_env(token_list));
 	env_value = &(*token_list)->value[1];
-	printf("env_value: %s\n", env_value);
 	if ((*token_list)->value[1] == '?')
 		return (get_exit_status(token_list, envl));
 	while (iter)
