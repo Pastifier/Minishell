@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/17 18:53:52 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 10:36:32 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static char	**clean_up_paths(char **paths);
 
-int		wexecve(t_astnode *word, t_node *envl, char **envp)
+int	wexecve(t_astnode *word, t_node *envl, char **envp)
 {
 	t_split	paths;
 	DIR		*dir;
