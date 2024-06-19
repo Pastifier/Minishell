@@ -6,25 +6,23 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 06:29:18 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 10:41:27 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 
+static size_t	list_count(t_node *head);
+
 char	**list_cpy_to_str_arr(t_node *lst)
 {
 	size_t	elem_count;
-	t_node	*dummy;
 	size_t	i;
 	char	**self;
 
 	if (!lst)
 		return (NULL);
-	dummy = lst;
-	elem_count = 0;
-	while (dummy)
-		(elem_count++, dummy = dummy->next);
+	elem_count = list_count(lst);
 	if (elem_count == 0)
 		return (NULL);
 	self = ft_calloc((elem_count + 1), sizeof(char *));
@@ -33,7 +31,7 @@ char	**list_cpy_to_str_arr(t_node *lst)
 	{
 		self[i] = ft_strdup(lst->content);
 		if (!self[i])
-				return (str_arr_destroy(self), NULL);
+			return (str_arr_destroy(self), NULL);
 		lst = lst->next;
 		i++;
 	}
@@ -56,38 +54,7 @@ void	str_arr_destroy(char **strarr)
 	free(strarr);
 }
 
-int		wexport(t_astnode *word, t_node **envp, const char *variable,
-	const char *value)
-{
-	t_node	*args;
-
-	args = word->data.command.args;
-	if (args)
-		args = args->next;
-	while (args)
-	{
-		if (*(char*)args->content == '=')
-		{
-			ft_putstr_fd("msh: export: `", STDERR_FILENO);
-			ft_putstr_fd((char *)variable, STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
-		if (parse_export(variable) == 1)
-		{
-			ft_putstr_fd("msh: export: `", STDERR_FILENO);
-			ft_putstr_fd((char *)variable, STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
-		if (bltin_export(envp, variable, value))
-			return (EXIT_FAILURE);
-		args = args->next;
-	}
-	return (EXIT_SUCCESS);
-}
-
-int		wunset(t_astnode *word, t_node **envp)
+int	wunset(t_astnode *word, t_node **envp)
 {
 	t_node	*args;
 
@@ -104,4 +71,17 @@ int		wunset(t_astnode *word, t_node **envp)
 		args = args->next;
 	}
 	return (EXIT_SUCCESS);
+}
+
+static size_t	list_count(t_node *lst)
+{
+	size_t	count;
+
+	count = 0;
+	while (lst)
+	{
+		count++;
+		lst = lst->next;
+	}
+	return (count);
 }
