@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:44:32 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:17:33 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 		return (close(pipedes[READ_END]), close(pipedes[WRITE_END]),
 			perror("fork()"), mshcontext->terminate = true, EXIT_FATAL);
 	else if (pid == 0)
-		store_heredoc_input(lredir, pipedes);
+		store_heredoc_input(lredir, pipedes, mshcontext);
 	else
 	{
 		(signal(SIGINT, SIG_IGN), close(pipedes[WRITE_END]));
