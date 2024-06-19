@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:47:30 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 07:22:30 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 07:25:24 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,10 @@ int	w_wexport(t_astnode *word, t_node **envp)
 	char	*variable;
 	char	*value;
 
-	args = word->data.command.args;
+	args = word->data.command.args->next;
+	if (!args)
+		return (env(envp, true));
 	value = NULL;
-	args = args->next;
 	while (args)
 	{
 		eql_addr = ft_strchr((char *)args->content, '=');
