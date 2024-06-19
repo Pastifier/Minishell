@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:16:10 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 18:03:26 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:43:49 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 			return (1);
 	}
 	ret = join_word(token_list, new, type);
-	if (ret)
+	if (ret || !new)
 		return (ret);
 	new_token = token_create(new, type);
 	if (new_token == NULL)
@@ -44,20 +44,20 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 
 static int	join_word(t_token **token_list, char *new, t_token_type type)
 {
-	t_token		*last_token;
+	t_token		**last_token;
 	char		*last_value;
 
 	if (token_list && (*token_list))
 	{
 		last_token = token_list_last(token_list);
-		if ((type == TK_WORD && last_token->token_type == TK_WORD)
-			|| (type == TK_SPACE && last_token->token_type == TK_SPACE))
+		if ((type == TK_WORD && (*last_token)->token_type == TK_WORD)
+			|| (type == TK_SPACE && (*last_token)->token_type == TK_SPACE))
 		{
-			last_value = last_token->value;
-			last_token->value = ft_strjoin(last_value, new);
-			if (!last_token->value)
+			last_value = (*last_token)->value;
+			(*last_token)->value = ft_strjoin(last_value, new);
+			if (!(*last_token)->value)
 				return (free(new), free(last_value), 1);
-			return (free(new), free(last_value), 0);
+			return (free(new), new = NULL, free(last_value), 0);
 		}
 	}
 	return (0);

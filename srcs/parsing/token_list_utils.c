@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:03:28 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 17:07:39 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:42:16 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_token	*token_create(char *value, t_token_type type)
 		return (NULL);
 	self->prev = NULL;
 	self->next = NULL;
-	self->value = value;
+	self->value = ft_strdup(value);
 	self->token_type = type;
 	return (self);
 }
@@ -65,9 +65,9 @@ t_token_type	get_token_type(char *str, int len)
 	else if (len == 2)
 	{
 		if (ft_strncmp(str, "||", 2) == 0)
-			return (TK_OR);
+			return (TK_WORD);
 		else if (ft_strncmp(str, "&&", 2) == 0)
-			return (TK_AND);
+			return (TK_WORD);
 		else if (ft_strncmp(str, ">>", 2) == 0)
 			return (TK_RAPPEND);
 		else if (ft_strncmp(str, "<<", 2) == 0)
@@ -92,12 +92,12 @@ int	char_in_str(char c, char *str)
 	return (0);
 }
 
-t_token	*token_list_last(t_token **token_list)
+t_token	**token_list_last(t_token **token_list)
 {
-	t_token	*iter;
+	t_token	**iter;
 
-	iter = *token_list;
-	while (iter && iter->next)
-		iter = iter->next;
+	iter = token_list;
+	while ((*iter)->next)
+		iter = &(*iter)->next;
 	return (iter);
 }

@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:41:09 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 20:36:15 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:46:06 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static	int	join_env(t_token **token_list)
 		content = iter->prev->value;
 		iter->prev->value = ft_strjoin(content, iter->value);
 		if (!iter->prev->value)
-			return (1);
+			return (free(content), 1);
 		free(content);
 		iter = iter->prev;
 		remove_token(token_list);
@@ -135,7 +135,7 @@ static	int	join_env(t_token **token_list)
 		content = iter->value;
 		iter->value = ft_strjoin(content, iter->next->value);
 		if (!iter->value)
-			return (1);
+			return (free(content), 1);
 		free(content);
 		remove_token(&iter->next);
 	}
