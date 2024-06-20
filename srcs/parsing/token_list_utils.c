@@ -94,12 +94,12 @@ int	char_in_str(char c, char *str)
 	return (0);
 }
 
-t_token	**token_list_last(t_token **token_list)
+t_token	*token_list_last(t_token **token_list)
 {
-	t_token	**iter;
+	t_token	*iter;
 
-	iter = token_list;
-	while ((*iter)->next)
-		iter = &(*iter)->next;
+	iter = (*token_list);
+	while (iter->next)
+		iter = iter->next;
 	return (iter);
 }

@@ -70,7 +70,7 @@ void	escape_special_char(char *temp, unsigned int *i)
 	special_char = " $|><\"'";
 	if (*i != 0)
 	{
-		special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.;";
+		special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; ";
 		if (temp[1] == '?')
 			(*i)++;
 	}

@@ -13,7 +13,7 @@
 #include "parser.h"
 #include <stdio.h>
 
-static int	join_word(t_token **token_list, char *new, t_token_type type);
+static int	join_word(t_token **token_list, char **new, t_token_type type);
 
 int	get_token(char *temp, unsigned int i, t_token **token_list,
 		t_token_type type)
@@ -32,7 +32,7 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 		if (new == NULL)
 			return (1);
 	}
-	ret = join_word(token_list, new, type);
+	ret = join_word(token_list, &new, type);
 	if (ret || !new)
 		return (ret);
 	new_token = token_create(new, type);
@@ -42,22 +42,22 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 	return (0);
 }
 
-static int	join_word(t_token **token_list, char *new, t_token_type type)
+static int	join_word(t_token **token_list, char **new, t_token_type type)
 {
-	t_token		**last_token;
+	t_token		*last_token;
 	char		*last_value;
 
 	if (token_list && (*token_list))
 	{
 		last_token = token_list_last(token_list);
-		if ((type == TK_WORD && (*last_token)->token_type == TK_WORD)
-			|| (type == TK_SPACE && (*last_token)->token_type == TK_SPACE))
+		if ((type == TK_WORD && (last_token)->token_type == TK_WORD)
+			|| (type == TK_SPACE && (last_token)->token_type == TK_SPACE))
 		{
-			last_value = (*last_token)->value;
-			(*last_token)->value = ft_strjoin(last_value, new);
-			if (!(*last_token)->value)
-				return (free(new), free(last_value), 1);
-			return (free(new), new = NULL, free(last_value), 0);
+			last_value = (last_token)->value;
+			(last_token)->value = ft_strjoin(last_value, *new);
+			if (!(last_token)->value)
+				return (free(*new), free(last_value), 1);
+			return (free(*new), *new = NULL, free(last_value), 0);
 		}
 	}
 	return (0);
