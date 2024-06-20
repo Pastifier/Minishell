@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/20 17:15:13 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 00:11:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 # define CD_INVAL_USE "msh: invalid use of `cd`. Read the subject, habibi."
 // HD stands for "Here Document"
 # define HD "%s: %s: %s delimited by end-of-file (wanted `%s')\n"
+# define NO_HOME "msh: cd: HOME not set"
+# define NO_OLDPWD "msh: cd: OLDPWD not set"
 
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
@@ -99,6 +101,9 @@ int		execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 // @author Emran BinJamaan
 // @brief  wrapper for the `cd` built-in.
 int		wcd(t_astnode *cdnode, t_shcontext *mshcontext);
+int		cd(char *path, t_node **envp);
+int		check_home_and_cd_if_it_exists(t_node **envp);
+int		check_oldpwd_and_cd_if_it_exists(t_node **envp);
 
 // @author Ahmed Alshafy
 // @brief  wrapper for the `export` built-in.
