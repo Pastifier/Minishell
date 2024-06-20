@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:09:10 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/20 09:27:32 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:17:37 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 static int	set_env(char *name, char *value, t_node **envp);
 static int	add_env(char *name, char *value, t_node **envp);
 static int	cd(char *path, t_node **envp);
+
+// TODO:
+// Apparently, '~' expansion and '-' should be handled...
 
 int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
 {
