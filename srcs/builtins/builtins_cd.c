@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:09:10 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 10:25:10 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 09:27:32 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
 	t_node	*cdarg;
 
 	cdarg = cdnode->data.command.args->next;
+	if (cdarg && OS_IS_MAC)
+		return (cd(cdarg->content, &(mshcontext->envl)));
 	if (cdarg && cdarg->next)
 	{
 		ft_putendl_fd("msh: cd: too many arguments", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	if (cdarg)
-		return (cd(cdarg->content, &(mshcontext->envl)));
 	return (cd(NULL, &(mshcontext->envl)));
 }
 
@@ -38,7 +38,7 @@ static int	cd(char *path, t_node **envp)
 	char	*pwd;
 
 	if (!path)
-		return (ft_putendl_fd(CD_INVAL_USE, STDERR_FILENO), EXIT_NEEDED);
+		return (ft_putendl_fd(CD_INVAL_USE, STDERR_FILENO), EXIT_FAILURE);
 	oldpwd = getcwd(NULL, 0);
 	if (chdir(path) == -1)
 	{
