@@ -22,6 +22,7 @@ int	parse_spaces_dollars(t_token **token_list, t_node **envl)
 {
 	t_token	**iter;
 	int		ret;
+	char	*temp;
 
 	ret = check_env(token_list, envl);
 	if (ret)
@@ -31,6 +32,17 @@ int	parse_spaces_dollars(t_token **token_list, t_node **envl)
 	iter = token_list;
 	while (*iter)
 	{
+		if ((*iter)->token_type == TK_WORD && ((*iter)->next
+				&& (*iter)->next->token_type == TK_DUMMY)
+			&& ((*iter)->next->next && (*iter)->next->next->token_type == TK_WORD))
+		{
+			temp = (*iter)->value;
+			(*iter)->value = ft_strjoin((*iter)->value, (*iter)->next->next->value);
+			if (!(*iter)->value)
+				return (free(temp), 1);
+			free(temp);
+			remove_token(&(*iter)->next->next);
+		}
 		if ((*iter)->token_type == TK_SPACE)
 			remove_token(&(*iter));
 		else

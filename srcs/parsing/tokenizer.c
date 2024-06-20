@@ -71,7 +71,7 @@ void	escape_special_char(char *temp, unsigned int *i)
 	if (*i != 0)
 	{
 		special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; ";
-		if (temp[1] == '?')
+		if (temp[1] == '?' || ft_isdigit(temp[1]))
 			(*i)++;
 	}
 	while (temp && temp[*i] && !char_in_str(temp[*i], special_char))
