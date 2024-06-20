@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/20 09:56:28 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 17:18:01 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,8 @@ int	bltin_export(t_node **envp, const char *variable, const char *value)
 	content = perform_joining_of_var_and_val(variable, value);
 	if (!content)
 		return (EXIT_FATAL);
-	// Check for visibility of the variable. If it is not visible, then set it to visible.
 	if (varp)
-		return (free(varp->content), varp->content = content, EXIT_SUCCESS);
+		return (confirm_var_visibility(val_length, varp, content));
 	to_append = node_create(content);
 	if (!to_append)
 		return (free(content), EXIT_FATAL);

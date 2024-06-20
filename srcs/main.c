@@ -102,24 +102,24 @@ static bool init_shlvl(t_node *envl)
 	char	*eql_addr;
 	char	*shlvl_value_str;
 
-	shlvl = find_variable(&envl, "SHLVL=");
+	shlvl = find_variable(&envl, "SHLVL");
 	if (!shlvl)
 	{
-		if (bltin_export(&envl, "SHLVL=", "1"))
+		if (bltin_export(&envl, "SHLVL", "1"))
 			return (false);
 		return (true);
 	}
 	eql_addr = ft_strchr(shlvl->content, '=');
 	if (ft_atoi(eql_addr + 1).value < 0)
 	{
-		if (bltin_export(&envl, "SHLVL=", "0"))
+		if (bltin_export(&envl, "SHLVL", "0"))
 			return (false);
 		return (true);
 	}
 	shlvl_value_str = ft_itoa(ft_atoi(eql_addr + 1).value + 1);
 	if (!shlvl_value_str)
 		return (false);
-	if (bltin_export(&envl, "SHLVL=", shlvl_value_str))
+	if (bltin_export(&envl, "SHLVL", shlvl_value_str))
 		return (free(shlvl_value_str), false);
 	free(shlvl_value_str);
 	return (true);

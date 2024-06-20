@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/20 09:51:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 17:15:13 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,4 +123,5 @@ void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
 			char **first_arg);
 int		w_wexport(t_astnode *word, t_node **envp);
 char	*perform_joining_of_var_and_val(const char *variable, const char *value);
+int		confirm_var_visibility(size_t val_length, t_node *varp, void *content);
 #endif // !INTERPRETER_H
