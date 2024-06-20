@@ -49,7 +49,9 @@ int	main(int argc, char **argv, char **envp)
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
-				*(int*)envl->content = EXIT_FATAL;
+				*(int *)envl->content = EXIT_FATAL;
+				if (OS_IS_MAC)
+					*(int *)envl->content = 258;
 			}
 			else
 			{
