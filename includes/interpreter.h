@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 21:14:04 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 09:50:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 /* --- LOG - MESSAGES ---*/
 
 # define CD_INVAL_USE "msh: invalid use of `cd`. Read the subject, habibi."
-# define HD "%s: %s: %s delimited by end-of-file (wanted `%s`)\n"
+# define HD "%s: %s: %s delimited by end-of-file (wanted `%s')\n"
 
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
