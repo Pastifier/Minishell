@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:38 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 16:34:53 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/20 09:34:13 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,18 @@ int	wunset(t_astnode *word, t_node **envp)
 	args = word->data.command.args->next;
 	while (args)
 	{
+		if (OS_IS_MAC)
+		{
+			if (ft_strchr(args->content, '='))
+			{
+				ft_putstr_fd("msh: unset: `", STDERR_FILENO);
+				ft_putstr_fd(args->content, STDERR_FILENO);
+				ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+				return (EXIT_FAILURE);
+			}
+			if (parse_export(args->content))
+				return (EXIT_FAILURE);
+		}
 		if (unset(envp, args->content))
 			return (EXIT_FAILURE);
 		if (find_variable(envp, args->content))
