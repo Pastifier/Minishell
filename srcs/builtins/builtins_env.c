@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/20 17:18:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 09:18:26 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ static int	perform_declare(t_node *iter)
 				printf("\"%s\"\n", eql_address + 1);
 		}
 		iter = iter->next;
-		if (!iter)
-			write(STDOUT_FILENO, "\n", 1);
+		if (!iter && !eql_address)
+			printf("\n");
 	}
 	return (EXIT_SUCCESS);
 }

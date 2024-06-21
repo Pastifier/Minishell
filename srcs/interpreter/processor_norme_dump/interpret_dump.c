@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:12:42 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/18 18:36:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 09:12:20 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	perform_wait_and_fetch_wstatus(t_shcontext *mshcontext)
 			else if (WTERMSIG(mshcontext->wstatus) == SIGQUIT)
 				write(1, "No one appreciates a quitter.\n", 31);
 			else if (WTERMSIG(mshcontext->wstatus) == SIGSEGV)
-				write(1, "Segmentation fault, habibi! >:(\n", 32);
+				ft_putendl_fd(SV SV2, STDERR_FILENO);
 			keep_printing = false;
 		}
 		if (fetch == mshcontext->rightmost_word->data.command.pid)

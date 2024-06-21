@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 00:11:21 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 09:11:36 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 # define HD "%s: %s: %s delimited by end-of-file (wanted `%s')\n"
 # define NO_HOME "msh: cd: HOME not set"
 # define NO_OLDPWD "msh: cd: OLDPWD not set"
+# define SV "STOP! You have violated the segments. "
+# define SV2 "Your stolen bytes are now forfeit!"
 
 typedef struct sigaction	t_sigaction;
 typedef struct s_tree
