@@ -1,29 +1,41 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   destroy.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 17:10:38 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/21 19:09:27 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 #include <stdio.h>
 
-void destroy_str_arr(char **str_arr)
+void	destroy_str_arr(char **str_arr)
 {
-    int i;
+	int	i;
 
-    if (!str_arr || !*str_arr)
-        return ;
-    i = 0;
-    while (str_arr[i])
-    {
-        free(str_arr[i]);
-        i++;
-    }
-    free(str_arr);
+	if (!str_arr || !*str_arr)
+		return ;
+	i = 0;
+	while (str_arr[i])
+	{
+		free(str_arr[i]);
+		i++;
+	}
+	free(str_arr);
 }
 
-void destroy_tokens(t_token **tokens)
+void	destroy_tokens(t_token **tokens)
 {
-	t_token *temp;
-	t_token **original; // Emran
+	t_token		*temp;
+	t_token		**original;
 
 	if (!tokens || !*tokens)
 		return ;
-	original = &(*tokens); // Emran
+	original = &(*tokens);
 	while (*tokens)
 	{
 		temp = *tokens;
@@ -31,10 +43,10 @@ void destroy_tokens(t_token **tokens)
 		free(temp->value);
 		free(temp);
 	}
-	*original = NULL; // Emran
+	*original = NULL;
 }
 
-void destroy_ast(t_astnode *node)
+void	destroy_ast(t_astnode *node)
 {
 	if (!node)
 		return ;
@@ -55,46 +67,18 @@ void destroy_ast(t_astnode *node)
 		free(node);
 }
 
-void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
+void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 {
-    (void)token;
-    destroy_ast(*node);
-    show_error(exit_status);
+	(void)token;
+	destroy_ast(*node);
+	show_error(exit_status);
 	*node = NULL;
-}
-
-void syntax_error(t_token **token_list, t_astnode **ast, char *token)
-{
-	destroy_tokens(token_list);
-	destroy_ast(*ast);
-	show_syntax_error(token);
-	*ast = NULL;
-}
-
-void show_error(int exit_status)
-{
-    char *msg;
-
-    if (exit_status == 0)
-        exit(0);
-    if (exit_status == 1)
-        msg = "Error: malloc failed\n";
-    else if (exit_status == 2)
-        return ;
-    else if (exit_status == 3)
-        msg = "Error: unclosed quotes\n";
-    else if (exit_status == 4)
-        msg = "Error: command not found\n";
-    else if (exit_status == 5)
-        msg = "Error: fork failed\n";
-    else if (exit_status == 6)
-        msg = "Error: execve failed\n";
-    write(2, msg, ft_strlen(msg));
 }
 
 void	show_syntax_error(char *token)
 {
-	char *msg;
+	char	*msg;
+	char	*temp;
 
 	msg = ft_strjoin("minishell: syntax error near unexpected token `", token);
 	if (!msg)
@@ -102,11 +86,43 @@ void	show_syntax_error(char *token)
 		show_error(1);
 		return ;
 	}
+	temp = msg;
 	msg = ft_strjoin(msg, "'\n");
+	free(temp);
 	if (!msg)
 	{
 		show_error(1);
 		return ;
 	}
+	write(2, msg, ft_strlen(msg));
+	free(msg);
+}
+
+// void	syntax_error(t_token **token_list, t_astnode **ast, char *token)
+// {
+// 	destroy_tokens(token_list);
+// 	destroy_ast(*ast);
+// 	show_syntax_error(token);
+// 	*ast = NULL;
+// }
+
+void	show_error(int exit_status)
+{
+	char	*msg;
+
+	if (exit_status == 0)
+		exit(0);
+	if (exit_status == 1)
+		msg = "Error: malloc failed\n";
+	else if (exit_status == 2)
+		return ;
+	else if (exit_status == 3)
+		msg = "Error: unclosed quotes\n";
+	else if (exit_status == 4)
+		msg = "Error: command not found\n";
+	else if (exit_status == 5)
+		msg = "Error: fork failed\n";
+	else if (exit_status == 6)
+		msg = "Error: execve failed\n";
 	write(2, msg, ft_strlen(msg));
 }

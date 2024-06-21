@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 15:15:37 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:08:24 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_node
 	struct s_node	*prev;
 	void			*content;
 	bool			visible;
-	bool 			is_env;
+	bool			is_env;
 }	t_node;
 
 // @author	Emran BinJamaan

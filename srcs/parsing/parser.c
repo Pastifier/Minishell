@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 16:59:25 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/21 19:09:49 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser.h"
 #include <stdio.h>
@@ -9,8 +21,6 @@ int	parse(t_token **tokens_iter, t_astnode **node, t_node **envl)
 	ret = 0;
 	if ((*tokens_iter)->token_type == TK_WORD)
 		ret = parse_word(tokens_iter, node);
-	// else if ((*tokens_iter)->token_type == TK_DOLLAR)
-	//     ret = parse_env(tokens_iter, node, envl);
 	else if ((*tokens_iter)->token_type == TK_PIPE)
 		ret = parse_pipe(tokens_iter, node);
 	else if ((*tokens_iter)->token_type == TK_LREDIR
@@ -70,49 +80,12 @@ int	parse_pipe(t_token **token_list, t_astnode **node)
 	return (0);
 }
 
-// int parse_rredir(t_token **token_list, t_astnode **node)
-	// can be the same as parse_lredir
-// {
-//     t_astnode *new_node;
-//     t_astnode *iter;
-
-//     if (((*token_list)->next && (*token_list)->next->token_type != TK_WORD)
-	// || !(*token_list)->next)
-//         return (2);
-//     new_node = (t_astnode *)malloc(sizeof(t_astnode));
-//     if (new_node == NULL)
-//         return (1);
-//     if ((*token_list)->token_type == TK_RAPPEND)
-//         new_node->data.redirection.mode = O_APPEND;
-//     else
-//         new_node->data.redirection.mode = 0;
-//     new_node->type = TK_RREDIR;
-//     new_node->right = NULL;
-//     new_node->left = NULL;
-//     new_node->data.redirection.filename = ft_strdup((*token_list)->next->value);
-//     if (!(*node))
-//     {
-//         (*node) = new_node;
-//         new_node->parent = NULL;
-//     }
-//     else
-//     {
-//         iter = *node;
-//         while (iter && iter->right)
-//             iter = iter->right;
-//         new_node->parent = iter;
-//         iter->right = new_node;
-//     }
-//     *token_list = (*token_list)->next;
-//     return (0);
-// }
-
 int	parse_redir(t_token **token_list, t_astnode **node)
 {
 	t_astnode	*new_node;
 
 	if (!(*token_list)->next || (*token_list)->next->token_type != TK_WORD)
-		return (show_syntax_error((*token_list)->value), 2);
+		return (show_syntax_error("newline"), 2);
 	new_node = (t_astnode *)malloc(sizeof(t_astnode));
 	if (new_node == NULL)
 		return (1);
@@ -125,44 +98,6 @@ int	parse_redir(t_token **token_list, t_astnode **node)
 	return (0);
 }
 
-// int parse_env(t_token **token_list, t_astnode **node, t_node **envl)
-// {
-//     t_node *iter;
-// 	char *eql_addr;
-//     char *env_value;
-
-//     iter = *envl;
-//     if (!(*token_list)->value[1])
-//         return (parse_word(token_list, node));
-//     env_value = &(*token_list)->value[1];
-// 	if ((*token_list)->value[1] == '?') // Emran
-// 	{
-// 		env_value = (*token_list)->value;
-//         (*token_list)->value = ft_itoa(*(int *)iter->content);
-//         if (!(*token_list)->value)
-//             return (free(env_value), 1);
-// 		return (free(env_value), parse_word(token_list, node));
-// 	}
-// 	while (iter)
-//     {
-//         if (!ft_strncmp(env_value, iter->content, ft_strlen(env_value)))
-//         {
-//             free((*token_list)->value);
-//             eql_addr = ft_strchr(iter->content, '=');
-//             (*token_list)->value = ft_strdup(eql_addr + 1);
-//             if (!(*token_list)->value)
-//                 return (1);
-//             return (parse_word(token_list, node));
-//         }
-//         iter = iter->next;
-//     }
-//     free((*token_list)->value);
-//     (*token_list)->value = ft_strdup(""); // Emran
-//     if (!(*token_list)->value)
-//         return (1);
-//     return (parse_word(token_list, node));
-// }
-
 int	parse_export(char *var_name)
 {
 	int	i;
@@ -173,11 +108,8 @@ int	parse_export(char *var_name)
 		i++;
 		while (var_name[i] && (ft_isalnum(var_name[i]) || var_name[i] == '_'))
 			i++;
-		if (!var_name[i] || (var_name[i] == '='))
+		if (!var_name[i])
 			return (0);
 	}
-	ft_putstr_fd("msh: export: `", STDERR_FILENO);
-	ft_putstr_fd((char *)var_name, STDERR_FILENO);
-	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	return (EXIT_FAILURE);
+	return (1);
 }
