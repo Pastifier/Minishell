@@ -58,6 +58,8 @@ int	parse_pipe(t_token **token_list, t_astnode **node)
 {
 	t_astnode	*new_node;
 
+	if (!(*token_list)->next)
+		return (4);
 	if (!(*token_list)->prev || ((*node) && ((*node)->type == TK_AND
 				|| (*node)->type == TK_OR))
 		|| (*token_list)->prev->token_type == TK_PIPE)

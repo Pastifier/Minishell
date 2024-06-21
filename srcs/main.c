@@ -25,6 +25,10 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FATAL);
 	if (!init_shlvl(envl))
 		return (list_destroy(&envl), EXIT_FATAL);
+	parse_ret = pipe_at_eol(&line, &envl);
+
+
+
 	while (true)
 	{
 		ast = NULL;
@@ -35,13 +39,13 @@ int	main(int argc, char **argv, char **envp)
 			write(STDOUT_FILENO, "\n", 1);
 			break;
 		}
-		// while (pipe_at_eol(&line))
-		// 	line = readline("> ");
 		if (g_signal == 130)
 			*(int*)envl->content = 130;
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
+			if (parse_ret == 4)
+				parse_ret = pipe_at_eol(&envl);
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
@@ -133,16 +137,71 @@ static bool init_shlvl(t_node *envl)
 	return (true);
 }
 
-// static bool pipe_at_eol(char **line)
-// {
-// 	char	*temp;
-// 	int		len;
+int pipe_at_eol(char **line, t_node **envl)
+{
+	int 	ret;
+	pid_t	pid;
+	t_astnode	*ast;
+	t_token		*token_list;
+	int fd[2];
 
-// 	len = ft_strlen(*line);
-// 	temp = *line;
-// 	while (temp [len] == ' ' || len > 0)
-// 		len--;
-// 	if (temp[len] == '|')
-
-	
-// }
+	if (pipe(fd) == -1)
+		return (EXIT_FATAL);
+	pid = fork();
+	if (pid == -1)
+		return (EXIT_FATAL);
+	if (pid == 0)
+	{
+		ast = NULL;
+		token_list = NULL;
+		while (true)
+		{
+			close(fd[0]);
+			*line = readline("$> ");
+			if (*line == NULL)
+			{
+				write(STDOUT_FILENO, "\n", 1);
+				// destroy
+				// exit unexpected eof
+				exit(EXIT_SUCCESS);
+			}
+			ret = init_tokenizer(*line, &ast, &token_list, envl);
+			// if (ret != 4)
+				// destroy, exit syntax error
+			// write(fd[1], line, ft_strlen(line));
+			// free(line);
+			if (!ret)
+			{
+				write(fd[1], *line, ft_strlen(line));
+				// write(fd[1], " ", 1);
+				exit(EXIT_SUCCESS);
+			}
+			else if (ret == 4)
+			{
+				write(fd[1], *line, ft_strlen(line));
+				write(fd[1], " ", 1);
+				free(line);
+			}
+			else
+				exit(ret);
+		}
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (ret == 0)
+		{
+			// read line from pipe
+			close(fd[1]);
+			temp = *line;
+			*line = (get_next_line(fd[0]).line)
+			if (!*line)
+				return (free(temp), 1);
+			*line = ft_strjoin(temp, *line);
+			if (!*line)
+				return (free(temp), EXIT_FAILURE);
+			return (0);
+		}
+	}
+	return (ret);
+}
