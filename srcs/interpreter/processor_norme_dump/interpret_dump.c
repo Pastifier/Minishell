@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:12:42 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 09:12:20 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:24:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	perform_wait_and_fetch_wstatus(t_shcontext *mshcontext)
 			if (WTERMSIG(mshcontext->wstatus) == SIGINT)
 				write(1, "\n", 1);
 			else if (WTERMSIG(mshcontext->wstatus) == SIGQUIT)
-				write(1, "No one appreciates a quitter.\n", 31);
+				ft_putendl_fd("No one appreciates a quitter.", STDERR_FILENO);
 			else if (WTERMSIG(mshcontext->wstatus) == SIGSEGV)
 				ft_putendl_fd(SV SV2, STDERR_FILENO);
 			keep_printing = false;
