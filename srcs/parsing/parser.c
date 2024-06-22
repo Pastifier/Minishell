@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:59:25 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 17:02:40 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:09:49 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

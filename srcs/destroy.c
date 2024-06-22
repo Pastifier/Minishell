@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   destroy.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:10:38 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 18:07:25 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:09:27 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
