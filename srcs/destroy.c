@@ -57,14 +57,19 @@ void	destroy_ast(t_astnode *node)
 		free(node->data.command.cmd);
 		list_destroy(&node->data.command.args);
 		free(node);
+		node = NULL;
 	}
 	else if (node->type == TK_LREDIR || node->type == TK_RREDIR)
 	{
 		free(node->data.redirection.filename);
 		free(node);
+		node = NULL;
 	}
 	else
+	{
 		free(node);
+		node = NULL;
+	}
 }
 
 void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
@@ -111,7 +116,7 @@ void	show_error(int exit_status)
 	char	*msg;
 
 	if (exit_status == 0)
-		exit(0);
+		return ;
 	if (exit_status == 1)
 		msg = "Error: malloc failed\n";
 	else if (exit_status == 2)
@@ -119,10 +124,10 @@ void	show_error(int exit_status)
 	else if (exit_status == 3)
 		msg = "Error: unclosed quotes\n";
 	else if (exit_status == 4)
-		msg = "Error: command not found\n";
-	else if (exit_status == 5)
-		msg = "Error: fork failed\n";
-	else if (exit_status == 6)
-		msg = "Error: execve failed\n";
+		return ;
+	// else if (exit_status == 5)
+	// 	msg = "Error: fork failed\n";
+	// else if (exit_status == 6)
+	// 	msg = "Error: execve failed\n";
 	write(2, msg, ft_strlen(msg));
 }

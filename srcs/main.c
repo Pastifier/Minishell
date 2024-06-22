@@ -9,6 +9,9 @@ volatile sig_atomic_t	g_signal = 0;
 static bool	init_envl(t_node **envl);
 static bool	init_shlvl(t_node *envl);
 static void	signal_handler(int signum);
+int pipe_at_eol(char **line, t_node **envl);
+int pipe_at_eol_child(char **line, t_node **envl, int fd[2]);
+int pipe_at_eol_parent(char **line, int fd[2]);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -44,8 +47,13 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
-			// if (parse_ret == 4)
-			// 	parse_ret = pipe_at_eol(&envl);
+			if (parse_ret == 4)
+			{
+				parse_ret = pipe_at_eol(&line, &envl);
+				destroy_mini_shell(&token_list, &ast, parse_ret);
+				if (!parse_ret)
+					parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
+			}
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
@@ -142,14 +150,14 @@ int pipe_at_eol(char **line, t_node **envl)
 	{
 		close(fd[0]);
 		ret = pipe_at_eol_child(line, envl, fd);
-		exit(ret);
+		exit(0);
 	}
 	else
 	{
 		waitpid(pid, &ret, 0);
-		if (ret == 0)
+		if (WEXITSTATUS(ret) == 0)
 			return (pipe_at_eol_parent(line, fd));
-		return (close(fd[0]), close(fd[1]), ret);
+		return (close(fd[0]), close(fd[1]), 4);
 	}
 	return (ret);
 }
@@ -170,32 +178,50 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
 			write(STDOUT_FILENO, "\n", 1);
 			exit(1);
 		}
-		ret = init_tokenizer(*line, &ast, &token_list, envl);
-		destroy_ast(ast);
-		if (ret && ret != 4)
-			exit(ret);
-		write(fd[1], " ", 1);
-		write(fd[1], *line, ft_strlen(line));
-		free(line);
-		if (!ret)
-			exit(EXIT_SUCCESS);
-	}
-	exit(EXIT_SUCCESS);
+		if ((*line)[0] != '\0')
+		{
+			ret = init_tokenizer(*line, &ast, &token_list, envl);
+			destroy_mini_shell(&token_list, &ast, ret);
+			if (ret && ret != 4)
+				exit(ret);		
+			write(fd[1], " ", 1);
+			write(fd[1], *line, ft_strlen(*line));
+			free(*line);
+			if (!ret)
+				exit(EXIT_SUCCESS);
+		}
+		free(*line);
+	}	
+	exit	(EXIT_SUCCESS);
 }
 
 int	pipe_at_eol_parent(char **line, int fd[2])
 {
-	int		ret;
 	char	*temp;
+	char	*new_line;
 
 	close(fd[1]);
 	temp = *line;
-	*line = (get_next_line(fd[0]).line);
+	new_line = (get_next_line(fd[0]).line); // need guard for GNL
 	close(fd[0]);
 	if (!*line)
 		return (free(temp), 1);
-	*line = ft_strjoin(temp, *line);
+	*line = ft_strjoin(temp, new_line);
+	free(temp);
+	free(new_line);
 	if (!*line)
-		return (free(temp), EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	return (0);
+}
+
+void	signal_handler(int signum)
+{
+	g_signal = signum;
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }

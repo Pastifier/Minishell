@@ -36,8 +36,9 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 	if (ret || !new)
 		return (ret);
 	new_token = token_create(new, type);
+	free(new);
 	if (new_token == NULL)
-		return (free(new), 1);
+		return (1);
 	token_list_append(token_list, new_token);
 	return (0);
 }
