@@ -51,6 +51,25 @@ int	parse_spaces_dollars(t_token **token_list, t_node **envl)
 	return (0);
 }
 
+int		skip_dummies(t_token **token_list)
+{
+	t_token	**iter;
+	char	*temp;
+
+	iter = token_list;
+	if (((*iter)->next && (*iter)->next->token_type == TK_DUMMY)
+		&& ((*iter)->next->next && (*iter)->next->next->token_type == TK_WORD))
+	{
+		temp = (*iter)->value;
+		(*iter)->value = ft_strjoin((*iter)->value, (*iter)->next->next->value);
+		if (!(*iter)->value)
+			return (free(temp), 1);
+		free(temp);
+		remove_token(&(*iter)->next->next);
+	}
+	return (0);
+}
+
 static	int	check_env(t_token **token_list, t_node **envl)
 {
 	t_token	**iter;

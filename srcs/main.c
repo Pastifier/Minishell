@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 			else
 			{
 				interpret(ast, envl);
-				destroy_ast(ast);
+				destroy_mini_shell(&token_list, &ast, 0);
 			}
 			add_history(line);
 		}
