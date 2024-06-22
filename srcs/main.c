@@ -44,8 +44,8 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0')
 		{
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
-			if (parse_ret == 4)
-				parse_ret = pipe_at_eol(&envl);
+			// if (parse_ret == 4)
+			// 	parse_ret = pipe_at_eol(&envl);
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
