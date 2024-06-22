@@ -25,10 +25,6 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FATAL);
 	if (!init_shlvl(envl))
 		return (list_destroy(&envl), EXIT_FATAL);
-	parse_ret = pipe_at_eol(&line, &envl);
-
-
-
 	while (true)
 	{
 		ast = NULL;
@@ -141,67 +137,71 @@ int pipe_at_eol(char **line, t_node **envl)
 {
 	int 	ret;
 	pid_t	pid;
-	t_astnode	*ast;
-	t_token		*token_list;
 	int fd[2];
 
 	if (pipe(fd) == -1)
-		return (EXIT_FATAL);
+		return (1);
 	pid = fork();
 	if (pid == -1)
-		return (EXIT_FATAL);
+		return (1);
 	if (pid == 0)
 	{
-		ast = NULL;
-		token_list = NULL;
-		while (true)
-		{
-			close(fd[0]);
-			*line = readline("$> ");
-			if (*line == NULL)
-			{
-				write(STDOUT_FILENO, "\n", 1);
-				// destroy
-				// exit unexpected eof
-				exit(EXIT_SUCCESS);
-			}
-			ret = init_tokenizer(*line, &ast, &token_list, envl);
-			// if (ret != 4)
-				// destroy, exit syntax error
-			// write(fd[1], line, ft_strlen(line));
-			// free(line);
-			if (!ret)
-			{
-				write(fd[1], *line, ft_strlen(line));
-				// write(fd[1], " ", 1);
-				exit(EXIT_SUCCESS);
-			}
-			else if (ret == 4)
-			{
-				write(fd[1], *line, ft_strlen(line));
-				write(fd[1], " ", 1);
-				free(line);
-			}
-			else
-				exit(ret);
-		}
+		close(fd[0]);
+		ret = pipe_at_eol_child(line, envl, fd);
+		exit(ret);
 	}
 	else
 	{
 		waitpid(pid, &ret, 0);
 		if (ret == 0)
-		{
-			// read line from pipe
-			close(fd[1]);
-			temp = *line;
-			*line = (get_next_line(fd[0]).line)
-			if (!*line)
-				return (free(temp), 1);
-			*line = ft_strjoin(temp, *line);
-			if (!*line)
-				return (free(temp), EXIT_FAILURE);
-			return (0);
-		}
+			return (pipe_at_eol_parent(line, fd));
+		return (close(fd[0]), close(fd[1]), ret);
 	}
 	return (ret);
+}
+
+int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
+{
+	int			ret;
+	t_astnode	*ast;
+	t_token		*token_list;
+
+	ast = NULL;
+	token_list = NULL;
+	while (true)
+	{
+		*line = readline("> ");
+		if (*line == NULL)
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			exit(1);
+		}
+		ret = init_tokenizer(*line, &ast, &token_list, envl);
+		destroy_ast(ast);
+		if (ret && ret != 4)
+			exit(ret);
+		write(fd[1], " ", 1);
+		write(fd[1], *line, ft_strlen(line));
+		free(line);
+		if (!ret)
+			exit(EXIT_SUCCESS);
+	}
+	exit(EXIT_SUCCESS);
+}
+
+int	pipe_at_eol_parent(char **line, int fd[2])
+{
+	int		ret;
+	char	*temp;
+
+	close(fd[1]);
+	temp = *line;
+	*line = (get_next_line(fd[0]).line);
+	close(fd[0]);
+	if (!*line)
+		return (free(temp), 1);
+	*line = ft_strjoin(temp, *line);
+	if (!*line)
+		return (free(temp), EXIT_FAILURE);
+	return (0);
 }
