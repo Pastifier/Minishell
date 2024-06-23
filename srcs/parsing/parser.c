@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:59:25 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/21 19:09:49 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/23 09:56:26 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ int	parse_pipe(t_token **token_list, t_astnode **node)
 {
 	t_astnode	*new_node;
 
-	if (!(*token_list)->next)
+	if ((*token_list)->prev && !(*token_list)->next)
 		return (4);
 	if (!(*token_list)->prev || ((*node) && ((*node)->type == TK_AND
 				|| (*node)->type == TK_OR))
-		|| (*token_list)->prev->token_type == TK_PIPE)
+		|| (*token_list)->next->token_type == TK_PIPE)
 		return (show_syntax_error((*token_list)->value), 2);
 	new_node = (t_astnode *)malloc(sizeof(t_astnode));
 	if (new_node == NULL)
