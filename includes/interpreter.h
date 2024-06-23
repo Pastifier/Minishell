@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 09:11:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:36:37 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 # define INTERPRETER_H
 
 # include "minishell.h"
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <signal.h>
 
 # define OS_IS_MAC false
+# define EXIT_SYNTAX_ERR		2
 
 # ifdef __linux__
 #  define EXIT_INVAL_ARG		2
@@ -25,6 +28,8 @@
 # ifdef __MACH__
 #  undef OS_IS_MAC
 #  define OS_IS_MAC true
+#  undef EXIT_SYNTAX_ERR
+#  define EXIT_SYNTAX_ERR		258
 #  define EXIT_INVAL_ARG		255
 # endif // !__MACH__
 
