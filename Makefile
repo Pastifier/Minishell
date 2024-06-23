@@ -4,7 +4,7 @@ NAME := minishell
 
 # Necessities
 CC := cc
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g3 -fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g3 #-fsanitize=address,undefined
 OS := $(shell uname)
 
 Dar = Darwin

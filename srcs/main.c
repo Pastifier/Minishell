@@ -170,6 +170,7 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
 
 	ast = NULL;
 	token_list = NULL;
+	free(*line);
 	while (true)
 	{
 		*line = readline("> ");
@@ -186,7 +187,6 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
 				exit(ret);		
 			write(fd[1], " ", 1);
 			write(fd[1], *line, ft_strlen(*line));
-			free(*line);
 			if (!ret)
 				exit(EXIT_SUCCESS);
 		}
