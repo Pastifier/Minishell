@@ -26,7 +26,7 @@ int	get_token(char *temp, unsigned int i, t_token **token_list,
 	if (new == NULL)
 		return (1);
 	if (ft_strlen(new) == 2 && (ft_strncmp(new, "\"\"", 2) == 0
-				|| ft_strncmp(new, "''", 2) == 0))
+			|| ft_strncmp(new, "''", 2) == 0))
 	{
 		free(new);
 		new = ft_strdup("");
