@@ -17,7 +17,6 @@ static	int	check_env(t_token **token_list, t_node **envl);
 static	int	parse_env(t_token **token_list, t_node **envl);
 static	int	get_exit_status(t_token **token_list, t_node **envl);
 static	int	join_env(t_token **token_list);
-static	int	skip_dummies(t_token **token_list);
 
 int	parse_spaces_dollars(t_token **token_list, t_node **envl)
 {
@@ -30,53 +29,13 @@ int	parse_spaces_dollars(t_token **token_list, t_node **envl)
 	if (*token_list == NULL)
 		return (0);
 	iter = token_list;
-	if (skip_dummies(iter))
+	if (skip_dummies(token_list))
 		return (1);
 	iter = token_list;
 	while (*iter)
 	{
-		// printf("iter->value = %s\n", (*iter)->value);
 		if ((*iter)->token_type == TK_SPACE)
 			remove_token(&(*iter));
-		else
-			iter = &(*iter)->next;
-	}
-	return (0);
-}
-
-int		skip_dummies(t_token **token_list)
-{
-	t_token	**iter;
-	t_token	*temp_token;
-	t_token	*this_token;
-	char	*temp;
-
-	
-	this_token = *token_list;
-	iter = token_list;
-	while (*iter)
-	{
-		printf("iter->value = %s iter->next->value = %s\n", (*iter)->value, (*iter)->next->value);
-		if ((*iter)->token_type == TK_DUMMY)
-		{
-			this_token = (*iter)->prev;
-			*iter = (*iter)->next;
-			while (*iter)
-			{
-				if ((*iter)->token_type == TK_WORD)
-				{
-					temp = this_token->value;
-					this_token->value = ft_strjoin(temp, (*iter)->value);
-					if (!this_token->value)
-						return (free(temp), 1);
-					free(temp);
-					remove_token(&(*iter));
-					temp_token = this_token;
-				}
-				else
-					break;
-			}
-		}
 		else
 			iter = &(*iter)->next;
 	}

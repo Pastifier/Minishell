@@ -22,6 +22,7 @@ SRC :=  main.c list_utils.c \
 		$(addprefix parsing/, \
 				tokenizer.c parser.c parser_utils.c parse_word_utils.c\
 				tokenizer_helper.c token_list_utils.c parse_env_spaces.c \
+				skip_dummies.c \
 		) \
 		$(addprefix interpreter/, \
 				interpreter.c pipes.c words.c \

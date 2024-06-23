@@ -37,6 +37,8 @@ int				char_in_str(char c, char *str);
 int				escape_quots(char *temp, unsigned int *i, t_token **token_list);
 int				dollar_check(char *str, t_token **token_list, unsigned int *i);
 t_token_type	get_token_type(char *str, int len);
+int				skip_dummies(t_token **token_list);
+
 
 /*--- PARSING - UTILS ---*/
 
