@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 10:36:32 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:19:00 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ int	wexecve(t_astnode *word, t_node *envl, char **envp)
 	else
 		str_arr_destroy(paths.array);
 	str_arr_destroy(args);
+	if (dir)
+		closedir(dir);
 	if (!keep_checking)
 		return (126);
 	return (127);
