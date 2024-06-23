@@ -35,6 +35,9 @@ SRC :=  main.c list_utils.c \
 		) \
 		$(addprefix wrappers/, \
 				wrapper_utils.c wrappers.c \
+				$(addprefix wrapper_norme_dump/, \
+						wrapper_dump.c \
+				) \
 		) \
 		$(addprefix builtins/, \
 				builtins_cd.c builtins_pwd.c builtins_env.c \
