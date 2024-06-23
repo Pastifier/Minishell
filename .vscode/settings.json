@@ -7,5 +7,6 @@
 		"parser.h": "c",
 		"interpreter.h": "c",
 		"wait.h": "c"
-	}
+	},
+	"42header.username": "aalshafy"
 }
