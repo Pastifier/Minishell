@@ -9,8 +9,8 @@ volatile sig_atomic_t	g_signal = 0;
 static bool	init_envl(t_node **envl);
 static bool	init_shlvl(t_node *envl);
 static void	signal_handler(int signum);
-int pipe_at_eol(char **line, t_node **envl);
-int pipe_at_eol_child(char **line, t_node **envl, int fd[2]);
+int pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
+int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
 int pipe_at_eol_parent(char **line, int fd[2]);
 
 int	main(int argc, char **argv, char **envp)
@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
 			if (parse_ret == 4)
 			{
-				parse_ret = pipe_at_eol(&line, &envl);
+				parse_ret = pipe_at_eol(&line, &envl, &ast);
 				destroy_mini_shell(&token_list, &ast, parse_ret);
 				if (!parse_ret)
 					parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
@@ -135,7 +135,7 @@ static bool init_shlvl(t_node *envl)
 	return (true);
 }
 
-int pipe_at_eol(char **line, t_node **envl)
+int pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 {
 	int 	ret;
 	pid_t	pid;
@@ -149,7 +149,7 @@ int pipe_at_eol(char **line, t_node **envl)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		ret = pipe_at_eol_child(line, envl, fd);
+		ret = pipe_at_eol_child(line, envl, fd, ast);
 		exit(0);
 	}
 	else
@@ -162,15 +162,16 @@ int pipe_at_eol(char **line, t_node **envl)
 	return (ret);
 }
 
-int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
+int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 {
 	int			ret;
-	t_astnode	*ast;
+	t_astnode	*new_ast;
 	t_token		*token_list;
 
-	ast = NULL;
+	new_ast = NULL;
 	token_list = NULL;
 	free(*line);
+	destroy_mini_shell(NULL, ast, 0);
 	while (true)
 	{
 		*line = readline("> ");
@@ -181,17 +182,21 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2])
 		}
 		if ((*line)[0] != '\0')
 		{
-			ret = init_tokenizer(*line, &ast, &token_list, envl);
-			destroy_mini_shell(&token_list, &ast, ret);
+			ret = init_tokenizer(*line, &new_ast, &token_list, envl);
+			destroy_mini_shell(&token_list, &new_ast, ret);
 			if (ret && ret != 4)
 				exit(ret);		
 			write(fd[1], " ", 1);
 			write(fd[1], *line, ft_strlen(*line));
 			if (!ret)
+			{
+				list_destroy(envl);
 				exit(EXIT_SUCCESS);
+			}
 		}
 		free(*line);
-	}	
+	}
+	list_destroy(envl);
 	exit	(EXIT_SUCCESS);
 }
 
@@ -203,6 +208,10 @@ int	pipe_at_eol_parent(char **line, int fd[2])
 	close(fd[1]);
 	temp = *line;
 	new_line = (get_next_line(fd[0]).line); // need guard for GNL
+	if (!new_line)
+	{
+		/*deal with it*/
+	}
 	close(fd[0]);
 	if (!*line)
 		return (free(temp), 1);
