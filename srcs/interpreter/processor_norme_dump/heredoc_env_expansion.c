@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:50:31 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/24 09:50:48 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/24 10:56:32 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
 		return (NULL);
 	}
 	else if (!ptr)
-		return (malloc(new_size));
+		return (ft_calloc(new_size, sizeof(char)));
 	else if (new_size <= original_size)
 		return (ptr);
 	else
 	{
-		new_ptr = malloc(new_size);
+		new_ptr = ft_calloc(new_size, sizeof(char));
 		if (new_ptr)
 		{
 			ft_memcpy(new_ptr, ptr, original_size);
