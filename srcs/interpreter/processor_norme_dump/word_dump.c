@@ -6,11 +6,34 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:47:30 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 07:25:24 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/24 20:05:46 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
+
+#include "interpreter.h"
+
+void	close_everything(t_astnode *node)
+{
+	if (!node)
+		return ;
+	close_everything(node->left);
+	close_everything(node->right);
+	if (node->type == TK_WORD)
+	{
+		if (node->data.command.thereisprev)
+		{
+			close(node->data.command.prevfd[READ_END]);
+			close(node->data.command.prevfd[WRITE_END]);
+		}
+		if (node->data.command.thereispipe)
+		{
+			close(node->data.command.fd[READ_END]);
+			close(node->data.command.fd[WRITE_END]);
+		}
+	}
+}
 
 void	perform_word_checks_and_close_pipes_if_needed(t_astnode *word,
 		t_shcontext *mshcontext, char **envp, t_node *envl)
@@ -31,13 +54,13 @@ void	perform_word_checks_and_close_pipes_if_needed(t_astnode *word,
 			dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
 		close(word->data.command.fd[WRITE_END]);
 	}
+	close_everything(mshcontext->root);
 	if (word->data.command.builtin && word->data.command.execute)
 	{
 		mshcontext->allocated_envp = envp;
 		fetch = execute_builtin(word, mshcontext);
 		(str_arr_destroy(envp), destroy_ast(mshcontext->root));
-		list_destroy(&envl);
-		restore_iodes(mshcontext, true);
+		(list_destroy(&envl), restore_iodes(mshcontext, true));
 		exit(fetch);
 	}
 }
