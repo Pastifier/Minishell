@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:47:30 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 01:24:02 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 01:37:51 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	wexit(t_astnode *word, t_shcontext *mshcontext, char *first_arg)
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 		list_destroy(&mshcontext->envl);
 		str_arr_destroy(mshcontext->allocated_envp);
-		destroy_ast(mshcontext->root);
+		(destroy_ast(mshcontext->root), restore_iodes(mshcontext, true));
 		exit(EXIT_INVAL_ARG);
 	}
 	if (first_arg && word->data.command.args->next->next)
@@ -95,7 +95,7 @@ int	wexit(t_astnode *word, t_shcontext *mshcontext, char *first_arg)
 		mshcontext->exit_status = ft_atoi(first_arg).value;
 	list_destroy(&mshcontext->envl);
 	str_arr_destroy(mshcontext->allocated_envp);
-	destroy_ast(mshcontext->root);
+	(destroy_ast(mshcontext->root), restore_iodes(mshcontext, true));
 	exit(mshcontext->exit_status);
 	return (EXIT_SUCCESS);
 }
