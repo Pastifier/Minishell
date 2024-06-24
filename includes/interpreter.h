@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/23 21:35:37 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/24 09:37:11 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,4 +147,5 @@ int		confirm_var_visibility(size_t val_length, t_node *varp, void *content);
 int		handle_slash_is_dir(char **args, DIR *dir);
 int		handle_slash_not_dir(char **args);
 int		handle_no_pathnode(char **args, char **envp);
+void	expand_env_vars(t_shcontext *context, char **buffer);
 #endif // !INTERPRETER_H
