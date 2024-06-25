@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 21:17:33 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 23:44:42 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,9 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 	{
 		(signal(SIGINT, SIG_IGN), close(pipedes[WRITE_END]));
 		waitpid(pid, &mshcontext->wstatus, 0);
-		if (WIFSIGNALED(mshcontext->wstatus))
-			if (WTERMSIG(mshcontext->wstatus) == SIGINT)
-				(printf("\n"), mshcontext->terminate = true);
 		*(int *)mshcontext->envl->content = WEXITSTATUS(mshcontext->wstatus);
+		if (WEXITSTATUS(mshcontext->wstatus) == 130)
+			return(mshcontext->terminate = true, 130);
 	}
 	return (EXIT_SUCCESS);
 }
