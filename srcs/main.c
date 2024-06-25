@@ -53,30 +53,40 @@ int	main(int argc, char **argv, char **envp)
 				{
 					free(line);
 					*(int*)envl->content = 130;
+					write(STDOUT_FILENO, "\n", 1);
 					continue ;
 				}
 				else if (parse_ret == EXIT_UNEXPECTED)
 				{
-					(list_destroy(&envl), free(line));
-					return (EXIT_SYNTAX_ERR);
+					if (!OS_IS_MAC)
+					{
+						(list_destroy(&envl), free(line));
+						return (EXIT_SYNTAX_ERR);
+					}
+					else
+					{
+						free(line);
+						continue ;
+					}
 				}
 				if (!parse_ret)
 					parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
 			}
+			add_history(line);
+			free(line);
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
 				*(int *)envl->content = EXIT_SYNTAX_ERR;
-				
 			}
 			else
 			{
 				interpret(ast, envl);
 				destroy_mini_shell(&token_list, &ast, 0);
 			}
-			add_history(line);
 		}
-		free(line);
+		else
+			free(line);
 		rl_on_new_line();
 	}
 	write(1, "exit\n", 5);

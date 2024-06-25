@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 17:22:25 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/25 17:22:35 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/25 18:33:56 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	show_error(int exit_status)
 {
 	char	*msg;
 
+	msg = NULL;
 	if (exit_status == 0)
 		return ;
 	if (exit_status == 1)
@@ -49,5 +50,8 @@ void	show_error(int exit_status)
 		msg = "Error: unclosed quotes\n";
 	else if (exit_status == 4)
 		return ;
-	write(2, msg, ft_strlen(msg));
+	else if (exit_status == 5)
+		return ;
+	if (msg)
+		write(2, msg, ft_strlen(msg));
 }
