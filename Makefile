@@ -32,10 +32,14 @@ SRC :=  main.c list_utils.c \
 						interpret_dump.c \
 						heredoc_dump.c \
 						word_dump.c \
+						heredoc_env_expansion.c \
 				) \
 		) \
 		$(addprefix wrappers/, \
 				wrapper_utils.c wrappers.c \
+				$(addprefix wrapper_norme_dump/, \
+						wrapper_dump.c \
+				) \
 		) \
 		$(addprefix builtins/, \
 				builtins_cd.c builtins_pwd.c builtins_env.c \

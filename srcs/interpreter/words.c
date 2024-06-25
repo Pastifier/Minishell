@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:36:57 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/19 21:14:40 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 01:38:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl,
 		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
 		perform_word_checks_and_close_pipes_if_needed(word, mshcontext,
 			envp, envl);
 		if (word->data.command.execute)

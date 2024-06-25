@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 09:11:36 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/24 09:37:11 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 # define INTERPRETER_H
 
 # include "minishell.h"
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <signal.h>
+# include <dirent.h>
 
 # define OS_IS_MAC false
+# define EXIT_SYNTAX_ERR		2
 
 # ifdef __linux__
 #  define EXIT_INVAL_ARG		2
@@ -25,6 +29,8 @@
 # ifdef __MACH__
 #  undef OS_IS_MAC
 #  define OS_IS_MAC true
+#  undef EXIT_SYNTAX_ERR
+#  define EXIT_SYNTAX_ERR		258
 #  define EXIT_INVAL_ARG		255
 # endif // !__MACH__
 
@@ -38,8 +44,17 @@
 # define SV "STOP! You have violated the segments. "
 # define SV2 "Your stolen bytes are now forfeit!"
 
-typedef struct sigaction	t_sigaction;
-typedef struct s_tree
+typedef struct s_wrapper_helper
+{
+	t_split	paths;
+	char	*slash;
+	char	**args;
+	DIR		*dir;
+	bool	keep_checking;
+	t_node	*pathnode;
+}	t_wexec;
+
+typedef struct s_mshcontext
 {
 	t_node				*envl;
 	bool				terminate;
@@ -49,8 +64,6 @@ typedef struct s_tree
 	t_astnode			*rightmost_word;
 	int					wstatus;
 	int					exit_status;
-	t_sigaction			*sa;
-	t_sigaction			*oldact;
 	int					stds[3];
 	char				**allocated_envp;
 }	t_shcontext;
@@ -131,4 +144,8 @@ void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
 int		w_wexport(t_astnode *word, t_node **envp);
 char	*perform_joining_of_var_and_val(const char *variable, const char *value);
 int		confirm_var_visibility(size_t val_length, t_node *varp, void *content);
+int		handle_slash_is_dir(char **args, DIR *dir);
+int		handle_slash_not_dir(char **args);
+int		handle_no_pathnode(char **args, char **envp);
+void	expand_env_vars(t_shcontext *context, char **buffer);
 #endif // !INTERPRETER_H
