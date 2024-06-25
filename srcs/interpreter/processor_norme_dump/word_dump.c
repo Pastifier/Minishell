@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:47:30 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 02:25:12 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:06:56 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,32 +74,6 @@ void	ignore_signals_and_close_pipes_if_needed_then_set_pid(t_astnode *word,
 	word->data.command.pid = pid;
 }
 
-int	wexit(t_astnode *word, t_shcontext *mshcontext, char *first_arg)
-{
-	if (first_arg && ft_atoi(first_arg).error)
-	{
-		ft_putstr_fd("exit\nmsh: exit: ", STDERR_FILENO);
-		ft_putstr_fd(first_arg, STDERR_FILENO);
-		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		list_destroy(&mshcontext->envl);
-		str_arr_destroy(mshcontext->allocated_envp);
-		(destroy_ast(mshcontext->root), restore_iodes(mshcontext, true));
-		exit(EXIT_INVAL_ARG);
-	}
-	if (first_arg && word->data.command.args->next->next)
-	{
-		ft_putendl_fd("exit\nmsh: exit: too many arguments", STDERR_FILENO);
-		return (EXIT_FAILURE);
-	}
-	if (first_arg)
-		mshcontext->exit_status = ft_atoi(first_arg).value;
-	list_destroy(&mshcontext->envl);
-	str_arr_destroy(mshcontext->allocated_envp);
-	(destroy_ast(mshcontext->root), restore_iodes(mshcontext, true));
-	exit(mshcontext->exit_status);
-	return (EXIT_SUCCESS);
-}
-
 void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
 			char **first_arg)
 {
@@ -108,33 +82,4 @@ void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
 	*first_arg = NULL;
 	if (word->data.command.args->next)
 		*first_arg = word->data.command.args->next->content;
-}
-
-int	w_wexport(t_astnode *word, t_node **envp)
-{
-	t_node	*args;
-	char	*eql_addr;
-	char	*variable;
-	char	*value;
-
-	args = word->data.command.args->next;
-	if (!args)
-		return (env(envp, true));
-	value = NULL;
-	while (args)
-	{
-		eql_addr = ft_strchr((char *)args->content, '=');
-		if (eql_addr)
-			value = eql_addr + 1;
-		variable = ft_substr((char *)args->content, 0,
-				eql_addr - (char *)args->content);
-		if (!variable)
-			return (EXIT_FAILURE);
-		if (parse_export(variable))
-			return (free(variable), EXIT_FAILURE);
-		if (bltin_export(envp, variable, value))
-			return (free(variable), EXIT_FAILURE);
-		(free(variable), args = args->next);
-	}
-	return (EXIT_SUCCESS);
 }
