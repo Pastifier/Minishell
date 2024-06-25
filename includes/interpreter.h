@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/24 09:37:11 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:49:13 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 # include <signal.h>
 # include <dirent.h>
 
-# define OS_IS_MAC false
+# define OS_IS_MAC				false
 # define EXIT_SYNTAX_ERR		2
+# define EXIT_UNEXPECTED		14
 
 # ifdef __linux__
 #  define EXIT_INVAL_ARG		2

@@ -8,7 +8,7 @@ volatile sig_atomic_t	g_signal = 0;
 
 static bool	init_envl(t_node **envl);
 static bool	init_shlvl(t_node *envl);
-static void	signal_handler(int signum);
+void		signal_handler(int signum);
 
 
 int	main(int argc, char **argv, char **envp)
@@ -55,15 +55,19 @@ int	main(int argc, char **argv, char **envp)
 					*(int*)envl->content = 130;
 					continue ;
 				}
+				else if (parse_ret == EXIT_UNEXPECTED)
+				{
+					(list_destroy(&envl), free(line));
+					return (EXIT_SYNTAX_ERR);
+				}
 				if (!parse_ret)
 					parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
 			}
 			if (parse_ret)
 			{
 				destroy_mini_shell(&token_list, &ast, parse_ret);
-				*(int *)envl->content = EXIT_FATAL;
-				if (OS_IS_MAC)
-					*(int *)envl->content = 258;
+				*(int *)envl->content = EXIT_SYNTAX_ERR;
+				
 			}
 			else
 			{

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_at_eol.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 17:29:13 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/25 17:43:53 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/25 18:08:33 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
+#include "parser.h"
+#include <readline/readline.h>
 
 int pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 {
@@ -31,14 +33,17 @@ int pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 	}
 	else
 	{
+		signal(SIGINT, SIG_IGN);
 		waitpid(pid, &ret, 0);
-        if (WIFSIGNALED(ret))
-        {
-            if (WTERMSIG(ret) == SIGINT)
-                return (close(fd[0]), close(fd[1]), 5);
-        }
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGINT)
+				return (close(fd[0]), close(fd[1]), 5);
+		}
 		if (WEXITSTATUS(ret) == 0)
 			return (pipe_at_eol_parent(line, fd));
+		else if (WEXITSTATUS(ret) == EXIT_UNEXPECTED && !OS_IS_MAC)
+			return (close(fd[0]), close(fd[1]), EXIT_UNEXPECTED);
 		return (close(fd[0]), close(fd[1]), 4);
 	}
 	return (ret);
@@ -54,13 +59,14 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 	token_list = NULL;
 	free(*line);
 	destroy_mini_shell(NULL, ast, 0);
+	signal(SIGINT, SIG_DFL);
 	while (true)
 	{
 		*line = readline("> ");
 		if (*line == NULL)
 		{
 			ft_putendl_fd("msh: syntax error: unexpected EOF", 2);
-			exit(EXIT_SYNTAX_ERR);
+			exit(EXIT_UNEXPECTED);
 		}
 		if ((*line)[0] != '\0')
 		{
@@ -72,6 +78,7 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 			write(fd[1], *line, ft_strlen(*line));
 			if (!ret)
 			{
+				(close(fd[0]), close(fd[1]));
 				list_destroy(envl);
 				exit(EXIT_SUCCESS);
 			}
@@ -79,7 +86,7 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 		free(*line);
 	}
 	list_destroy(envl);
-	exit	(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }
 
 int	pipe_at_eol_parent(char **line, int fd[2])
