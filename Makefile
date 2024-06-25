@@ -48,7 +48,7 @@ SRC :=  main.c list_utils.c \
 						builtin_dump.c \
 				) \
 		) \
-		destroy.c print.c
+		destroy.c show_errors.c \
 
 #$(addprefix wrappers_norme_dump/,
 #		wrapper_dump.c

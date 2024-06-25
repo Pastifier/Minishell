@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   destroy.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:10:38 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/21 19:09:27 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:24:49 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,56 +73,4 @@ void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status)
 	destroy_ast(*node);
 	show_error(exit_status);
 	*node = NULL;
-}
-
-void	show_syntax_error(char *token)
-{
-	char	*msg;
-	char	*temp;
-
-	msg = ft_strjoin("minishell: syntax error near unexpected token `", token);
-	if (!msg)
-	{
-		show_error(1);
-		return ;
-	}
-	temp = msg;
-	msg = ft_strjoin(msg, "'\n");
-	free(temp);
-	if (!msg)
-	{
-		show_error(1);
-		return ;
-	}
-	write(2, msg, ft_strlen(msg));
-	free(msg);
-}
-
-// void	syntax_error(t_token **token_list, t_astnode **ast, char *token)
-// {
-// 	destroy_tokens(token_list);
-// 	destroy_ast(*ast);
-// 	show_syntax_error(token);
-// 	*ast = NULL;
-// }
-
-void	show_error(int exit_status)
-{
-	char	*msg;
-
-	if (exit_status == 0)
-		return ;
-	if (exit_status == 1)
-		msg = "Error: malloc failed\n";
-	else if (exit_status == 2)
-		return ;
-	else if (exit_status == 3)
-		msg = "Error: unclosed quotes\n";
-	else if (exit_status == 4)
-		return ;
-	// else if (exit_status == 5)
-	// 	msg = "Error: fork failed\n";
-	// else if (exit_status == 6)
-	// 	msg = "Error: execve failed\n";
-	write(2, msg, ft_strlen(msg));
 }
