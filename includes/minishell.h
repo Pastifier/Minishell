@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 19:08:24 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:31:34 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,10 @@ void destroy_ast(t_astnode *node);
 void destroy_parser(t_token **token, t_astnode **node);
 void syntax_error(t_token **token_list, t_astnode **ast, char *token);
 void show_syntax_error(char *token);
-
 void show_error(int exit_status);
+
+/*--- PIPE @ EOL ---*/
+int pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
+int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
+int pipe_at_eol_parent(char **line, int fd[2]);
 #endif // !MINISHELL_H
