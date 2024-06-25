@@ -6,7 +6,7 @@
 /*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:27:14 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 23:44:42 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 01:08:41 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	prepare_heredoc(t_astnode *lredir, t_shcontext *mshcontext)
 		waitpid(pid, &mshcontext->wstatus, 0);
 		*(int *)mshcontext->envl->content = WEXITSTATUS(mshcontext->wstatus);
 		if (WEXITSTATUS(mshcontext->wstatus) == 130)
-			return(mshcontext->terminate = true, 130);
+			return (mshcontext->terminate = true, 130);
 	}
 	return (EXIT_SUCCESS);
 }

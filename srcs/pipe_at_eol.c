@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_at_eol.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 17:29:13 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/25 21:01:26 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 01:10:52 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ static void	catch_sigint(int signum)
 	}
 }
 
-int pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
+int	pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 {
-	int 	ret;
+	int		ret;
 	pid_t	pid;
-	int fd[2];
+	int		fd[2];
 
 	if (pipe(fd) == -1)
 		return (1);
@@ -65,7 +65,7 @@ int pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 	return (ret);
 }
 
-int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
+int	pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 {
 	int			ret;
 	t_astnode	*new_ast;
@@ -73,7 +73,6 @@ int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 
 	new_ast = NULL;
 	token_list = NULL;
-	// free(*line);
 	destroy_mini_shell(NULL, ast, 0);
 	signal(SIGINT, catch_sigint);
 	while (true && g_signal != 130)
@@ -131,8 +130,6 @@ int	pipe_at_eol_parent(char **line, int fd[2])
 	if (!new_line)
 		return (close(fd[0]), 1);
 	close(fd[0]);
-	// if (!*line)
-	// 	return (free(temp), 1);
 	*line = ft_strjoin(temp, new_line);
 	free(temp);
 	free(new_line);
