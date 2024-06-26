@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 17:31:34 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 12:25:06 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,9 +187,18 @@ int		bltin_export(t_node **envp, const char *variable, const char *value);
 int		unset(t_node **envp, const char *variable);
 int		pwd(void);
 
+/*--- main() Scope ---*/
+bool	init_envl(t_node **envl);
+bool	init_shlvl(t_node *envl);
+int		init_msh_env(t_node **envl, char **envp);
+char	*clean_start(t_astnode **ast, t_token **token_list,
+            void (*signal_handler)(int));
+int		parse_line(char **line, t_astnode **ast, t_token **token_list, t_node **envl);
+
+
 /*--- WRAPPER FUNCTIONS ---*/
-char **list_cpy_to_str_arr(t_node *lst);
-int wexecve(t_astnode *word, t_node *envl, char **envp);
+char	**list_cpy_to_str_arr(t_node *lst);
+int		wexecve(t_astnode *word, t_node *envl, char **envp);
 
 /*--- TEMPERORY DEBUGGING FUNCTIONS*/
 
@@ -213,4 +222,9 @@ void show_error(int exit_status);
 int pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
 int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
 int pipe_at_eol_parent(char **line, int fd[2]);
+
+/*--- PROCESSING ---*/
+void	processing(int parse_ret, t_astnode **ast, t_token **token_list,
+		t_node **envl);
+
 #endif // !MINISHELL_H

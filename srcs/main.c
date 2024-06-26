@@ -6,14 +6,21 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-static bool	init_envl(t_node **envl);
-static bool	init_shlvl(t_node *envl);
+static void	end_shell(t_node **envl)
+{
+	int	exit_code;
+
+	exit_code = *(int *)(*envl)->content;
+	write(1, "exit\n", 5);
+	list_destroy(envl);
+	clear_history();
+	exit(exit_code);
+}
 void		signal_handler(int signum);
 
 
 int	main(int argc, char **argv, char **envp)
 {
-	char 		*prompt = "$> ";
 	char  		*line;
 	t_astnode	*ast;
 	t_token		*token_list;
@@ -22,78 +29,28 @@ int	main(int argc, char **argv, char **envp)
 
 	((void)argc, (void)argv, envl = NULL);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, signal_handler);
-	if (!init_envl(&envl))
+	if (init_msh_env(&envl, envp))
 		return (EXIT_FATAL);
-	if (!str_arr_dup_to_list(envp, &envl))
-		return (EXIT_FATAL);
-	if (!init_shlvl(envl))
-		return (list_destroy(&envl), EXIT_FATAL);
 	while (true)
 	{
-		signal(SIGINT, signal_handler);
-		ast = NULL;
-		token_list = NULL;
-		line = readline(prompt);
+		line = clean_start(&ast, &token_list, signal_handler);
 		if (line == NULL)
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			break;
-		}
-		if (g_signal == 130)
-			*(int*)envl->content = 130;
+			break ;
 		if (line[0] != '\0')
 		{
-			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
-			if (parse_ret == 4)
-			{
-				parse_ret = pipe_at_eol(&line, &envl, &ast);
-				destroy_mini_shell(&token_list, &ast, parse_ret);
-				if (parse_ret == 5)
-				{
-					free(line);
-					*(int*)envl->content = 130;
-					write(STDOUT_FILENO, "\n", 1);
-					continue ;
-				}
-				else if (parse_ret == EXIT_UNEXPECTED)
-				{
-					if (!OS_IS_MAC)
-					{
-						(list_destroy(&envl), free(line));
-						return (EXIT_SYNTAX_ERR);
-					}
-					else
-					{
-						free(line);
-						continue ;
-					}
-				}
-				if (!parse_ret)
-					parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
-			}
-			add_history(line);
-			free(line);
-			if (parse_ret)
-			{
-				destroy_mini_shell(&token_list, &ast, parse_ret);
-				*(int *)envl->content = EXIT_SYNTAX_ERR;
-			}
-			else
-			{
-				interpret(ast, envl);
-				destroy_mini_shell(&token_list, &ast, 0);
-			}
+			parse_ret = parse_line(&line, &ast, &token_list, &envl);
+			if (parse_ret == 5 )
+				continue ;
+			else if (parse_ret == EXIT_SYNTAX_ERR)
+				return (parse_ret);
+			(add_history(line), free(line));
+			processing(parse_ret, &ast, &token_list, &envl);
 		}
 		else
 			free(line);
 		rl_on_new_line();
 	}
-	write(1, "exit\n", 5);
-	int temp = *(int*)envl->content;
-	list_destroy(&envl);
-	clear_history();
-	exit(temp);
+	end_shell(&envl);
 }
 
 // @author Emran BinJamaan
@@ -107,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 // @warning The environment list must be freed by the caller. If the allocation fails,
 //			the function will free the allocated memory and set the
 //			pointer to `NULL`.
-static bool init_envl(t_node **envl)
+bool init_envl(t_node **envl)
 {
 	t_node	*to_append;
 
@@ -124,7 +81,7 @@ static bool init_envl(t_node **envl)
 	return (true);
 }
 
-static bool init_shlvl(t_node *envl)
+bool init_shlvl(t_node *envl)
 {
 	t_node	*shlvl;
 	char	*eql_addr;

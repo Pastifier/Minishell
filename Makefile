@@ -4,21 +4,22 @@ NAME := minishell
 
 # Necessities
 CC := cc
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g3 #-fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g3 -fsanitize=address,undefined
 OS := $(shell uname)
 
 Dar = Darwin
 Lin = Linux
+HOME_DIR := $(shell echo ~)
 
 ifeq (${OS}, ${Dar})
-	CFLAGS += -L/Users/ebinjama/homebrew/opt/readline/lib -I/Users/ebinjama/homebrew/opt/readline/include
+	CFLAGS += -L${HOME_DIR}/homebrew/opt/readline/lib -I${HOME_DIR}/homebrew/opt/readline/include
 else ifeq (${OS}, ${Lin})
 	CFLAGS += -lreadline -lcurses
 else
 	$(error Idk, man. Doesn't look like something I was BUILT to deal with ;3)
 endif
 
-SRC :=  main.c list_utils.c pipe_at_eol.c \
+SRC :=  main.c list_utils.c pipe_at_eol.c init_msh.c \
 		$(addprefix parsing/, \
 				tokenizer.c parser.c parser_utils.c parse_word_utils.c\
 				tokenizer_helper.c token_list_utils.c parse_env_spaces.c \

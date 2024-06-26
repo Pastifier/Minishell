@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:28:11 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 21:54:14 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 12:42:41 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ void	escape_special_char(char *temp, unsigned int *i)
 	if (*i != 0)
 	{
 		if (!ft_isdigit(temp[1]))
-			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; ";
+			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; \t";
 		else
-			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; 1234567890";
+			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; 1234567890\t";
 		if (temp[1] == '?' || ft_isdigit(temp[1]))
 			(*i)++;
 	}
