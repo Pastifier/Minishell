@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/26 14:10:39 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:30:19 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,39 +192,31 @@ bool	init_envl(t_node **envl);
 bool	init_shlvl(t_node *envl);
 int		init_msh_env(t_node **envl, char **envp);
 char	*clean_start(t_astnode **ast, t_token **token_list,
-            void (*signal_handler)(int));
-int		reading_line(char **line, t_node **envl, t_astnode **ast, t_token **token_list);
-int		parse_line(char **line, t_astnode **ast, t_token **token_list, t_node **envl);
-
+			void (*signal_handler)(int));
+int		reading_line(char **line, t_node **envl, t_astnode **ast,
+			t_token **token_list);
+int		parse_line(char **line, t_astnode **ast, t_token **token_list,
+			t_node **envl);
 
 /*--- WRAPPER FUNCTIONS ---*/
 char	**list_cpy_to_str_arr(t_node *lst);
 int		wexecve(t_astnode *word, t_node *envl, char **envp);
 
-/*--- TEMPERORY DEBUGGING FUNCTIONS*/
-
-void print_tokens(t_token **token);
-void print_array(char **array);
-void print_ast(t_astnode *ast);
-void print_list(t_node **head);
-
 /*--- DESTROY FUNCTIONS ---*/
-void destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
-void str_arr_destroy(char **strarr);
-void destroy_str_arr(char **str_arr);
-void destroy_tokens(t_token **token);
-void destroy_ast(t_astnode *node);
-void destroy_parser(t_token **token, t_astnode **node);
-void syntax_error(t_token **token_list, t_astnode **ast, char *token);
-void show_syntax_error(char *token);
-void show_error(int exit_status);
+void	destroy_mini_shell(t_token **token, t_astnode **node, int exit_status);
+void	str_arr_destroy(char **strarr);
+void	destroy_str_arr(char **str_arr);
+void	destroy_tokens(t_token **token);
+void	destroy_ast(t_astnode *node);
+void	show_syntax_error(char *token);
+void	show_error(int exit_status);
 
 /*--- PIPE @ EOL ---*/
 int		pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
-int		pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
+int		pipe_at_eol_child(char **line, t_node **envl, int fd[2],
+			t_astnode **ast);
 int		pipe_at_eol_parent(char **line, int fd[2]);
 void	__pipe_at_eol_confirm(char **line, t_node **envl, int *fd);
 int		__end_child_process(t_node **envl, int *fd);
-
 
 #endif // !MINISHELL_H

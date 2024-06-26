@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 17:49:13 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:27:09 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,8 @@ int		wexit(t_astnode *word, t_shcontext *mshcontext, char *first_arg);
 void	init_builtin_necessities(t_astnode *word, char **variable, char **temp,
 			char **first_arg);
 int		w_wexport(t_astnode *word, t_node **envp);
-char	*perform_joining_of_var_and_val(const char *variable, const char *value);
+char	*perform_joining_of_var_and_val(const char *variable,
+			const char *value);
 int		confirm_var_visibility(size_t val_length, t_node *varp, void *content);
 int		handle_slash_is_dir(char **args, DIR *dir);
 int		handle_slash_not_dir(char **args);

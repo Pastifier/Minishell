@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/26 14:23:18 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/26 14:26:22 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "interpreter.h"
 #include "parser.h"
 #include <readline/history.h>
@@ -53,9 +65,9 @@ int	main(int argc, char **argv, char **envp)
 //
 // @param	envl The environment list to initialize.
 //
-// @warning The environment list must be freed by the caller. If the allocation fails,
-//			the function will free the allocated memory and set the
-//			pointer to `NULL`.
+// @warning The environment list must be freed by the caller.
+//			If the allocation fails, the function will free
+//			the allocated memory and set the pointer to `NULL`.
 bool	init_envl(t_node **envl)
 {
 	t_node	*to_append;

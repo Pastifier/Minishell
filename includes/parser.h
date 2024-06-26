@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:38 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/19 21:16:32 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:27:23 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int				escape_quots(char *temp, unsigned int *i, t_token **token_list);
 int				dollar_check(char *str, t_token **token_list, unsigned int *i);
 t_token_type	get_token_type(char *str, int len);
 int				skip_dummies(t_token **token_list);
-
 
 /*--- PARSING - UTILS ---*/
 

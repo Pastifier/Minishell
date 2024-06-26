@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_at_eol.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 17:29:13 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/26 14:06:50 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:25:27 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
