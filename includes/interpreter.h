@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 09:53:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/26 14:27:09 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/26 15:41:12 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	perform_wait_and_fetch_wstatus(t_shcontext *mshcontext);
 int		determine_exit_code(t_shcontext *mshcontext);
 int		store_heredoc_input(t_astnode *lredir, int *pipedes,
 			t_shcontext *mshcontext);
+void	close_heredoc_recursively(t_astnode *node);
 void	perform_word_checks_and_close_pipes_if_needed(t_astnode *word,
 			t_shcontext *mshcontext, char **envp, t_node *envl);
 void	ignore_signals_and_close_pipes_if_needed_then_set_pid(t_astnode *word,

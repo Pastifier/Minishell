@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpret_dump.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:12:42 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 19:24:29 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/26 15:40:37 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,17 @@ int	determine_exit_code(t_shcontext *mshcontext)
 	if (mshcontext->terminate)
 		return (EXIT_FAILURE);
 	return (EXIT_FAILURE);
+}
+
+void	close_heredoc_recursively(t_astnode *node)
+{
+	if (!node)
+		return ;
+	close_heredoc_recursively(node->left);
+	close_heredoc_recursively(node->right);
+	if (node->type == TK_LREDIR && node->data.redirection.mode == O_APPEND)
+	{
+		close(node->data.redirection.fd[READ_END]);
+		close(node->data.redirection.fd[WRITE_END]);
+	}
 }
