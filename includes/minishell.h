@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/26 12:25:06 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:05:49 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,9 +219,11 @@ void show_syntax_error(char *token);
 void show_error(int exit_status);
 
 /*--- PIPE @ EOL ---*/
-int pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
-int pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
-int pipe_at_eol_parent(char **line, int fd[2]);
+int		pipe_at_eol(char **line, t_node **envl, t_astnode **ast);
+int		pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast);
+int		pipe_at_eol_parent(char **line, int fd[2]);
+void	__pipe_at_eol_confirm(char **line, t_node **envl, int *fd);
+int		__end_child_process(t_node **envl, int *fd);
 
 /*--- PROCESSING ---*/
 void	processing(int parse_ret, t_astnode **ast, t_token **token_list,

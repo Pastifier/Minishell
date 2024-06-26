@@ -6,7 +6,7 @@
 /*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 17:29:13 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/26 01:10:52 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:06:50 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <readline/readline.h>
 
 extern volatile sig_atomic_t	g_signal;
+
+int	_wpipe_at_eol_parent(int *fd, char **line, int *ret, pid_t pid);
 
 static void	catch_sigint(int signum)
 {
@@ -46,33 +48,30 @@ int	pipe_at_eol(char **line, t_node **envl, t_astnode **ast)
 		exit(0);
 	}
 	else
-	{
-		signal(SIGINT, SIG_IGN);
-		waitpid(pid, &ret, 0);
-		if (WEXITSTATUS(ret) == 130)
-			return (close(fd[0]), close(fd[1]), 5);
-		if (WIFSIGNALED(ret))
-		{
-			if (WTERMSIG(ret) == SIGINT)
-				return (close(fd[0]), close(fd[1]), 5);
-		}
-		if (WEXITSTATUS(ret) == 0)
-			return (pipe_at_eol_parent(line, fd));
-		else if (WEXITSTATUS(ret) == EXIT_UNEXPECTED)
-			return (close(fd[0]), close(fd[1]), EXIT_UNEXPECTED);
-		return (close(fd[0]), close(fd[1]), WEXITSTATUS(ret));
-	}
+		return (_wpipe_at_eol_parent(fd, line, &ret, pid));
 	return (ret);
+}
+
+int	_wpipe_at_eol_parent(int *fd, char **line, int *ret, pid_t pid)
+{
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, ret, 0);
+	if (WEXITSTATUS(*ret) == 130)
+		return (close(fd[0]), close(fd[1]), 5);
+	if (WIFSIGNALED(*ret))
+	{
+		if (WTERMSIG(*ret) == SIGINT)
+			return (close(fd[0]), close(fd[1]), 5);
+	}
+	if (WEXITSTATUS(*ret) == 0)
+		return (pipe_at_eol_parent(line, fd));
+	else if (WEXITSTATUS(*ret) == EXIT_UNEXPECTED)
+		return (close(fd[0]), close(fd[1]), EXIT_UNEXPECTED);
+	return (close(fd[0]), close(fd[1]), WEXITSTATUS(*ret));
 }
 
 int	pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 {
-	int			ret;
-	t_astnode	*new_ast;
-	t_token		*token_list;
-
-	new_ast = NULL;
-	token_list = NULL;
 	destroy_mini_shell(NULL, ast, 0);
 	signal(SIGINT, catch_sigint);
 	while (true && g_signal != 130)
@@ -88,35 +87,10 @@ int	pipe_at_eol_child(char **line, t_node **envl, int fd[2], t_astnode **ast)
 			exit(EXIT_UNEXPECTED);
 		}
 		if ((*line)[0] != '\0')
-		{
-			ret = init_tokenizer(*line, &new_ast, &token_list, envl);
-			destroy_mini_shell(&token_list, &new_ast, ret);
-			if (ret && ret != 4)
-			{
-				(close(fd[0]), close(fd[1]));
-				free(*line);
-				list_destroy(envl);
-				exit(ret);
-			}
-			write(fd[1], " ", 1);
-			write(fd[1], *line, ft_strlen(*line));
-			if (!ret)
-			{
-				(close(fd[0]), close(fd[1]));
-				list_destroy(envl);
-				free(*line);
-				exit(EXIT_SUCCESS);
-			}
-		}
+			__pipe_at_eol_confirm(line, envl, fd);
 		free(*line);
 	}
-	list_destroy(envl);
-	if (g_signal == 130)
-	{
-		(close(fd[0]), close(fd[1]));
-		exit(130);
-	}
-	exit(EXIT_SUCCESS);
+	return (__end_child_process(envl, fd));
 }
 
 int	pipe_at_eol_parent(char **line, int fd[2])

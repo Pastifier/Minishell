@@ -20,6 +20,7 @@ else
 endif
 
 SRC :=  main.c list_utils.c pipe_at_eol.c init_msh.c \
+		pipe_at_eol_norme_dump.c \
 		$(addprefix parsing/, \
 				tokenizer.c parser.c parser_utils.c parse_word_utils.c\
 				tokenizer_helper.c token_list_utils.c parse_env_spaces.c \
