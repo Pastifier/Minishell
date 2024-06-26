@@ -6,7 +6,7 @@
 /*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 02:40:13 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/26 15:40:33 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:17:31 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ static void			visit(t_astnode *node, t_node *envl,
 						t_shcontext *mshcontext);
 static void			find_rightmost_word(t_astnode *root, t_astnode **to_set);
 void				restore_iodes(t_shcontext *mshcontext, bool clear);
-
-
 
 int	interpret(t_astnode *root, t_node *envl)
 {
