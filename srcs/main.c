@@ -1,7 +1,7 @@
-#include "parser.h"
 #include "interpreter.h"
-#include <readline/readline.h>
+#include "parser.h"
 #include <readline/history.h>
+#include <readline/readline.h>
 #include <signal.h>
 
 volatile sig_atomic_t	g_signal = 0;
@@ -16,12 +16,11 @@ static void	end_shell(t_node **envl)
 	clear_history();
 	exit(exit_code);
 }
-void		signal_handler(int signum);
-
+void					signal_handler(int signum);
 
 int	main(int argc, char **argv, char **envp)
 {
-	char  		*line;
+	char		*line;
 	t_astnode	*ast;
 	t_token		*token_list;
 	t_node		*envl;
@@ -36,18 +35,11 @@ int	main(int argc, char **argv, char **envp)
 		line = clean_start(&ast, &token_list, signal_handler);
 		if (line == NULL)
 			break ;
-		if (line[0] != '\0')
-		{
-			parse_ret = parse_line(&line, &ast, &token_list, &envl);
-			if (parse_ret == 5 )
-				continue ;
-			else if (parse_ret == EXIT_SYNTAX_ERR)
-				return (parse_ret);
-			(add_history(line), free(line));
-			processing(parse_ret, &ast, &token_list, &envl);
-		}
-		else
-			free(line);
+		parse_ret = reading_line(&line, &envl, &ast, &token_list);
+		if (parse_ret == 5)
+			continue ;
+		else if (parse_ret == EXIT_SYNTAX_ERR)
+			return (parse_ret);
 		rl_on_new_line();
 	}
 	end_shell(&envl);
@@ -64,7 +56,7 @@ int	main(int argc, char **argv, char **envp)
 // @warning The environment list must be freed by the caller. If the allocation fails,
 //			the function will free the allocated memory and set the
 //			pointer to `NULL`.
-bool init_envl(t_node **envl)
+bool	init_envl(t_node **envl)
 {
 	t_node	*to_append;
 
@@ -76,12 +68,12 @@ bool init_envl(t_node **envl)
 	to_append->content = ft_calloc(1, sizeof(int));
 	if (!to_append->content)
 		return (node_destroy(to_append), false);
-	*(int*)to_append->content = EXIT_SUCCESS;
+	*(int *)to_append->content = EXIT_SUCCESS;
 	list_append(envl, to_append);
 	return (true);
 }
 
-bool init_shlvl(t_node *envl)
+bool	init_shlvl(t_node *envl)
 {
 	t_node	*shlvl;
 	char	*eql_addr;
@@ -109,8 +101,6 @@ bool init_shlvl(t_node *envl)
 	free(shlvl_value_str);
 	return (true);
 }
-
-
 
 void	signal_handler(int signum)
 {
