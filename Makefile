@@ -19,7 +19,7 @@ else
 	$(error Idk, man. Doesn't look like something I was BUILT to deal with ;3)
 endif
 
-SRC :=  main.c list_utils.c pipe_at_eol.c init_msh.c \
+SRC :=  main.c list_utils.c pipe_at_eol.c init_msh.c msh.c \
 		pipe_at_eol_norme_dump.c \
 		$(addprefix parsing/, \
 				tokenizer.c parser.c parser_utils.c parse_word_utils.c\

@@ -6,7 +6,7 @@
 /*   By: aalshafy <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:21:49 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/26 14:05:49 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:10:39 by aalshafy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ bool	init_shlvl(t_node *envl);
 int		init_msh_env(t_node **envl, char **envp);
 char	*clean_start(t_astnode **ast, t_token **token_list,
             void (*signal_handler)(int));
+int		reading_line(char **line, t_node **envl, t_astnode **ast, t_token **token_list);
 int		parse_line(char **line, t_astnode **ast, t_token **token_list, t_node **envl);
 
 
@@ -225,8 +226,5 @@ int		pipe_at_eol_parent(char **line, int fd[2]);
 void	__pipe_at_eol_confirm(char **line, t_node **envl, int *fd);
 int		__end_child_process(t_node **envl, int *fd);
 
-/*--- PROCESSING ---*/
-void	processing(int parse_ret, t_astnode **ast, t_token **token_list,
-		t_node **envl);
 
 #endif // !MINISHELL_H
