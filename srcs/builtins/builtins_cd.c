@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:09:10 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/27 16:40:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/28 01:28:37 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	wcd(t_astnode *cdnode, t_shcontext *mshcontext)
 		there_is_no_more = !*((char *)cdarg->content + 1);
 		if (!cdarg->next && !OS_IS_MAC)
 			if (first_char_of_cdarg == '-' && there_is_no_more)
+				return (check_oldpwd_and_cd_if_it_exists(&mshcontext->envl));
+		if (first_char_of_cdarg == '-' && there_is_no_more)
 				return (check_oldpwd_and_cd_if_it_exists(&mshcontext->envl));
 	}
 	if (cdarg && OS_IS_MAC)
