@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 16:54:54 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/25 17:11:40 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/06/30 19:24:04 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	search_path_execute(char **envp, bool *keep_checking, t_split paths,
 			if (!access(temp, X_OK))
 			{
 				execve(temp, args, envp);
-				perror(args[0]);
 				*keep_checking = false;
 			}
 			else
