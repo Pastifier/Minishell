@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:59:25 by aalshafy          #+#    #+#             */
-/*   Updated: 2024/06/26 15:11:31 by aalshafy         ###   ########.fr       */
+/*   Updated: 2024/07/01 20:40:58 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,9 @@ int	parse_export(char *var_name)
 		if (!var_name[i])
 			return (0);
 	}
+	ft_putstr_fd("msh: `", STDERR_FILENO);
+	ft_putstr_fd(var_name, STDERR_FILENO);
+	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+	return (EXIT_FAILURE);
 	return (1);
 }
