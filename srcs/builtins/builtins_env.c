@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:21:21 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/21 09:18:26 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/01 20:51:41 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,27 +81,53 @@ int	unset(t_node **envp, const char *variable)
 
 t_node	*find_variable(t_node **envp, const char *variable)
 {
-	size_t	var_length;
-	size_t	con_length;
-	char	*eql_address;
-	t_node	*iter;
+    size_t	var_length;
+    size_t	id_length;
+    char	*eql_address;
+    t_node	*iter;
 
-	if (!envp && !*envp)
-		return (NULL);
-	var_length = ft_strlen(variable);
-	iter = *envp;
-	while (iter)
-	{
-		eql_address = ft_strchr(iter->content, '=');
-		con_length = ft_strlen(iter->content);
-		if (con_length >= var_length
-			&& !ft_strncmp(iter->content, variable,
-				ft_strlen(iter->content) - ft_strlen(eql_address)))
-			return (iter);
-		iter = iter->next;
-	}
-	return (NULL);
+    if (!envp || !*envp)
+        return (NULL);
+    var_length = ft_strlen(variable);
+    iter = *envp;
+    while (iter)
+    {
+        eql_address = ft_strchr(iter->content, '=');
+        if (!eql_address)
+        {
+            iter = iter->next;
+            continue;
+        }
+        id_length = eql_address - (char *)iter->content;
+        if (id_length == var_length
+			&& !ft_strncmp(iter->content, variable, id_length))
+            return (iter);
+        iter = iter->next;
+    }
+    return (NULL);
 }
+// {
+// 	size_t	var_length;
+// 	size_t	con_length;
+// 	char	*eql_address;
+// 	t_node	*iter;
+
+// 	if (!envp && !*envp)
+// 		return (NULL);
+// 	var_length = ft_strlen(variable);
+// 	iter = *envp;
+// 	while (iter)
+// 	{
+// 		eql_address = ft_strchr(iter->content, '=');
+// 		con_length = ft_strlen(iter->content);
+// 		if (con_length >= var_length
+// 			&& !ft_strncmp(iter->content, variable,
+// 				ft_strlen(iter->content) - ft_strlen(eql_address)))
+// 			return (iter);
+// 		iter = iter->next;
+// 	}
+// 	return (NULL);
+// }
 
 static int	perform_declare(t_node *iter)
 {
