@@ -1,4 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_echo.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/18 09:58:11 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/06/19 19:41:01 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+// static bool	s_option(const char *arg)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (arg[i++] != '-')
+// 		return (false);
+// 	while (arg[i])
+// 	{
+// 		if (arg[i] != 'n')
+// 			return (false);
+// 		i++;
+// 	}
+// 	return (true);
+// }
 
 int	echo(t_astnode *word, t_node *first_arg)
 {
@@ -8,7 +36,7 @@ int	echo(t_astnode *word, t_node *first_arg)
 	(void)word;
 	iter = first_arg;
 	newline = true;
-	if (first_arg && !ft_strncmp(first_arg->content, "-n", 2))
+	if (first_arg && !ft_strncmp(first_arg->content, "-n", -1))
 	{
 		newline = false;
 		iter = first_arg->next;

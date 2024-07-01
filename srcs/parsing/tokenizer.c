@@ -1,16 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aalshafy <aalshafy@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/19 15:28:11 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/26 12:42:41 by aalshafy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 #include <stdio.h>
 
 int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
-					t_node **envl)
+		t_node **envl)
 {
-	int ret;
-	t_token     *iter;
+	int		ret;
+	t_token	*iter;
 
 	ret = tokenize(line, token_list);
 	if (ret)
 		return (destroy_tokens(token_list), ret);
-	remove_spaces(token_list);
+	ret = parse_spaces_dollars(token_list, envl);
+	if (ret)
+		return (destroy_tokens(token_list), ret);
 	if (!*token_list)
 		return (0);
 	iter = *token_list;
@@ -21,15 +35,15 @@ int	init_tokenizer(char *line, t_astnode **ast, t_token **token_list,
 	return (0);
 }
 
-int tokenize(char *line, t_token **token_list)
+int	tokenize(char *line, t_token **token_list)
 {
-	char *temp;
-	unsigned int i;
-	int ret;
+	char			*temp;
+	unsigned int	i;
+	int				ret;
 
 	temp = line;
 	i = 0;
-	if (!temp || !*temp) 
+	if (!temp || !*temp)
 		return (0);
 	escape_special_char(temp, &i);
 	if (i != 0)
@@ -49,16 +63,28 @@ int tokenize(char *line, t_token **token_list)
 	return (0);
 }
 
-void escape_special_char(char *temp, unsigned int *i)
+void	escape_special_char(char *temp, unsigned int *i)
 {
-	while (temp && temp[*i] && !char_in_str(temp[*i], " $|><\"'")) // removed "&()" for testing
+	char	*special_char;
+
+	special_char = " $|><\"'";
+	if (*i != 0)
+	{
+		if (!ft_isdigit(temp[1]))
+			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; \t";
+		else
+			special_char = "@#$%^&*-+/={}|:<>[]\"'?~\\,.; 1234567890\t";
+		if (temp[1] == '?' || ft_isdigit(temp[1]))
+			(*i)++;
+	}
+	while (temp && temp[*i] && !char_in_str(temp[*i], special_char))
 		(*i)++;
 }
 
- int escape_quots(char *temp, unsigned int *i, t_token **token_list)
+int	escape_quots(char *temp, unsigned int *i, t_token **token_list)
 {
-	char c;
-	int ret;
+	char	c;
+	int		ret;
 
 	c = temp[*i];
 	(*i)++;
@@ -67,8 +93,7 @@ void escape_special_char(char *temp, unsigned int *i)
 		ret = get_token(&temp[0], *i + 1, token_list, TK_WORD);
 		if (ret)
 			return (ret);
-		(*i)++;
-		return (0);
+		return ((*i)++, 0);
 	}
 	while (temp[*i] && temp[*i] != c)
 		(*i)++;
@@ -82,15 +107,14 @@ void escape_special_char(char *temp, unsigned int *i)
 		if (ret)
 			return (ret);
 	}
-	(*i)++;
-	return (0);
+	return ((*i)++, 0);
 }
 
-int dollar_check(char *str, t_token **token_list, unsigned int *i)
+int	dollar_check(char *str, t_token **token_list, unsigned int *i)
 {
-	unsigned int j;
-	unsigned int k;
-	int ret;
+	unsigned int	j;
+	unsigned int	k;
+	int				ret;
 
 	j = 0;
 	while (str[j] && str[j] != '$' && str[j] != '"')
@@ -114,9 +138,3 @@ int dollar_check(char *str, t_token **token_list, unsigned int *i)
 		return (dollar_check(&str[j], token_list, i));
 	return (0);
 }
-
-//"$'ahmed'$|'samy'"
-	// $
-	// 'ahmed'
-	// $|'samy'
-	// |'samy'

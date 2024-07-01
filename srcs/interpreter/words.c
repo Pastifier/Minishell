@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/14 08:29:40 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/06/14 02:46:34:53ebinjama         ###   ########.fr       */
+/*   Created: 2024/06/18 19:36:57 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/06/25 01:38:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,26 @@
 #include "interpreter.h"
 #include <stdio.h>
 
-extern int	g_signal;
+extern volatile sig_atomic_t	g_signal;
 
-static int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext);
-static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext);
+static int	execute_word_leaf_node(t_astnode *word, t_node *envl,
+				t_shcontext *mshcontext);
 static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext);
+int			execute_builtin(t_astnode *word, t_shcontext *mshcontext);
 
 int	handle_word(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
 {
 	if (word->type != TK_WORD)
 		return (EXIT_NEEDED);
 	if (is_builtin(word, mshcontext) && !word->parent && !mshcontext->terminate)
-		*(int*)mshcontext->envl->content = execute_builtin(word, mshcontext);
+		*(int *)mshcontext->envl->content = execute_builtin(word, mshcontext);
 	else
 		execute_word_leaf_node(word, envl, mshcontext);
 	return (WEXITSTATUS(word->data.command.exit));
 }
 
-int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontext)
+int	execute_word_leaf_node(t_astnode *word, t_node *envl,
+		t_shcontext *mshcontext)
 {
 	pid_t		pid;
 	int			fetch;
@@ -46,45 +48,16 @@ int	execute_word_leaf_node(t_astnode *word, t_node *envl, t_shcontext *mshcontex
 		return ((void)write(2, "msh: ", 5), perror("fork()"), EXIT_FATAL);
 	if (pid == 0)
 	{
-		if (word->data.command.thereisprev)
-		{
-			if (!word->data.command.thereisin && word->data.command.execute)
-				dup2(word->data.command.prevfd[READ_END], STDIN_FILENO);
-			close(word->data.command.prevfd[READ_END]);
-		}
-		if (word->data.command.thereispipe)
-		{
-			close(word->data.command.fd[READ_END]);
-			if (!word->data.command.thereisout && word->data.command.execute)
-				dup2(word->data.command.fd[WRITE_END], STDOUT_FILENO);
-			close(word->data.command.fd[WRITE_END]);
-		}
-		if (word->data.command.builtin && word->data.command.execute)
-		{
-			mshcontext->allocated_envp = envp;
-			fetch = execute_builtin(word, mshcontext);
-			str_arr_destroy(envp);
-			destroy_ast(mshcontext->root);
-			list_destroy(&envl);
-			restore_iodes(mshcontext, true);
-			exit(fetch);
-		}
+		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
+		perform_word_checks_and_close_pipes_if_needed(word, mshcontext,
+			envp, envl);
 		if (word->data.command.execute)
 			fetch = wexecve(word, envl, envp);
-		restore_iodes(mshcontext, true);
-		(str_arr_destroy(envp), list_destroy(&envl));
-		destroy_ast(mshcontext->root);
-		exit(fetch);
+		(destroy_ast(mshcontext->root), str_arr_destroy(envp));
+		(list_destroy(&envl), restore_iodes(mshcontext, true), exit(fetch));
 	}
 	else
-	{
-		str_arr_destroy(envp);
-		if (word->data.command.thereisprev)
-			close(word->data.command.prevfd[READ_END]);
-		if (word->data.command.thereispipe)
-			close(word->data.command.fd[WRITE_END]);
-		word->data.command.pid = pid;
-	}
+		ignore_signals_and_close_pipes_if_needed_then_set_pid(word, pid, envp);
 	return (EXIT_SUCCESS);
 }
 
@@ -108,22 +81,15 @@ static bool	is_builtin(t_astnode *word, t_shcontext *mshcontext)
 	return (false);
 }
 
-static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
+int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 {
 	char		*first_arg;
 	char		*temp;
 	char		*variable;
-	int			fetch;
 	char		*cmd;
 
 	cmd = word->data.command.args->content;
-	first_arg = NULL;
-	temp = NULL;
-	variable = NULL;
-	if (word->data.command.args->next)
-		first_arg = word->data.command.args->next->content;
-	//if (ft_atoi(first_arg).error)
-	//	mshcontext->exit_status = 255;
+	init_builtin_necessities(word, &variable, &temp, &first_arg);
 	if (!ft_strncmp(cmd, "cd", -1))
 		return (wcd(word, mshcontext));
 	if (!ft_strncmp(cmd, "env", -1))
@@ -131,50 +97,12 @@ static int	execute_builtin(t_astnode *word, t_shcontext *mshcontext)
 	if (!ft_strncmp(cmd, "pwd", -1))
 		return (pwd());
 	if (!ft_strncmp(cmd, "unset", -1))
-		return (unset(&mshcontext->envl, first_arg));
+		return (wunset(word, &mshcontext->envl));
 	if (!ft_strncmp(cmd, "echo", -1))
 		return (echo(word, word->data.command.args->next));
 	if (!ft_strncmp(cmd, "export", -1))
-	{
-		// first of all. It leaks memory, I think. Also, the function assumes correct
-		// export syntax, which is not guaranteed. It should be fixed.
-		// For instance, export "a b"="c d" will work but it should not.
-		// Also, it takes more than one argument, AND it also edits empty exports and doesn't add new onces in declare -x
-		if (!first_arg)
-			return (env(&(mshcontext->envl->next), true));
-		temp = ft_strchr(first_arg, '=');
-		if (temp)
-		{
-			variable = ft_substr(first_arg, 0, temp - first_arg + 1);
-			if (!variable)
-				return (EXIT_FATAL);
-			fetch = bltin_export(&mshcontext->envl, variable, temp + 1);
-			return (free(variable), fetch);
-		}
-		return (bltin_export(&mshcontext->envl, first_arg, ""));
-	}
+		return (w_wexport(word, &mshcontext->envl));
 	if (!ft_strncmp(cmd, "exit", -1))
-	{
-		if (first_arg && ft_atoi(first_arg).error)
-		{
-			ft_putstr_fd("exit\nmsh: exit: ", STDERR_FILENO);
-			ft_putstr_fd(first_arg, STDERR_FILENO);
-			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			list_destroy(&mshcontext->envl);
-			str_arr_destroy(mshcontext->allocated_envp);
-			destroy_ast(mshcontext->root);
-			exit(255);
-		}
-		if (first_arg && word->data.command.args->next->next)
-		{
-			ft_putendl_fd("exit\nmsh: exit: too many arguments", STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
-		mshcontext->exit_status = ft_atoi(first_arg).value;
-		list_destroy(&mshcontext->envl);
-		str_arr_destroy(mshcontext->allocated_envp);
-		destroy_ast(mshcontext->root);
-		exit(mshcontext->exit_status);
-	}
+		return (wexit(word, mshcontext, first_arg));
 	return (EXIT_FATAL);
 }

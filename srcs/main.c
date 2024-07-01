@@ -1,66 +1,60 @@
-#include "parser.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/26 14:23:18 by aalshafy          #+#    #+#             */
+/*   Updated: 2024/06/26 14:26:22 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "interpreter.h"
-#include <readline/readline.h>
+#include "parser.h"
 #include <readline/history.h>
+#include <readline/readline.h>
 #include <signal.h>
 
-int	g_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
-static bool init_envl(t_node **envl);
-static bool	init_shlvl(t_node *envl);
+static void	end_shell(t_node **envl)
+{
+	int	exit_code;
+
+	exit_code = *(int *)(*envl)->content;
+	write(1, "exit\n", 5);
+	list_destroy(envl);
+	clear_history();
+	exit(exit_code);
+}
+void					signal_handler(int signum);
 
 int	main(int argc, char **argv, char **envp)
 {
-	char 		*prompt = "$> ";
-	char  		*line;
+	char		*line;
 	t_astnode	*ast;
 	t_token		*token_list;
 	t_node		*envl;
 	int			parse_ret;
 
 	((void)argc, (void)argv, envl = NULL);
-	if (!init_envl(&envl))
+	signal(SIGQUIT, SIG_IGN);
+	if (init_msh_env(&envl, envp))
 		return (EXIT_FATAL);
-	if (!str_arr_dup_to_list(envp, &envl))
-		return (EXIT_FATAL);
-	if (!init_shlvl(envl))
-		return (list_destroy(&envl), EXIT_FATAL);
 	while (true)
 	{
-		ast = NULL;
-		token_list = NULL;
-		line = readline(prompt);
+		line = clean_start(&ast, &token_list, signal_handler);
 		if (line == NULL)
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			break;
-		}
-		if (g_signal == 130)
-			*(int*)envl->content = 130;
-		if (line[0] != '\0')
-		{
-			parse_ret = init_tokenizer(line, &ast, &token_list, &envl);
-			if (parse_ret)
-			{
-				printf("error value: %d\n", parse_ret); // should be in stderr
-				destroy_mini_shell(&token_list, &ast, parse_ret);
-			}
-			else
-			{
-				interpret(ast, envl);
-				destroy_ast(ast);
-			}
-			add_history(line);
-		}
-		free(line);
+			break ;
+		parse_ret = reading_line(&line, &envl, &ast, &token_list);
+		if (parse_ret == 5)
+			continue ;
+		else if (parse_ret == EXIT_SYNTAX_ERR)
+			return (parse_ret);
 		rl_on_new_line();
 	}
-	write(1, "exit\n", 5);
-	int temp = *(int*)envl->content;
-	list_destroy(&envl);
-	clear_history();
-	exit(temp);
-	// destroy_mini_shell(&token_list, &ast, EXIT_SUCCESS);
+	end_shell(&envl);
 }
 
 // @author Emran BinJamaan
@@ -71,10 +65,10 @@ int	main(int argc, char **argv, char **envp)
 //
 // @param	envl The environment list to initialize.
 //
-// @warning The environment list must be freed by the caller. If the allocation fails,
-//			the function will free the allocated memory and set the
-//			pointer to `NULL`.
-static bool init_envl(t_node **envl)
+// @warning The environment list must be freed by the caller.
+//			If the allocation fails, the function will free
+//			the allocated memory and set the pointer to `NULL`.
+bool	init_envl(t_node **envl)
 {
 	t_node	*to_append;
 
@@ -86,47 +80,48 @@ static bool init_envl(t_node **envl)
 	to_append->content = ft_calloc(1, sizeof(int));
 	if (!to_append->content)
 		return (node_destroy(to_append), false);
-	*(int*)to_append->content = EXIT_SUCCESS;
+	*(int *)to_append->content = EXIT_SUCCESS;
 	list_append(envl, to_append);
-	// *envl = malloc(sizeof(t_node));
-	// if (!*envl)
-	// 	return (false);
-	// (*envl)->content = ft_calloc(1, sizeof(int));
-	// if (!(*envl)->content)
-	// 	return (free(*envl), *envl = NULL, false);
-	// *(int*)(*envl)->content = EXIT_SUCCESS;
-	// (*envl)->next = NULL;
-	// (*envl)->prev = NULL;
-	// (*envl)->visible = false;
-	// (*envl)->is_env = false;
 	return (true);
 }
 
-static bool init_shlvl(t_node *envl)
+bool	init_shlvl(t_node *envl)
 {
 	t_node	*shlvl;
 	char	*eql_addr;
 	char	*shlvl_value_str;
 
-	shlvl = find_variable(&envl, "SHLVL=");
+	shlvl = find_variable(&envl, "SHLVL");
 	if (!shlvl)
 	{
-		if (bltin_export(&envl, "SHLVL=", "1"))
+		if (bltin_export(&envl, "SHLVL", "1"))
 			return (false);
 		return (true);
 	}
 	eql_addr = ft_strchr(shlvl->content, '=');
 	if (ft_atoi(eql_addr + 1).value < 0)
 	{
-		if (bltin_export(&envl, "SHLVL=", "0"))
+		if (bltin_export(&envl, "SHLVL", "0"))
 			return (false);
 		return (true);
 	}
 	shlvl_value_str = ft_itoa(ft_atoi(eql_addr + 1).value + 1);
 	if (!shlvl_value_str)
 		return (false);
-	if (bltin_export(&envl, "SHLVL=", shlvl_value_str))
+	if (bltin_export(&envl, "SHLVL", shlvl_value_str))
 		return (free(shlvl_value_str), false);
 	free(shlvl_value_str);
 	return (true);
+}
+
+void	signal_handler(int signum)
+{
+	g_signal = signum;
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }

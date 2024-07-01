@@ -6,12 +6,11 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 06:41:42 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/04/20 07:04:55 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/06/19 07:15:22 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 static bool	ft_iswhitespace(int c)
 {
@@ -25,7 +24,7 @@ char	*extract_variable(char *string)
 {
 	size_t	count;
 	char	*self;
-	char	*no_var;
+
 	count = 0;
 	if (*(string + 1))
 		++string;
@@ -35,4 +34,20 @@ char	*extract_variable(char *string)
 		return (NULL);
 	self = ft_substr(string, 0, count);
 	return (self);
+}
+
+char	*perform_joining_of_var_and_val(const char *variable, const char *value)
+{
+	char	*content;
+	char	*buffer;
+
+	buffer = (char *)variable;
+	if (value && *value)
+		buffer = ft_strjoin(variable, "=");
+	if (!buffer)
+		return (NULL);
+	content = ft_strjoin(buffer, value);
+	if (value && *value)
+		free(buffer);
+	return (content);
 }
