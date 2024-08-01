@@ -43,7 +43,7 @@ $> WORD1 | WORD2 > WORD3
                                              [ WORD ]
 ```
 ### The parsing step is where all the syntax is checked for. A syntax error will stop the ongoing operation and will return an error!
-### The way you decide to execute the command pipeline will be the determining factor of your tree's structure. For example: some people might find that making the output redirection a parent to the pipe makes more sense, but we use a little trick when it comes to I/O redirections and so, we decided to structure it this way. Some people might find that each word should be just a word, and that its children nodes are its "arguments" if it were a command for example.
+### The way you decide to execute the command pipeline will be the determining factor of your tree's structure. For example: some people might find that making the output redirection a parent to the pipe more logical, but we use a little trick when it comes to I/O redirections and so, we decided to structure it this way. Some people might find that each word should be just a word, and that its children nodes are its "arguments" if it were a command for example.
 
 ## AST -> Interpreter/Processor: execute the commands on the tree
     - Do a recursive, post-order depth-first search on the tree until you reach a leaf node.
