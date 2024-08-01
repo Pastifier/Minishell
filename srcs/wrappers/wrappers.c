@@ -109,7 +109,7 @@ int	wexecve(t_astnode *word, t_node *envl, char **envp)
 		if (access(wexec.args[0], F_OK))
 			return (handle_slash_not_dir(wexec.args));
 	}
-	pathnode = find_variable(&envl, "PATH=");
+	pathnode = find_variable(&envl, "PATH");
 	if (!pathnode)
 		return (handle_no_pathnode(wexec.args, envp));
 	wexec.paths = ft_split(pathnode->content, ":");
