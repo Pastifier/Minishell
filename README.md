@@ -1,5 +1,7 @@
 # Minishell 🚀
 
+![Banner](assets/logo.png)
+
 **Minishell** is a 42 project focused on building a minimal Bash-like shell. This shell interprets and executes commands with support for piping, redirections, and environment variable expansion. The project also includes built-in commands and advanced features as bonuses.
 
 ---
@@ -21,11 +23,9 @@
     - 🔚 `exit` (no options)
   - 💲 **Environment variable expansion**: `$VAR_NAME`
   
-- **Bonus:**
-  - 🧠 **Logical operators**: `&&` and `||` (with parentheses for precedence)
-  - 🌟 **Wildcard expansion**: `*` (for current directory files)
-
 ---
+
+![hello, world](assets/hello_world.gif)
 
 ## Building and Running the Project 🔧
 
