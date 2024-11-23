@@ -119,8 +119,7 @@ void traverse(ASTNode *node)
 ## Notes on Implementation
 
 - **Error Handling:** The shell ensures syntactic correctness during parsing. Runtime errors (e.g., invalid commands) are handled during execution.
-- **Customization:** You are free to structure the AST and handle I/O redirections in ways that suit your implementation style.
-- **Our Implementation:** We opted for a different organisation of the AST in our Minishell than the one you see because we relied on some neat tricks for processing I/O operations. However, keep in mind that most AST configurations are valid, and it's your processor that determines how you construct the AST. Be smart, as some configurations are easier to deal with than others!
+- **Customization:** You are free to structure the AST and handle I/O redirections in ways that suit your implementation style. We opted for a different organisation of the AST in our Minishell than the one you see because we relied on some neat tricks for processing I/O operations. However, keep in mind that most AST configurations are valid, and it's your processor that determines how you construct the AST. Be smart, as some configurations are easier to deal with than others!
 
 ---
 
