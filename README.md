@@ -1,40 +1,50 @@
-# Minishell
+# Minishell 🚀
 
 **Minishell** is a 42 project focused on building a minimal Bash-like shell. This shell interprets and executes commands with support for piping, redirections, and environment variable expansion. The project also includes built-in commands and advanced features as bonuses.
 
 ---
 
-## Features
-  - Redirections and HEREDOC: `>`, `>>`, `<`, `<< DELIM`
-  - Piping: `|`
-  - Command execution using `fork(2)` and `execve(2)`
-  - Signal handling: `SIGINT`, `SIGQUIT`, `EOF`
-  - Built-in commands:
-    - `echo` (with `-n`)
-    - `cd` (relative or absolute paths)
-    - `pwd` (no options)
-    - `export` (no options)
-    - `unset` (no options)
-    - `env` (no arguments)
-    - `exit` (no options)
-  - Environment variable expansion using `$VAR_NAME`
+## Features ✨
+
+- **Mandatory:**
+  - 🔄 **Redirections**: `>`, `>>`, `<`
+  - 🔗 **Piping**: `|`
+  - ⚙️ **Command execution** using `fork(2)` and `execve(2)`
+  - 🚦 **Signal handling**: `SIGINT`, `SIGQUIT`, `EOF`
+  - 🛠️ **Built-in commands**:
+    - 🗣️ `echo` (with `-n`)
+    - 📂 `cd` (relative or absolute paths)
+    - 🧭 `pwd` (no options)
+    - 📤 `export` (no options)
+    - 🚫 `unset` (no options)
+    - 🌐 `env` (no arguments)
+    - 🔚 `exit` (no options)
+  - 💲 **Environment variable expansion**: `$VAR_NAME`
+  
+- **Bonus:**
+  - 🧠 **Logical operators**: `&&` and `||` (with parentheses for precedence)
+  - 🌟 **Wildcard expansion**: `*` (for current directory files)
 
 ---
 
-## Building and Running the Project
+## Building and Running the Project 🔧
 
-### Prerequisites
+### Prerequisites 📋
+
 - **C Compiler** (e.g., `gcc`)
+- **Readline Library (v8+)**
 - **Makefile** for compilation
 - **Unix-based system** (Linux or macOS)
 
-### Compilation
+### Compilation 🛠️
+
 Run the following command:
 ```sh
 make
 ```
 
-### Running
+### Running ▶️
+
 Start the shell by executing:
 ```sh
 ./minishell
@@ -42,20 +52,20 @@ Start the shell by executing:
 
 ---
 
-## Structure
+## Structure 🏗️
 
 The project is divided into three main phases:
 
-### 1. **Tokenizer**
+### 1. **Tokenizer** 🧩
 The tokenizer breaks down the user input into manageable components (tokens).
 
-#### Workflow:
+#### Workflow 📝
 1. Read the input string.
 2. Tokenize the input into a list/queue/stack of structured tokens ready for parsing.
 
 ---
 
-### 2. **Parser**
+### 2. **Parser** 🌲
 The parser verifies syntax and builds an **Abstract Syntax Tree (AST)** that represents the hierarchical structure of the command.
 
 #### Example:
@@ -71,16 +81,16 @@ The resulting tree might look like this:
                                       [ WORD2 ]    [ WORD3 ]
 ```
 
-#### Notes:
+#### Notes 🗒️
 - The AST's structure depends on your execution strategy. You can adapt it to simplify I/O redirection or argument handling.
-- Syntax errors are handled here. If the input is invalid, an error is returned, and execution stops.
+- ❌ **Syntax errors** are handled here. If the input is invalid, an error is returned, and execution stops.
 
 ---
 
-### 3. **Interpreter**
+### 3. **Interpreter** 🤖
 The interpreter traverses the AST and executes the commands.
 
-#### Execution Workflow:
+#### Execution Workflow 🔄
 1. Perform a **post-order depth-first traversal** of the AST.
 2. At each node:
    - Execute commands using `fork(2)` and `execve(2)`.
@@ -102,7 +112,7 @@ The traversal and execution follow this process:
 2. Pipe its output to `WORD2`.
 3. Redirect the result of `WORD2` to `WORD3`.
 
-#### Simplified Code:
+#### Simplified Code 💻
 ```c
 void traverse(ASTNode *node)
 {
@@ -116,10 +126,10 @@ void traverse(ASTNode *node)
 
 ---
 
-## Notes on Implementation
+## Notes on Implementation 🛠️
 
-- **Error Handling:** The shell ensures syntactic correctness during parsing. Runtime errors (e.g., invalid commands) are handled during execution.
-- **Customization:** You are free to structure the AST and handle I/O redirections in ways that suit your implementation style. We opted for a different organisation of the AST in our Minishell than the one you see because we relied on some neat tricks for processing I/O operations. However, keep in mind that most AST configurations are valid, and it's your processor that determines how you construct the AST. Be smart, as some configurations are easier to deal with than others!
+- ⚠️ **Error Handling**: The shell ensures syntactic correctness during parsing. Runtime errors (e.g., invalid commands) are handled during execution.
+- 🛠️ **Customization**: You are free to structure the AST and handle I/O redirections in ways that suit your implementation style. We opted for a different organisation of the AST in our Minishell than the one you see because we relied on some neat tricks for processing I/O operations. However, keep in mind that most AST configurations are valid, and it's your processor that determines how you construct the AST. Be smart, as some configurations are easier to deal with than others!
 
 ---
 
