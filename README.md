@@ -87,7 +87,7 @@ The resulting tree might look like this:
 
 ---
 
-### 3. **Interpreter** 🤖
+### 3. **Interpreter/Processor** 🤖
 The interpreter traverses the AST and executes the commands.
 
 #### Execution Workflow 🔄
@@ -107,8 +107,8 @@ For the AST:
                       ( WORD1 )      ( WORD2 )
 ```
 
-The traversal and execution follow this process:
-1. Traverse `WORD1` and execute it.
+The traversal and processing/interpreting follow this process:
+1. Traverse `WORD1` and process it.
 2. Pipe its output to `WORD2`.
 3. Redirect the result of `WORD2` to `WORD3`.
 
@@ -120,7 +120,7 @@ void traverse(ASTNode *node)
         return;
     traverse(node->left);
     traverse(node->right);
-    execute_node(node);
+    process_node(node);
 }
 ```
 
